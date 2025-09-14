@@ -47,3 +47,22 @@ git push -u origin main
 git checkout main
 git merge feature_pms0914
 ```
+
+5. Emmet 정리
+
+```html
+ul>li*4>a[href="#"]>{한} .container>.item.item${$}*10
+```
+
+6. flex
+
+```
+flex: 1  -> flex: 1 1 0% 와 동일 (flex-grow flex-shrink flex-basis)
+```
+
+7. 윈도우 단축키
+
+```
+ctrl + R
+ctrl + shift + R (강력 새로고침)
+```
