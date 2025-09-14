@@ -51,7 +51,8 @@ git merge feature_pms0914
 5. Emmet 정리
 
 ```html
-ul>li*4>a[href="#"]>{한} .container>.item.item${$}*10
+ul>li*4>a[href="#"]>{한} 
+.container>.item.item${$}*10
 ```
 
 6. flex
