@@ -49,10 +49,7 @@ body {
   text-decoration: none;
   color: white;
 }
-.navbar__menu li a :focus {
-  outline: none; /* 기본 outline은 제거 */
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5); /* 커스텀 스타일 추가 */
-}
+
 .navbar__icons {
   display: flex;
 }
@@ -84,6 +81,7 @@ body {
     align-items: center;
     width: 100%;
     /* display: none; */
+
     max-height: 0;
     opacity: 0;
     overflow: hidden;
@@ -97,6 +95,7 @@ body {
     /* display: none; */
     justify-content: center;
     width: 100%;
+
     max-height: 0;
     opacity: 0;
     overflow: hidden;
@@ -109,6 +108,7 @@ body {
   .navbar__menu.active,
   .navbar__icons.active {
     display: flex;
+
     max-height: 500px; /* 실제 콘텐츠의 높이보다 충분히 큰 값 */
     opacity: 1;
   }
