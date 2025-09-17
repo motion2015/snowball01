@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아파트 정보 입력</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7fafc;
+    }
+
+    .bottom-sheet {
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .bottom-sheet.open {
+      transform: translateY(0);
+    }
+
+    .bottom-sheet-overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .addr-info {
+      margin: 8px 0;
+    }
+
+    .addr-info-tit {
+      font-size: 12px;
+      border: 1px solid #dedede;
+      padding: 2px 4px;
+      border-radius: 4px;
+      /* background-color: #dedede; */
+    }
+
+    .tooltip {
+      z-index: 1000;
+      transform: translate(0, -54px) !important;
+    }
+  </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-xl mx-auto p-6 md:p-10 bg-white rounded-xl shadow-lg">
+    <h1 class="text-2xl md:text-3xl font-bold mb-8 text-gray-800">아파트 정보를 입력해주세요</h1>
+
+    <div class="space-y-6">
+      <!-- Apartment Name Input Field -->
+      <div>
+        <label for="apartment-name" class="block text-gray-700 font-medium mb-2">
+          아파트 이름
+          <span class="inline-block relative ml-1 group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 cursor-pointer" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span
+              class="tooltip absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-2 text-xs text-white bg-gray-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+              예시: 한신무학아파트
+            </span>
+          </span>
+        </label>
+        <div class="relative">
+          <input type="text" id="apartment-name"
+            class="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+            value="한신무학아파트">
+          <svg xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <div class="addr-info">
+          <span class="addr-info-tit">주소</span>
+          서울특별시 성동구 왕십리로 31나길 18
+        </div>
+      </div>
+
+      <!-- Dong/Ho Select Fields -->
+      <div class="flex space-x-4">
+        <div class="w-1/2">
+          <label for="dong" class="block text-gray-700 font-medium mb-2">동</label>
+          <div class="relative">
+            <select id="dong"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 md:block hidden">
+              <option value="1">1동</option>
+              <option value="2">2동</option>
+              <option value="3">3동</option>
+            </select>
+            <div id="dong-mobile-select"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white flex justify-between items-center cursor-pointer md:hidden">
+              <span id="selected-dong-value">1동</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="w-1/2">
+          <label for="ho" class="block text-gray-700 font-medium mb-2">호</label>
+          <div class="relative">
+            <select id="ho"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 md:block hidden">
+              <option value="101">101호</option>
+              <option value="102">102호</option>
+              <option value="103">103호</option>
+            </select>
+            <div id="ho-mobile-select"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white flex justify-between items-center cursor-pointer md:hidden">
+              <span id="selected-ho-value">101호</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Next Button -->
+      <div class="pt-4">
+        <button id="next-button"
+          class="w-full py-4 font-semibold rounded-lg transition duration-200 bg-gray-400 text-white cursor-not-allowed"
+          disabled>
+          다음
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet Container -->
+  <div id="bottom-sheet-container" class="fixed inset-0 z-50 flex items-end justify-center hidden">
+    <div class="bottom-sheet-overlay absolute inset-0 bg-black opacity-0"></div>
+    <div class="bottom-sheet relative w-full max-w-lg bg-white rounded-t-xl shadow-lg p-6">
+      <h2 id="bottom-sheet-title" class="text-xl font-bold mb-4"></h2>
+      <div id="bottom-sheet-options" class="space-y-2 max-h-64 overflow-y-auto"></div>
+      <button id="close-bottom-sheet"
+        class="mt-4 w-full py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold">닫기</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const apartmentNameInput = document.getElementById('apartment-name');
+      const dongSelect = document.getElementById('dong');
+      const hoSelect = document.getElementById('ho');
+      const nextButton = document.getElementById('next-button');
+
+      const dongMobileSelect = document.getElementById('dong-mobile-select');
+      const hoMobileSelect = document.getElementById('ho-mobile-select');
+      const selectedDongValue = document.getElementById('selected-dong-value');
+      const selectedHoValue = document.getElementById('selected-ho-value');
+      const bottomSheetContainer = document.getElementById('bottom-sheet-container');
+      const bottomSheetTitle = document.getElementById('bottom-sheet-title');
+      const bottomSheetOptions = document.getElementById('bottom-sheet-options');
+      const closeBottomSheetBtn = document.getElementById('close-bottom-sheet');
+
+      function checkFormValidity() {
+        const isFormValid = apartmentNameInput.value.trim() !== '' &&
+          dongSelect.value !== '' &&
+          hoSelect.value !== '';
+
+        if (isFormValid) {
+          nextButton.disabled = false;
+          nextButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+          nextButton.classList.add('bg-blue-600', 'hover:bg-blue-700', 'focus:ring-4', 'focus:ring-blue-300');
+        } else {
+          nextButton.disabled = true;
+          nextButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'focus:ring-4', 'focus:ring-blue-300');
+          nextButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+        }
+      }
+
+      // Initial check and event listeners
+      apartmentNameInput.addEventListener('keyup', checkFormValidity);
+      dongSelect.addEventListener('change', checkFormValidity);
+      hoSelect.addEventListener('change', checkFormValidity);
+
+      // Mobile bottom sheet handling
+      function isMobile() {
+        return window.innerWidth < 768;
+      }
+
+      function openBottomSheet(targetSelect, displayElement) {
+        bottomSheetOptions.innerHTML = '';
+        const options = Array.from(targetSelect.options).map(option => {
+          const button = document.createElement('button');
+          button.textContent = option.textContent;
+          button.value = option.value;
+          button.className = 'w-full text-left py-3 px-4 rounded-lg hover:bg-gray-100 transition-colors duration-200';
+          button.onclick = () => {
+            displayElement.textContent = option.textContent;
+            targetSelect.value = option.value;
+            closeBottomSheet();
+            checkFormValidity();
+          };
+          return button;
+        });
+        options.forEach(option => bottomSheetOptions.appendChild(option));
+
+        bottomSheetTitle.textContent = targetSelect.id === 'dong' ? '동 선택' : '호 선택';
+
+        bottomSheetContainer.classList.remove('hidden');
+        setTimeout(() => {
+          bottomSheetContainer.querySelector('.bottom-sheet').classList.add('open');
+          bottomSheetContainer.querySelector('.bottom-sheet-overlay').style.opacity = '1';
+        }, 10);
+      }
+
+      function closeBottomSheet() {
+        bottomSheetContainer.querySelector('.bottom-sheet').classList.remove('open');
+        bottomSheetContainer.querySelector('.bottom-sheet-overlay').style.opacity = '0';
+        setTimeout(() => {
+          bottomSheetContainer.classList.add('hidden');
+        }, 300);
+      }
+
+      dongMobileSelect.addEventListener('click', () => {
+        if (isMobile()) {
+          openBottomSheet(dongSelect, selectedDongValue);
+        }
+      });
+
+      hoMobileSelect.addEventListener('click', () => {
+        if (isMobile()) {
+          openBottomSheet(hoSelect, selectedHoValue);
+        }
+      });
+
+      closeBottomSheetBtn.addEventListener('click', closeBottomSheet);
+
+      bottomSheetContainer.querySelector('.bottom-sheet-overlay').addEventListener('click', closeBottomSheet);
+
+      // Initial check on page load
+      checkFormValidity();
+    });
+  </script>
+</body>
+
+</html>
