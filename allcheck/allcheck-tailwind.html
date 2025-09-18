@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이용약관 동의</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind CSS를 위한 설정
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-blue': '#4F46E5', // 예시로 사용된 파란색
+            'light-gray': '#E5E7EB',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+  <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">약관에 동의해주세요</h1>
+
+    <!-- 전체 동의 체크박스 -->
+    <div class="bg-gray-100 rounded-lg p-4 mb-4 flex items-center space-x-2 border border-gray-200">
+      <input type="checkbox" id="check-all"
+        class="form-checkbox h-5 w-5 text-primary-blue rounded-full border-gray-300">
+      <label for="check-all" class="text-lg font-semibold text-gray-800">필수약관 전체 동의</label>
+    </div>
+
+    <!-- 개별 약관 리스트 -->
+    <div id="terms-list">
+      <div class="flex justify-between items-center py-3 border-b border-gray-200">
+        <div class="flex items-center space-x-2">
+          <input type="checkbox" id="term-1"
+            class="form-checkbox h-5 w-5 text-primary-blue rounded-full border-gray-300 required-term">
+          <label for="term-1" class="text-sm text-gray-600">[필수] 정기결제 자동납부 이용 동의</label>
+        </div>
+        <button class="text-gray-400 focus:outline-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="flex justify-between items-center py-3 border-b border-gray-200">
+        <div class="flex items-center space-x-2">
+          <input type="checkbox" id="term-2"
+            class="form-checkbox h-5 w-5 text-primary-blue rounded-full border-gray-300 required-term">
+          <label for="term-2" class="text-sm text-gray-600">[필수] 자동납부 신청 동의</label>
+        </div>
+        <button class="text-gray-400 focus:outline-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="flex justify-between items-center py-3">
+        <div class="flex items-center space-x-2">
+          <input type="checkbox" id="term-3"
+            class="form-checkbox h-5 w-5 text-primary-blue rounded-full border-gray-300 required-term">
+          <label for="term-3" class="text-sm text-gray-600">[필수] 전자금융거래기본약관 동의</label>
+        </div>
+        <button class="text-gray-400 focus:outline-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 버튼 영역 -->
+    <div class="mt-8 flex space-x-4">
+      <button id="later-btn"
+        class="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-full font-bold transition-colors duration-200 hover:bg-gray-300">
+        다음에
+      </button>
+      <button id="submit-btn"
+        class="flex-1 bg-primary-blue text-white py-3 px-6 rounded-full font-bold transition-colors duration-200 hover:bg-indigo-600">
+        신청하기
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const checkAll = document.getElementById('check-all');
+    const requiredTerms = document.querySelectorAll('.required-term');
+    const submitBtn = document.getElementById('submit-btn');
+    const laterBtn = document.getElementById('later-btn');
+
+    // 전체 동의 체크박스 클릭 이벤트
+    checkAll.addEventListener('change', (event) => {
+      requiredTerms.forEach(checkbox => {
+        checkbox.checked = event.target.checked;
+      });
+    });
+
+    // 개별 약관 체크박스 클릭 이벤트
+    requiredTerms.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        const allChecked = Array.from(requiredTerms).every(cb => cb.checked);
+        checkAll.checked = allChecked;
+      });
+    });
+
+    // "신청하기" 버튼 클릭 이벤트
+    submitBtn.addEventListener('click', () => {
+      if (checkAll.checked) {
+        alert('신청이 완료되었습니다.');
+      } else {
+        alert('필수 약관에 모두 동의해야 합니다.');
+      }
+    });
+
+    // "다음에" 버튼 클릭 이벤트
+    laterBtn.addEventListener('click', () => {
+      alert('다음에 진행하겠습니다.');
+    });
+  </script>
+</body>
+
+</html>
