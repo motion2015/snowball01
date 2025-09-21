@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>스와이퍼 및 스크립트 스터디용</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Making 17</h1>
+      <p>포인트 적립률은 영역별 1~15%이며 절립률의 환산이 17%가 되도록 설정해 주세요.</p>
+    </header>
+
+    <section class="ai-recommendation-section">
+      <div class="ai-header">
+        <h2>AI가 추천항목</h2>
+        <div class="toggle-switch">
+          <input type="checkbox" id="ai-toggle" class="toggle-input" role="switch" aria-checked="true" checked>
+          <label for="ai-toggle" class="toggle-label"></label>
+        </div>
+      </div>
+      <p class="ai-description">AI가 추천하는 영역과 절립률입니다. 반드시 최대의 적립을 보장하지는 않으며, 직접 수정할 수 있습니다.</p>
+      <div class="siwper ai-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">4%</span>
+              <span class="label">소셜커머스</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">3%</span>
+              <span class="label">쇼핑</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">2%</span>
+              <span class="label">병원</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">4%</span>
+              <span class="label">영화</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">3%</span>
+              <span class="label">극장</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">2%</span>
+              <span class="label">외식</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">4%</span>
+              <span class="label">여행</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">3%</span>
+              <span class="label">문화</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">2%</span>
+              <span class="label">엔터테인</span>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination ai-swiper-pagination"></div>
+      </div>
+    </section>
+    <section class="tabs-section">
+      <div class="tabs" role="tablist">
+        <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-shopping-panel"
+          id="tab-shopping">쇼핑</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-lifestyle-panel"
+          id="tab-lifestyle" tabindex="-1">생활</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-food-panel" id="tab-food"
+          tabindex="-1">푸드</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-travel-panel" id="tab-travel"
+          tabindex="-1">여행</button>
+      </div>
+
+      <div class="tab-content-container">
+        <div id="tab-shopping-panel" role="tabpanel" aria-labelledby="tab-shopping" class="tab-panel active">
+          <div class="grid-container">
+            <div class="item-card">
+              <a href="#" class="item-link">
+                <i class="fas fa-store icon"></i>
+                <span class="label">백화점</span>
+                <i class="fas fa-chevron-right arrow"></i>
+              </a>
+              <div class="rate-control">
+                <button class="minus" aria-label="백화점 적립률 감소">-</button>
+                <span class="rate-value" role="status" aria-live="polite">0%</span>
+                <button class="plus" aria-label="백화점 적립률 증가">+</button>
+              </div>
+            </div>
+            <div class="item-card">
+              <a href="#" class="item-link">
+                <i class="fas fa-shopping-basket icon"></i>
+                <span class="label">마트</span>
+                <i class="fas fa-chevron-right arrow"></i>
+              </a>
+              <div class="rate-control">
+                <button class="minus" aria-label="마트 적립률 감소">-</button>
+                <span class="rate-value" role="status" aria-live="polite">0%</span>
+                <button class="plus" aria-label="마트 적립률 증가">+</button>
+              </div>
+            </div>
+            <div class="item-card">
+              <a href="#" class="item-link">
+                <i class="fas fa-laptap icon"></i>
+                <span class="label">홈 쇼핑</span>
+                <i class="fas fa-chevron-right arrow"></i>
+              </a>
+              <div class="rate-control">
+                <button class="minus" aria-label="홈 쇼핑 적립률 감소">-</button>
+                <span class="rate-value" role="status" aria-live="polite">0%</span>
+                <button class="plus" aria-label="홈 쇼핑 적립률 증가">+</button>
+              </div>
+            </div>
+            <div class="item-card">
+              <a href="#" class="item-link">
+                <i class="fas fa-shopping-bag icon"></i>
+                <span class="label">온라인 쇼핑</span>
+                <i class="fas fa-chevron-right arrow"></i>
+              </a>
+              <div class="rate-control">
+                <button class="minus" aria-label="홈 쇼핑 적립률 감소">-</button>
+                <span class="rate-value" role="status" aria-live="polite">0%</span>
+                <button class="plus" aria-label="홈 쇼핑 적립률 증가">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-lifestyle-panel" role="tabpanel" aria-labelledby="tab-lifestyle" class="tab-panel" hidden>
+          <p>생활 탭 내용</p>
+        </div>
+        <div id="tab-food-panel" role="tabpanel" aria-labelledby="tab-food" class="tab-panel" hidden>
+          <p>푸드 탭 내용</p>
+        </div>
+        <div id="tab-travel-panel" role="tabpanel" aria-labelledby="tab-travel" class="tab-panel" hidden>
+          <p>여행 탭 내용</p>
+        </div>
+      </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    <script src="./script.js"></script>
+  </div>
+
+</body>
+
+</html>

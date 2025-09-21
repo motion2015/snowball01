@@ -1,0 +1,320 @@
+:root {
+  --primary-color: #6c46ef;
+  --background-color: #f7f8fa;
+  --card-background-color: #fff;
+  --border-color: #eee;
+  --text-color: #333;
+  --sub-text-color: #999;
+  --active-tab-color: #fff;
+  --active-tab-bg: #6c46ef;
+  --tab-inactive-bg: #e9ecef;
+  --active-rate-bg: #e0d8f8;
+  --swiper-bullet-active-bg: var(--primary-color);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 420px;
+  margin: 0 auto;
+  background-color: var(--background-color);
+}
+
+/* Header */
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.header p {
+  font-size: 0.875rem;
+  color: var(--sub-text-color);
+}
+
+/* AI Recommendation Section */
+.ai-recommendation-section {
+  background-color: var(--card-background-color);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ai-header h2 {
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.ai-description {
+  font-size: 0.8rem;
+  color: var(--sub-text-color);
+  margin-bottom: 20px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.toggle-label:before {
+  position: absolute;
+  content: '';
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-input:checked + .toggle-label {
+  background-color: var(--primary-color);
+}
+
+.toggle-input:checked + .toggle-label:before {
+  transform: translateX(20px);
+}
+
+/* AI Swiper */
+.ai-swiper {
+  position: relative; /* 이 속성을 추가하여 pagination의 기준점을 설정합니다. */
+  padding-bottom: 30px; /* Space for pagination */
+  width: 100%;
+  /* 추가된 속성: 슬라이더 자체에 라운드 처리와 오버플로우 숨김 적용 */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ai-swiper .swiper-wrapper {
+  align-items: stretch;
+}
+
+.ai-slide {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--card-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  height: 80px;
+  min-width: 100px; /* Swiper handles the rest, but gives a base */
+}
+
+.rate-box {
+  display: flex;
+  flex: 1;
+  border-radius: 8px;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-color);
+}
+
+.rate-box .rate {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.rate-box .label {
+  font-size: 0.875rem;
+  color: var(--sub-text-color);
+  margin-top: 4px;
+}
+
+.swiper-pagination.ai-swiper-pagination {
+  bottom: 0;
+}
+
+.swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background-color: #d1d5db;
+  opacity: 1;
+  border-radius: 50%; /* 동그란 모양 유지 */
+  transition: width 0.3s; /* 너비 변경 시 부드러운 전환 효과 추가 */
+}
+
+.swiper-pagination-bullet-active {
+  width: 18px; /* 너비를 더 넓게 설정 */
+  background-color: var(--swiper-bullet-active-bg);
+  border-radius: 4px; /* 끝을 둥글게 만들어 알약 모양처럼 보이게 함 */
+}
+
+/* Tabs Section */
+.tabs-section {
+  padding-bottom: 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--tab-inactive-bg);
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  padding: 10px 0;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--sub-text-color);
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tab-button.active {
+  background-color: var(--active-tab-bg);
+  color: var(--active-tab-color);
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* Grid Layout for Items */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.item-card {
+  background-color: var(--card-background-color);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item-card.is-active {
+  border: 2px solid var(--primary-color);
+  background-color: var(--active-rate-bg);
+}
+
+.item-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 12px;
+}
+
+.item-link .icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-right: 12px;
+}
+
+.item-link .label {
+  font-weight: bold;
+  flex-grow: 1;
+}
+
+.item-link .arrow {
+  color: var(--sub-text-color);
+}
+
+.rate-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--background-color);
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.rate-control button {
+  background-color: transparent;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rate-control button:hover {
+  background-color: rgba(108, 70, 239, 0.1);
+}
+
+.rate-control .rate-value {
+  font-weight: bold;
+  color: var(--text-color);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Specific styles for the "active" item as per image */
+.item-card .item-link,
+.item-card .rate-control {
+  color: var(--text-color);
+}
+
+.item-card.is-active .item-link .icon,
+.item-card.is-active .rate-control button {
+  color: var(--primary-color);
+}
