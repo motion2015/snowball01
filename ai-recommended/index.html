@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .headline--s {
+      text-align: center;
+    }
+
+    .headlilne-description {
+      text-align: center;
+    }
+
+    .highlighted-description {
+
+      word-break: keep-all;
+      background-color: #f6f6f6;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .shc-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .message-box {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      color: #2d3748;
+      display: none;
+      word-break: keep-all;
+    }
+
+    .theme-secondary {
+      width: 100%;
+      padding: 1rem;
+      background-color: #476eff;
+      color: white;
+      font-weight: 700;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .theme-secondary:hover {
+      background-color: #6281f2;
+    }
+
+    .theme-primary {
+      width: 100%;
+      padding: 1rem;
+      margin-top: 1rem;
+      background-color: transparent;
+      color: #4a5568;
+      font-weight: 500;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .theme-primary:hover {
+      background-color: #e2e8f0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ai-recommended">
+
+  </div>
+  <section class="shc-section visual-section">
+    <div class="card-list__apply-list">
+      <h1 class="headline--s mb--4xl">AI 적립률<br>추천 서비스 안내</h1>
+      <p class="headlilne-description">고객님의 신한카드 이용 데이터를 기반으로<br>최적화된 영역별 적립률을 추천받아보세요.</p>
+      <p class="highlighted-description">기존 Deep Making 이용 고객님도 로그인 후 AI 적립률을 추천받으실 수 있으며, 적립률은 별도 지정할 수 있습니다.</p>
+      <div class="shc-btn-group direction-col">
+        <button id="ai-button" class="shc-btn theme-secondary size-lg" type="button"><span class="shc-btn__text">AI
+            추천받기</span></button>
+        <button id="survey-button" class="shc-btn theme-primary size-lg" type="button"><span class="shc-btn__text">로그인
+            없이 설문
+            추천받기</span></button>
+      </div>
+      <div id="message" class="message-box"></div>
+    </div>
+  </section>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const aiButton = document.getElementById('ai-button');
+      const surveyButton = document.getElementById('survey-button');
+      const messageBox = document.getElementById('message');
+
+      function showMessage(text) {
+        messageBox.textContent = text;
+        messageBox.style.display = 'block';
+      }
+
+      aiButton.addEventListener('click', () => {
+        showMessage('AI 추천을 시작합니다.');
+      });
+
+      surveyButton.addEventListener('click', () => {
+        showMessage('로그인 없이 설문 추천을 시작합니다.');
+      });
+    });
+  </script>
+</body>
+
+</html>

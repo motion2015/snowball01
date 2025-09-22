@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <template>
+    id: MOBFM129C01
+    issueId: 110, 2177
+    title: 아파트 정보 입력
+    menu: 서비스 > 대표 생활요금 > 아파트정보입력
+    layout: VxSubLayout
+    publish: 박민숙
+    publishVersion: 1.00_20250917
+    rework: 대상
+    workid: TSM011, TSM012, TSM013, TSM014
+  </template>
+  <inject file="/components/head-meta.html" label="서비스" />
+  <inject file="/components/head-css.html" />
+  <!-- 메뉴별 CSS 연결 -->
+  <link rel="stylesheet" href="/assets/css/pages/service.scss">
+  <inject file="/components/head-js.html" />
+
+  <script>
+    window.pageBreadcrumb = [
+      { text: "서비스", url: "/life" },
+      { text: "대표 생활요금", url: "/life/claim" },
+      { text: "아파트 관리비", url: "/life/claim/accident" }
+    ];
+  </script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 공통 HEADER inject -->
+    <inject file="/components/header.html" label="서비스 Header Label" />
+
+    <!-- Main Content -->
+    <main id="shcMainContent">
+      <section class="shc-section apt-managementfee">
+        <h1 class="headline--s mb--4xl">아파트 정보를 입력해주세요</h1>
+        <div class="shc-form">
+          <div class="shc-form__title">
+            <label for="shcForm01">아파트 이름</label>
+            <button class="shc-ico-btn shc-tooltip-target"
+              data-tippy-content="정확한 아파트의 관리비를 납부할 수 있도록 아파트의 번지수와 단지명을 꼼꼼하게 확인하고 선택해주세요.">
+              <span class="shc-icon--info"></span>
+            </button>
+            <span class="shc-icon shc-icon--search"></span>
+          </div>
+          <!-- shc input component -->
+          <div class="shc-input type-box">
+            <input type="text" placeholder="건물, 지번 또는 도로명 검색" id="shcForm01" aria-label="" maxlength="NaN">
+            <button type="button" class="shc-icon shc-icon--clear" aria-label="내용 지우기"></button>
+            <button type="button" class="shc-icon shc-icon--search" aria-label="건물, 지번 또는 도로명 검색"
+              onclick="gfn_layered.open('tempSearchLayered', event)"></button>
+            <!-- <button type="button" class="shc-icon shc-icon--search" aria-label="건물, 지번 또는 도로명 검색"
+              onclick="gfn_layered.open('addressSearchLayered', event)"></button> -->
+          </div>
+
+          <!-- // shc input component -->
+          <!-- <div class="shc-form__bottom">
+                <div class="shc-form__validation">에러메세지(상황에 따라 노출)</div>
+                <div class="shc-form__msg">안내메세지(항상 노출)</div>
+          </div> -->
+        </div>
+        <!-- 검색된 주소 노출 : is-active -->
+        <div class="addr-info mt--md">
+          <div class="addr-info__tit">주소</div>
+          <div class="addr-info__cont">서울특별시 성동구 왕십리로 31나길 18</div>
+        </div>
+
+        <!-- 동, 호 선택 -->
+        <div class="shc-form-group gap--md mt--2xl  mb--4xl">
+          <div class="shc-form">
+            <div class="shc-form__title">
+              <label for="shcForm10">동</label>
+            </div>
+            <!-- shc input component -->
+            <div class="shc-dropdown type-box" data-call="bottomsheet" data-placeholder="아파트 동 선택">
+              <button type="button" class="shc-dropdown__btn" aria-haspopup="listbox" aria-expanded="false"
+                id="dropdownDefault">
+                <span class="shc-dropdown__btn-value shc-dropdown__btn-placeholder">동</span>
+              </button>
+              <ul class="shc-dropdown__option" role="listbox" aria-labelledby="dropdownDefault">
+                <li class="shc-dropdown__option-item" role="option" data-value="option1" tabindex="0">
+                  <span class="shc-dropdown__option-item-text">1동</span>
+                </li>
+                <li class="shc-dropdown__option-item" role="option" data-value="option2" tabindex="0">
+                  <span class="shc-dropdown__option-item-text">2동</span>
+                </li>
+                <li class="shc-dropdown__option-item" role="option" data-value="option2" tabindex="0">
+                  <span class="shc-dropdown__option-item-text">3동</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="shc-form">
+            <!-- shc input component -->
+            <div class="shc-form">
+              <div class="shc-form__title">
+                <label for="dropdownHo">호</label>
+              </div>
+              <div class="shc-dropdown type-box">
+                <button type="button" class="shc-dropdown__btn" onclick="gfn_layered.open('hoSelectLayered', event)"
+                  aria-haspopup="listbox" aria-expanded="false" id="dropdownHo">
+                  <span class="shc-dropdown__btn-value shc-dropdown__btn-placeholder">호</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- //동, 호 선택 -->
+
+      </section>
+
+
+      <!-- 도로명 검색 검색 -->
+      <div class="shc-layered" data-layered-name="tempSearchLayered">
+        <div class="shc-layered__header">
+          <h2 class="shc-layered__title">도로명 검색</h2>
+        </div>
+        <!-- shc-layered__content.is-full 을 넣으면 좌우 padding이 0 -->
+        <div class="shc-layered__content is-full">
+          <!-- 컨텐츠 영역 -->
+          <div class="shc-address-search">
+            <div class="shc-form">
+              <div class="shc-form__title">
+                <label for="shcForm01">도로명</label>
+                <button class="shc-ico-btn shc-tooltip-target"
+                  data-tippy-content="정확한 아파트의 관리비를 납부할 수 있도록 아파트의 번지수와 단지명을 꼼꼼하게 확인하고 선택해주세요.">
+                  <span class="shc-icon--info"></span>
+                </button>
+              </div>
+              <!-- shc input component -->
+              <div class="shc-input type-box">
+                <input type="text" placeholder="도로명으로 검색" id="shcForm01" aria-label="" />
+                <button type="button" class="shc-ico-btn shc-icon--clear" aria-label="내용 지우기"></button>
+                <button type="button" class="shc-ico-btn shc-icon--search" aria-label="건물, 지번 또는 도로명 검색"></button>
+              </div>
+              <!-- // shc input component -->
+              <!-- 입력한 주소 노출 : is-active -->
+              <div class="layer-search__info">
+                <p>청구서의 도로명 주소로<br>
+                  검색해주세요.</p>
+              </div>
+            </div>
+          </div>
+          <ul class="shc-list shc-address-results">
+            <li>
+              <button type="button" class="shc-address-card">
+                <strong class="shc-address-card__title">한신무학</strong>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-blue">도로명</span>
+                  서울특별시 성동구 왕십리로 31나길 18
+                </div>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-gray">지명</span>
+                  서울특별시 성동구 하왕십리로 990
+                </div>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="shc-address-card">
+                <strong class="shc-address-card__title">한신무학</strong>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-blue">도로명</span>
+                  서울특별시 성동구 왕십리로 31나길 18
+                </div>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-gray">지명</span>
+                  서울특별시 성동구 하왕십리로 990
+                </div>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="shc-address-card">
+                <strong class="shc-address-card__title">한신무학</strong>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-blue">도로명</span>
+                  서울특별시 성동구 왕십리로 31나길 18
+                </div>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-gray">지명</span>
+                  서울특별시 성동구 하왕십리로 990
+                </div>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="shc-address-card">
+                <strong class="shc-address-card__title">동인드림힐스</strong>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-blue">도로명</span>
+                  서울특별시 성동구 왕십리로 31나길 18
+                </div>
+                <div class="shc-address-card__row">
+                  <span class="shc-label--line theme-gray">지명</span>
+                  서울특별시 성동구 하왕십리로 990
+                </div>
+              </button>
+            </li>
+          </ul>
+          <!-- 더보기버튼  -->
+          <div class="shc-btn-group align-center mt--lg mb--5xl">
+            <button type="button" class="shc-capsule-btn theme-outline size-lg">
+              <span class="shc-icon shc-icon--plus"></span>
+              <span class="shc-capsule-btn__text">더보기</span>
+            </button>
+          </div>
+
+          <!-- Case: 검색되는 내용 Empty 경우 -->
+          <div class="shc-complete-msg">
+            <span class="shc-icon shc-icon--bang--gray size-68"></span>
+            <strong class="shc-complete-msg__title">검색된 주소가 없어요</strong>
+            <p class="add-info-disc">청구서의 도로명 주소로<br>
+              다시 시도해주세요.</p>
+          </div>
+        </div>
+
+        <button class="shc-layered__close shc-icon--close--black"><span class="sr-only">팝업 닫기</span></button>
+      </div>
+
+
+
+      <section class="shc-cta-area">
+        <div class="shc-btn-group">
+          <button class="shc-btn theme-primary size-xl" type="button" disabled>
+            <span class="shc-btn__text">다음</span>
+          </button>
+        </div>
+      </section>
+    </main>
+    <inject file="/html/common/popup/address-search.html" /><!-- 주소 검색 -->
+    <!-- 공통 FOOTER inject -->
+    <inject file="/components/footer.html" label="혜택 Footer Label" />
+
+  </div>
+  <div class="shc-bottomsheet" data-layered-name="hoSelectLayered" role="dialog" aria-labelledby="dropdownHo">
+    <div class="shc-bottomsheet__header">
+      <h2 class="shc-bottomsheet__title">아파트 호 선택</h2>
+    </div>
+    <!-- shc-bottomsheet__content.is-full 을 넣으면 좌우 padding이 0 -->
+    <div class="shc-bottomsheet__content is-full">
+      <div class="shc-dropdown__option in-bottomsheet">
+        <div class="mx--xl mb--xl">
+          <div class="shc-input type-box">
+            <input type="text" placeholder="호수 검색" aria-label="아파트 호 선택" id="hoSearch" />
+            <button type=" button" class="shc-icon shc-icon--clear" aria-label="내용 지우기"></button>
+            <button type="button" class="shc-icon shc-icon--search" aria-label="주소 검색"></button>
+          </div>
+        </div>
+        <button type="button" class="shc-dropdown__option-item is-active" aria-selected="true" data-index="0">
+          <span class="shc-dropdown__option-item-text">1호</span>
+        </button>
+        <button type="button" class="shc-dropdown__option-item " aria-selected="false" data-index="1">
+          <span class="shc-dropdown__option-item-text">2호</span>
+        </button>
+        <button type="button" class="shc-dropdown__option-item " aria-selected="false" data-index="1">
+          <span class="shc-dropdown__option-item-text">3호</span>
+        </button>
+      </div>
+    </div>
+    <button class="shc-layered__close shc-icon--close--black"><span class="sr-only">팝업 닫기</span></button>
+  </div>
+</body>
+
+</html>
