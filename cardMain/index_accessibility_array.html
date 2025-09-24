@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Making 17 - Point Settings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
+  <style>
+    /* CSS 변수 정의 */
+    :root {
+      --primary-color: #6c46ef;
+      --background-color: #f7f8fa;
+      --card-background-color: #fff;
+      --border-color: #eee;
+      --text-color: #333;
+      --sub-text-color: #999;
+      --active-tab-color: #fff;
+      --active-tab-bg: #6c46ef;
+      --tab-inactive-bg: #e9ecef;
+      --active-rate-bg: #e0d8f8;
+      --swiper-bullet-active-bg: var(--primary-color);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      background-color: var(--background-color);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .header p {
+      font-size: 0.875rem;
+      color: var(--sub-text-color);
+    }
+
+    /* AI Recommendation Section */
+    .ai-recommendation-section {
+      background-color: var(--card-background-color);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .ai-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .ai-header h2 {
+      font-size: 1.125rem;
+      font-weight: bold;
+    }
+
+    .ai-description {
+      font-size: 0.8rem;
+      color: var(--sub-text-color);
+      margin-bottom: 20px;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-label {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 24px;
+    }
+
+    .toggle-label:before {
+      position: absolute;
+      content: '';
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    .toggle-input:checked+.toggle-label {
+      background-color: var(--primary-color);
+    }
+
+    .toggle-input:checked+.toggle-label:before {
+      transform: translateX(20px);
+    }
+
+    /* AI Swiper */
+    .ai-swiper {
+      position: relative;
+      /* 이 속성을 추가하여 pagination의 기준점을 설정합니다. */
+      padding-bottom: 30px;
+      /* Space for pagination */
+      width: 100%;
+      /* 추가된 속성: 슬라이더 자체에 라운드 처리와 오버플로우 숨김 적용 */
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .ai-swiper .swiper-wrapper {
+      align-items: stretch;
+    }
+
+    .ai-slide {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--card-background-color);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      height: 80px;
+      min-width: 100px;
+      /* Swiper handles the rest, but gives a base */
+    }
+
+    .rate-box {
+      display: flex;
+      flex: 1;
+      border-radius: 8px;
+      flex-direction: column;
+      align-items: center;
+      background-color: var(--background-color);
+    }
+
+    .rate-box .rate {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .rate-box .label {
+      font-size: 0.875rem;
+      color: var(--sub-text-color);
+      margin-top: 4px;
+    }
+
+    .swiper-pagination.ai-swiper-pagination {
+      bottom: 0;
+    }
+
+    .swiper-pagination-bullet {
+      width: 8px;
+      height: 8px;
+      background-color: #d1d5db;
+      opacity: 1;
+      border-radius: 50%;
+      /* 동그란 모양 유지 */
+      transition: width 0.3s;
+      /* 너비 변경 시 부드러운 전환 효과 추가 */
+    }
+
+    .swiper-pagination-bullet-active {
+      width: 18px;
+      /* 너비를 더 넓게 설정 */
+      background-color: var(--swiper-bullet-active-bg);
+      border-radius: 4px;
+      /* 끝을 둥글게 만들어 알약 모양처럼 보이게 함 */
+    }
+
+    /* Tabs Section */
+    .tabs-section {
+      padding-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      background-color: var(--tab-inactive-bg);
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      flex: 1;
+      background-color: transparent;
+      border: none;
+      padding: 10px 0;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: var(--sub-text-color);
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .tab-button.active {
+      background-color: var(--active-tab-bg);
+      color: var(--active-tab-color);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* Grid Layout for Items */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .item-card {
+      background-color: var(--card-background-color);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .item-card.is-active {
+      //border: 2px solid var(--primary-color);
+      //background-color: var(--active-rate-bg);
+    }
+
+    .item-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      margin-bottom: 12px;
+    }
+
+    .item-link .icon {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-right: 12px;
+    }
+
+    .item-link .label {
+      font-weight: bold;
+      flex-grow: 1;
+    }
+
+    .item-link .arrow {
+      color: var(--sub-text-color);
+    }
+
+    .rate-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--background-color);
+      border-radius: 20px;
+      padding: 4px;
+    }
+
+    .rate-control button {
+      background-color: transparent;
+      border: none;
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      font-weight: bold;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .rate-control button:hover {
+      background-color: rgba(108, 70, 239, 0.1);
+    }
+
+    .rate-control .rate-value {
+      font-weight: bold;
+      color: var(--text-color);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    /* Specific styles for the "active" item as per image */
+    .item-card .item-link,
+    .item-card .rate-control {
+      color: var(--text-color);
+    }
+
+    .item-card.is-active .item-link .icon,
+    .item-card.is-active .rate-control button {
+      color: var(--primary-color);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header class="header">
+      <h1>Making 17</h1>
+      <p>포인트 적립률은 영역별 1~5%이며 적립률의 환산이 17%가 되도록 설정해주세요.</p>
+    </header>
+
+    <section class="ai-recommendation-section">
+      <div class="ai-header">
+        <h2>AI 추천항목</h2>
+        <div class="toggle-switch">
+          <input type="checkbox" id="ai-toggle" class="toggle-input" role="switch" aria-checked="true" checked>
+          <label for="ai-toggle" class="toggle-label"></label>
+        </div>
+      </div>
+      <p class="ai-description">
+        AI가 추천하는 영역과 적립률입니다. 반드시 최대의 적립을 보장하지는 않으며, 직접 수정할 수 있습니다.
+      </p>
+
+      <div class="swiper ai-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">4%</span>
+              <span class="label">소셜 커머스</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">1%</span>
+              <span class="label">패션&뷰티</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">2%</span>
+              <span class="label">병원</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">3%</span>
+              <span class="label">기타</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">4%</span>
+              <span class="label">소셜 커머스</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">1%</span>
+              <span class="label">패션&뷰티</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">2%</span>
+              <span class="label">병원</span>
+            </div>
+          </div>
+          <div class="swiper-slide ai-slide">
+            <div class="rate-box">
+              <span class="rate">3%</span>
+              <span class="label">기타</span>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination ai-swiper-pagination"></div>
+      </div>
+    </section>
+
+    <section class="tabs-section">
+      <div class="tabs" role="tablist">
+        <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab-shopping-panel"
+          id="tab-shopping">쇼핑</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-lifestyle-panel"
+          id="tab-lifestyle" tabindex="-1">생활</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-food-panel" id="tab-food"
+          tabindex="-1">푸드</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-travel-panel" id="tab-travel"
+          tabindex="-1">여행</button>
+      </div>
+
+      <div class="tab-content-container">
+        <!-- 동적으로 생성된 카드가 여기에 표시됩니다 -->
+        <div id="tab-shopping-panel" role="tabpanel" aria-labelledby="tab-shopping" class="tab-panel active">
+          <div class="grid-container">
+            <!-- JavaScript가 여기에 카드를 동적으로 추가합니다. -->
+          </div>
+        </div>
+        <div id="tab-lifestyle-panel" role="tabpanel" aria-labelledby="tab-lifestyle" class="tab-panel" hidden>
+          <div class="grid-container"></div>
+        </div>
+        <div id="tab-food-panel" role="tabpanel" aria-labelledby="tab-food" class="tab-panel" hidden>
+          <div class="grid-container"></div>
+        </div>
+        <div id="tab-travel-panel" role="tabpanel" aria-labelledby="tab-travel" class="tab-panel" hidden>
+          <div class="grid-container"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Swiper for the AI recommendation section
+      const aiSwiper = new Swiper('.ai-swiper', {
+        slidesPerView: 3,
+        slidesPerGroup: 3,
+        spaceBetween: 10,
+        loop: false,
+        pagination: {
+          el: '.ai-swiper-pagination',
+          clickable: true,
+        },
+        observer: true,
+        observeParents: true,
+        breakpoints: {
+          320: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+            spaceBetween: 10
+          },
+          768: {
+            slidesPerView: 2,
+            slidesPerGroup: 2,
+            spaceBetween: 10
+          },
+          1024: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            spaceBetween: 10
+          }
+        }
+      });
+
+      // --- 탭 기능 ---
+      const tabs = document.querySelectorAll('.tab-button');
+      const panels = document.querySelectorAll('.tab-panel');
+
+      // 동적으로 생성할 카드 데이터 배열
+      const cardData = [
+        // 쇼핑 카테고리
+        { category: 'shopping', label: '백화점', iconClass: 'fas fa-store' },
+        { category: 'shopping', label: '마트', iconClass: 'fas fa-shopping-basket' },
+        { category: 'shopping', label: '홈 쇼핑', iconClass: 'fas fa-laptop' },
+        { category: 'shopping', label: '온라인 쇼핑', iconClass: 'fas fa-shopping-bag' },
+        { category: 'shopping', label: '소셜 커머스', iconClass: 'fas fa-users' },
+        { category: 'shopping', label: '패션&뷰티', iconClass: 'fas fa-magic' },
+        // 생활 카테고리
+        { category: 'lifestyle', label: '주유', iconClass: 'fas fa-gas-pump' },
+        { category: 'lifestyle', label: '통신', iconClass: 'fas fa-phone' },
+        { category: 'lifestyle', label: '병원', iconClass: 'fas fa-hospital' },
+        { category: 'lifestyle', label: '약국', iconClass: 'fas fa-prescription-bottle-alt' },
+        // 푸드 카테고리
+        { category: 'food', label: '카페', iconClass: 'fas fa-coffee' },
+        { category: 'food', label: '레스토랑', iconClass: 'fas fa-utensils' },
+        { category: 'food', label: '베이커리', iconClass: 'fas fa-cookie-bite' },
+        { category: 'food', label: '음료', iconClass: 'fas fa-cocktail' },
+        // 여행 카테고리
+        { category: 'travel', label: '항공', iconClass: 'fas fa-plane' },
+        { category: 'travel', label: '호텔', iconClass: 'fas fa-hotel' },
+        { category: 'travel', label: '렌터카', iconClass: 'fas fa-car' },
+        { category: 'travel', label: '기타', iconClass: 'fas fa-suitcase-rolling' },
+      ];
+
+      // 카드별 현재 적립률을 저장할 객체. 초기값 설정.
+      let cardRates = {
+        '소셜 커머스': 4,
+        '패션&뷰티': 4
+      };
+
+      // 카드를 동적으로 렌더링하는 함수
+      const renderCards = (category) => {
+        const gridContainer = document.querySelector(`#tab-${category}-panel .grid-container`);
+        if (!gridContainer) return;
+
+        gridContainer.innerHTML = ''; // 기존 카드 제거
+        const filteredCards = cardData.filter(card => card.category === category);
+
+        filteredCards.forEach(item => {
+          const cardElement = document.createElement('div');
+          cardElement.className = 'item-card';
+
+          const currentRate = cardRates[item.label] || 0;
+          if (currentRate > 0) {
+            cardElement.classList.add('is-active');
+          }
+
+          cardElement.innerHTML = `
+            <a href="#" class="item-link" aria-label="${item.label} 상세 정보 보기">
+              <i class="${item.iconClass} icon"></i>
+              <span class="label">${item.label}</span>
+              <i class="fas fa-chevron-right arrow"></i>
+            </a>
+            <div class="rate-control">
+              <button class="minus" aria-label="${item.label} 적립률 감소">-</button>
+              <span class="rate-value" role="status" aria-live="polite">${currentRate}%</span>
+              <button class="plus" aria-label="${item.label} 적립률 증가">+</button>
+            </div>
+          `;
+
+          // 이벤트 리스너를 동적으로 추가
+          const minusBtn = cardElement.querySelector('.minus');
+          const plusBtn = cardElement.querySelector('.plus');
+          const rateValueSpan = cardElement.querySelector('.rate-value');
+
+          minusBtn.addEventListener('click', () => {
+            let currentValue = parseInt(rateValueSpan.textContent);
+            if (currentValue > 0) {
+              currentValue--;
+              cardRates[item.label] = currentValue; // 상태 업데이트
+              rateValueSpan.textContent = `${currentValue}%`;
+              if (currentValue === 0) {
+                cardElement.classList.remove('is-active');
+              }
+            }
+          });
+
+          plusBtn.addEventListener('click', () => {
+            let currentValue = parseInt(rateValueSpan.textContent);
+            if (currentValue < 5) {
+              currentValue++;
+              cardRates[item.label] = currentValue; // 상태 업데이트
+              rateValueSpan.textContent = `${currentValue}%`;
+              if (currentValue > 0) {
+                cardElement.classList.add('is-active');
+              }
+            }
+          });
+          gridContainer.appendChild(cardElement);
+        });
+      };
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          const targetTab = e.target;
+          const targetPanelId = targetTab.getAttribute('aria-controls');
+          const targetPanel = document.getElementById(targetPanelId);
+          const category = targetTab.id.replace('tab-', '');
+
+          // 모든 탭 및 패널 비활성화
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+            t.setAttribute('tabindex', '-1');
+          });
+          panels.forEach(p => {
+            p.classList.remove('active');
+            p.setAttribute('hidden', '');
+          });
+
+          // 클릭된 탭 및 해당 패널 활성화
+          targetTab.classList.add('active');
+          targetTab.setAttribute('aria-selected', 'true');
+          targetTab.setAttribute('tabindex', '0');
+          targetPanel.classList.add('active');
+          targetPanel.removeAttribute('hidden');
+          // 카드를 동적으로 렌더링
+          renderCards(category);
+        });
+      });
+
+      // 초기 렌더링: '쇼핑' 탭의 카드들을 표시
+      renderCards('shopping');
+    });
+  </script>
+</body>
+
+</html>
