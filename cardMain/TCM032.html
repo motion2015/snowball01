@@ -1,0 +1,173 @@
+<!-- 카드 찾기 최종 s -->
+ <div class="shc-layered" data-layered-name="TCM032">
+  <div class="shc-layered__header">
+    <h2 class="shc-layered__title">한눈에 보기</h2>
+  </div>
+  <div class="shc-layered__content">
+    <h3>지금까지 선택한 <br>혜택의 적립률은 17%입니다.</h3>
+    <div class="popup-content" tabindex="0">
+      <ul class="shc-list type-data gap-lg">
+  <li>
+    <strong class="shc-list__title">
+      <span class="shc-icon shc-icon--ai-store size-20"></span>
+      마트
+      <button class="shc-ico-btn" aria-label="도움말"  onclick="gfn_layered.open('Layered-airecommmend01', event)"><span class="shc-icon shc-icon--info size-20"></span></button>
+    </strong>
+    <span class="shc-list__details">3%</span>
+  </li>
+  <li>
+    <strong class="shc-list__title">
+      <span class="shc-icon shc-icon--ai-user size-20"></span>
+      쇼셜몰
+      <button class="shc-ico-btn" aria-label="도움말"><span class="shc-icon shc-icon--info size-20"></span></button>
+    </strong>
+    <span class="shc-list__details">1%</span>
+  </li>
+  <li>
+    <strong class="shc-list__title">
+      <span class="shc-icon shc-icon--ai-mobile size-20"></span>
+      이동통신
+      <button class="shc-ico-btn" aria-label="도움말"><span class="shc-icon shc-icon--info size-20"></span></button>
+    </strong>
+    <span class="shc-list__details">3%</span>
+  </li>
+  <li>
+    <strong class="shc-list__title">
+      <span class="shc-icon shc-icon--ai-convenience-store size-20"></span>
+      편의점
+      <button class="shc-ico-btn" aria-label="도움말"><span class="shc-icon shc-icon--info size-20"></span></button>
+    </strong>
+    <span class="shc-list__details">4%</span>
+  </li>
+  <li>
+    <strong class="shc-list__title">
+      <span class="shc-icon shc-icon--ai-delivery-app size-20"></span>
+      배달앱
+      <button class="shc-ico-btn" aria-label="도움말"><span class="shc-icon shc-icon--info size-20"></span></button>
+    </strong>
+    <span class="shc-list__details">3%</span>
+  </li>
+  <li>
+    <strong class="shc-list__title">
+      <span class="shc-icon shc-icon--ai-duty-free size-20"></span>
+      항공&면세점
+      <button class="shc-ico-btn" aria-label="도움말"><span class="shc-icon shc-icon--info size-20"></span></button>
+    </strong>
+    <span class="shc-list__details">2%</span>
+  </li>
+</ul>
+    </div>
+  </div>
+  <button type="button" class="shc-layered__close shc-icon--close--black"><span class="sr-only">팝업 닫기</span></button>
+</div> 
+<!-- 카드 찾기 최종 e -->
+ <div class="shc-layered" data-layered-name="Layered-airecommmend01">
+    <div class="shc-layered__header">
+      <h2 class="shc-layered__title">백화점</h2>
+    </div>
+    <!-- shc-layered__content.is-full 을 넣으면 좌우 padding이 0 -->
+    <div class="shc-layered__content">
+      <!-- 컨텐츠 영역 -->
+      <p>서비스 대상</p>
+      <ul role="list">
+        <li>신세계백화점, 롯데백화점, 현대백화점</li>
+      </ul>
+      <p>유의사항</p>
+      <ul>
+        <li>비쇼핑항목 제외(상품권,문화센터, 주차장, 미용실, 여행사, 보험, 주유(충전)소, 정비소)</li>
+        <li>SSM(기업형 슈퍼마켓) 및 온라인 결제 제외</li>
+      </ul>      
+    </div>
+    <section class="shc-cta-area">
+        <div class="shc-btn-group">
+          <button type="button" class="shc-btn theme-primary size-xl"  onclick="gfn_layered.close('Layered-airecommmend01', event)">
+            <span class="shc-btn__text">확인</span>
+          </button>
+        </div>
+      </section>
+    <button class="shc-layered__close shc-icon--close--black"><span class="sr-only">팝업 닫기</span></button>
+  </div>
+ <script>
+    function alert01(){
+      gfn_modal.alert({
+        content: '장기카드대출(카드론) 한도 부여 및 이용에 동의할까요?',
+        alignCenter: false,
+        buttons: [
+          { 
+            text: '다음에', 
+            theme: 'secondary', 
+            callback: function() {
+              console.log('텍스트입력');
+            }
+          },
+          { 
+            text: '동의 신청', 
+            theme: 'primary', 
+            callback: function() {
+              console.log('다른텍스트');
+            }
+          }
+        ]
+      });
+    }
+
+
+
+  </script> 
+
+
+
+
+
+<!-- 도시가스 공급지역 확인 s -->
+<!-- <div class="shc-layered" data-layered-name="TCM032">
+  <div class="shc-bottomsheet__header">
+    <h2 class="shc-bottomsheet__title">한도 상향하기</h2>
+  </div>-->
+  <!-- shc-bottomsheet__content.is-full 을 넣으면 좌우 padding이 0 -->
+   <!--
+  <div class="shc-bottomsheet__content pt--none">
+    <p class="fn-limit-card__info-text">최대 한도 안에서 원하는 만큼 한도를 올려보세요.</p>
+    <h3 class="title--m mb--xl">총 이용한도</h3>
+    <div class="shc-info-box mb--3xl">
+      <dl class="fn-limit-card">
+        <div class="fn-limit-card__group">
+          <dt class="sr-only">이전 한도</dt>
+          <dd class="fn-limit-card__amount">600만원</dd>
+        </div>
+        <div class="fn-limit-card__icon" aria-hidden="true">
+          <span class="shc-icon shc-icon--chevron--gray size-20"></span>
+        </div>
+        <div class="fn-limit-card__group">
+          <dt class="sr-only">변경된 한도</dt>
+          <dd class="fn-limit-card__amount new">650만원</dd>
+        </div>
+      </dl>
+    </div>
+    <h3 class="title--m mb--xl">단기카드대출(현금서비스) 한도 변경</h3>
+    <div class="shc-info-box">
+      <dl class="fn-limit-card">
+        <div class="fn-limit-card__group">
+          <dt class="sr-only">이전 한도</dt>
+          <dd class="fn-limit-card__amount">600만원</dd>
+        </div>
+        <div class="fn-limit-card__icon" aria-hidden="true">
+          <span class="shc-icon shc-icon--chevron--gray size-20"></span>
+        </div>
+        <div class="fn-limit-card__group">
+          <dt class="sr-only">변경된 한도</dt>
+          <dd class="fn-limit-card__amount loan-new">650만원</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+  <div class="shc-bottomsheet__footer">
+    <div class="shc-btn-group">
+      <button type="button" class="shc-btn theme-primary size-xl">
+        <span class="shc-btn__text">상향하기</span>
+      </button>
+    </div>
+  </div>
+  <button type="button" class="shc-layered__close shc-icon--close--black"><span class="sr-only">팝업 닫기</span></button>
+</div> -->
+

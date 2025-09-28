@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swiper 동적 콘텐츠 주입 예제</title>
+  <!-- Tailwind CSS CDN 로드 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper CSS 로드 -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <style>
+    /* Inter 폰트 사용 */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f7fa;
+    }
+
+    /* 사용자 정의 차트 스타일 (사용자 마크업 기반) */
+    .shc-slide {
+      max-width: 90%;
+      margin: 2rem auto;
+      overflow: hidden;
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+      padding: 1.5rem 0.5rem;
+      box-sizing: border-box;
+      background-color: #f9f9f9;
+      border-radius: 0.75rem;
+      margin: 0 0.5rem;
+      /* 슬라이드 간격 확보 */
+    }
+
+    .shc-chart--circle {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 0.75rem;
+      position: relative;
+    }
+
+    .shc-chart--circle svg {
+      transform: rotate(-90deg);
+    }
+
+    .shc-chart--circle__bg {
+      fill: none;
+      stroke: #e0e0e0;
+      stroke-width: 4;
+    }
+
+    .shc-chart--circle__progress {
+      fill: none;
+      stroke: #4f46e5;
+      /* Tailwind indigo-600 */
+      stroke-width: 4;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .shc-chart--circle__text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1f2937;
+    }
+
+    /* Pagination style */
+    .shc-slide__control {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .swiper-pagination-bullet {
+      background: #cbd5e1 !important;
+      opacity: 1 !important;
+    }
+
+    .swiper-pagination-bullet-active {
+      background: #4f46e5 !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slide_area">
+    <!-- 
+            [KEEP] Swiper 초기화 및 컨테이너 클래스는 유지되어야 합니다.
+            이 Div는 슬라이더의 전체 영역을 정의합니다.
+        -->
+    <div class="swiper shc-slide ai-recommend-slide" data-slider="main_1">
+
+      <!-- 
+                [KEEP] swiper-wrapper는 모든 슬라이드가 들어갈 컨테이너입니다.
+                *내부의 모든 swiper-slide* 요소를 JavaScript로 생성해야 하므로, 
+                여기에 정적으로 작성된 모든 슬라이드 마크업을 삭제해야 합니다.
+            -->
+      <div class="swiper-wrapper" id="dynamic-swiper-wrapper">
+        <!-- 
+                    [REMOVE & REPLACE]
+                    여기에 있던 기존의 <div class="swiper-slide">...</div> 블록들은 모두 제거하고, 
+                    아래 JavaScript 코드처럼 동적으로 삽입합니다.
+                -->
+      </div>
+
+      <!-- 
+                [KEEP] 페이지네이션 및 컨트롤 영역은 유지되어야 합니다.
+                Swiper가 이 요소들을 찾아 네비게이션을 주입합니다.
+            -->
+      <div class="shc-slide__utils">
+        <div class="shc-slide__control">
+          <!-- Swiper Pagination이 주입될 Span입니다. -->
+          <span class="swiper-pagination"></span>
+        </div>
+      </div>
+
+    </div> <!-- End of swiper shc-slide -->
+  </div> <!-- End of slide_area -->
+
+  <!-- Swiper JS 로드 (반드시 body 끝에서 로드) -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <script>
+    // Swiper에서 사용할 동적 데이터 (사용자 데이터베이스 등에서 가져온다고 가정)
+    const slideData = [
+      { name: "소셜 커머스", percent: 75, chartValue: 5 },
+      { name: "패션 & 뷰티", percent: 20, chartValue: 4 },
+      { name: "병원", percent: 45, chartValue: 3 },
+      { name: "식품/외식", percent: 90, chartValue: 5 },
+      { name: "여행/레저", percent: 30, chartValue: 2 },
+      { name: "교육", percent: 60, chartValue: 4 },
+      { name: "금융", percent: 10, chartValue: 1 },
+      { name: "IT/소프트웨어", percent: 55, chartValue: 3 },
+    ];
+
+    // 원형 차트의 SVG 속성을 계산하는 함수
+    function getChartProgressStyle(percent) {
+      const radius = 18;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference - (percent / 100) * circumference;
+      return `stroke-dasharray: ${circumference} ${circumference}; stroke-dashoffset: ${offset};`;
+    }
+
+    // 1. 동적 슬라이드 콘텐츠 생성 함수
+    function createSlides() {
+      const wrapper = document.getElementById('dynamic-swiper-wrapper');
+      let slidesHtml = '';
+
+      slideData.forEach(data => {
+        const chartProgressStyle = getChartProgressStyle(data.percent);
+
+        // data-chart-value와 data-chart-percent는 예시 데이터입니다.
+        slidesHtml += `
+                    <div class="swiper-slide" data-chart-value="${data.chartValue}">
+                        <div class="swiper-inner">
+                            <!-- SVG 원형 차트는 내용에 따라 동적으로 생성되어야 합니다. -->
+                            <div class="shc-chart--circle" data-chart-value="${data.chartValue}">
+                                <svg viewBox="0 0 40 40">
+                                    <circle class="shc-chart--circle__bg" cx="20" cy="20" r="18"></circle>
+                                    <!-- progress circle의 스타일은 데이터에 따라 계산됩니다 -->
+                                    <circle class="shc-chart--circle__progress" cx="20" cy="20" r="18" style="${chartProgressStyle}"></circle>
+                                </svg>
+                                <!-- 기존 마크업에 있던 라인 요소들은 복잡도 때문에 제거하거나 단순화할 수 있습니다. -->
+                                <div class="shc-chart--circle__text">${data.percent}%</div>
+                            </div>
+                            <!-- 슬라이드 내부의 텍스트 콘텐츠 -->
+                            <strong class="name font-semibold text-lg text-gray-800">${data.name}</strong>
+                        </div>
+                    </div>
+                `;
+      });
+
+      // 2. Swiper Wrapper에 동적 HTML 삽입
+      wrapper.innerHTML = slidesHtml;
+
+      // 3. 동적 콘텐츠 삽입 후 Swiper 초기화
+      initSwiper();
+    }
+
+    // Swiper 초기화 함수
+    function initSwiper() {
+      // Swiper가 초기화되기 전에 wrapper에 슬라이드가 채워져 있어야 합니다.
+      new Swiper('.shc-slide', {
+        // 슬라이드가 몇 개 보일지 설정합니다.
+        slidesPerView: 'auto',
+        spaceBetween: 16, // Tailwind 'space-x-4'와 유사
+        loop: false,
+
+        // 페이지네이션 설정
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+
+        // 반응형 브레이크 포인트 (예시)
+        breakpoints: {
+          640: {
+            slidesPerView: 3,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 4,
+            spaceBetween: 30,
+          },
+        }
+      });
+    }
+
+    // 페이지 로드 시 슬라이드 생성 및 Swiper 초기화
+    document.addEventListener('DOMContentLoaded', createSlides);
+  </script>
+</body>
+
+</html>

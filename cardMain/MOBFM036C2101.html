@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <template>
+    id: MOBFM036C2101
+    workid: TCM032
+    title: 1/5 Making 17
+    menu: 카드 > 카드 찾기 > 신용카드 > Deep Marking
+    publish: 박민숙
+    publishVersion: 0.8_20250924
+    rework:
+    status: 진행중
+  </template>
+  <inject file="/components/head-meta.html" label="서비스" />
+  <inject file="/components/head-css.html" />
+  <!-- 메뉴별 CSS 연결 -->
+  <link rel="stylesheet" href="/assets/css/pages/card.scss">
+  <inject file="/components/head-js.html" />
+
+  <script>
+    window.pageBreadcrumb = [
+      { text: "카드", url: "/card" },
+      { text: "카드찾기", url:  "/card/#" },
+      { text: "신용카드", url: "/card/#/#" },
+      { text: "Deep Marking 신청 브릿지", url: "/card/#/#/#" },
+      { text: "신청 카드 설정", url: "/card/#/#/#/#" }
+    ];
+  </script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 공통 HEADER inject -->
+    <inject file="/components/header.html" label="카드 / 카드 찾기" />
+
+    <!-- Main Content -->
+    <main id="shcMainContent">
+      <section class="shc-section accrual-rate17">
+        <h1 class="headline--m accrual-rate17__title">Making 17  7878</h1>
+        <p class="accrual-rate17__desc">포인트 적립률은 영역별 1~5%이며<br> 적립률의 환산이 17%가 되도록 설정해주세요.</p>
+
+
+        <div class="accrual-rate17-header">
+          <div class="ai-recommendation__status">
+            <h2 class="title--m">AI 추천항목</h2>
+            <div class="shc-switch-toggle">
+              <input type="checkbox" class="shc-switch-toggle__input" role="switch" aria-labelledby="switch-label05"
+                id="ai-toggle" checked />
+              <label for="ai-toggle" id="switch-label05" class="shc-switch-toggle__track" data-on-txt="켜짐"
+                data-off-txt="꺼짐">
+                <span class="shc-switch-toggle__label sr-only">켜짐</span>
+              </label>
+            </div>
+          </div>
+          <div class="ai-recommendation__status--contents is-active">
+            <p class="ai-description">
+              AI가 추천하는 영역과 적립률입니다. 반드시 최대의 적립을 보장하지는 않으며, 직접 수정할 수 있습니다.
+            </p>
+            <div class="slide_area">
+              <div class="swiper shc-slide ai-recommend-slide" data-slider="main_1">
+                <div class="swiper-wrapper">
+                  <!-- <div class="swiper-slide" data-chart-value="5">
+                    <div class="swiper-inner">
+                      <div class="shc-chart--circle" data-chart-value="3">
+                        <svg viewBox="0 0 40 40">
+                          <circle class="shc-chart--circle__bg" cx="20" cy="20" r="18"></circle>
+                          <circle class="shc-chart--circle__progress" cx="20" cy="20" r="18"></circle>
+                        </svg>
+                        <div class="shc-chart--circle__lines">
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                        </div>
+                        <div class="shc-chart--circle__text">4%</div>
+                      </div>
+                      <strong class="name">소셜 커머스</strong>
+
+                    </div>
+
+                  </div> -->
+
+
+                  <!-- <div class="swiper-slide" data-chart-value="2">
+                    <div class="swiper-inner">
+                      <strong class="name">소셜 커머스</strong>
+                    </div>
+                  </div> -->
+
+                </div>
+
+                <div class="shc-slide__utils">
+                  <div class="shc-slide__control">
+                    <span class="swiper-pagination"></span>
+                  </div>
+                </div>
+              </div>
+              <!--End of ai-recommend-slide -->
+            </div> <!-- End of slide_area -->
+          </div>
+          <!--End of ai-recommendation__status--active  -->
+
+        </div>
+
+<div class="shc-chart--circle" data-chart-value="3">
+              <svg viewBox="0 0 40 40">
+                <circle class="shc-chart--circle__bg" cx="20" cy="20" r="18"></circle>
+                <circle class="shc-chart--circle__progress" cx="20" cy="20" r="18"></circle>
+              </svg>
+              <div class="shc-chart--circle__lines">
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+              </div>
+              <div class="shc-chart--circle__text">4%</div>
+            </div>
+            <br>
+            <div class="shc-btn-group">
+              <button type="button" class="shc-btn theme-quaternary size-xs" onclick="setChart(1);">
+                <span class="shc-btn__text">1</span>
+              </button>
+              <button type="button" class="shc-btn theme-quaternary size-xs" onclick="setChart(2);">
+                <span class="shc-btn__text">2</span>
+              </button>
+              <button type="button" class="shc-btn theme-quaternary size-xs" onclick="setChart(3);">
+                <span class="shc-btn__text">3</span>
+              </button>
+              <button type="button" class="shc-btn theme-quaternary size-xs" onclick="setChart(4);">
+                <span class="shc-btn__text">4</span>
+              </button>
+              <button type="button" class="shc-btn theme-quaternary size-xs" onclick="setChart(5);">
+                <span class="shc-btn__text">5</span>
+              </button>
+              <button type="button" class="shc-btn theme-quaternary size-xs" onclick="setChart(0);">
+                <span class="shc-btn__text">Reset</span>
+              </button>
+            </div>
+
+      </section>
+      <section class="shc-section accrual-rate17">
+        <div class="shc-tab type-segment">
+          <div class="shc-tab__menu" role="tablist">
+            <a href="javascript:void(0);" class="shc-tab__btn is-active" role="tab" data-tab="shopping"
+              aria-selected="true" aria-controls="tab-shopping-panel" id="tab-shopping">
+              <span class="shc-tab__btn-text">쇼핑</span>
+            </a>
+            <a href="javascript:void(0);" class="shc-tab__btn" role="tab" data-tab="lifestyle" aria-selected="false"
+              aria-controls="tab-lifestyle-panel" id="tab-lifestyle">
+              <span class="shc-tab__btn-text">생활</span>
+            </a>
+            <a href="javascript:void(0);" class="shc-tab__btn" role="tab" data-tab="food" aria-selected="false"
+              aria-controls="tab-food-panel" id="tab-food">
+              <span class="shc-tab__btn-text">푸드</span>
+            </a>
+            <a href="javascript:void(0);" class="shc-tab__btn" role="tab" data-tab="travel" aria-selected="false"
+              aria-controls="tab-travel-panel" id="tab-travel">
+              <span class="shc-tab__btn-text">여행</span>
+            </a>
+          </div>
+          <div class="shc-tab__container">
+            <div id="tab-shopping-panel" class="shc-tab__panel is-active" role="tabpanel" data-panel="shopping"
+              id="tab-panel3-1">
+              <div class="flex-container">
+                <!-- JavaScript가 여기에 카드를 동적으로 추가합니다. -->
+                 <!-- 동적 컨텐츠 구조 S-->
+                  <!--
+                 <div class="item-card">
+                  <a href="#" class="item-link" aria-label="백화점 상세 정보 보기">
+                    <span class="shc-icon shc-icon--ai-store size-40"></span>
+                    <span class="label"></span>
+                    <button type="button" class="shc-txt-btn theme-secondary size-md">
+                      <span class="shc-txt-btn__text">백화점</span>
+                      <span class="shc-icon shc-icon--chevron"></span>
+                    </button>              
+                  </a>
+                  <div class="rate-control">
+                    <button type="button" class="shc-capsule-btn theme-outline size-sm minus" aria-label="백화점 적립률 감소">
+                      <span class="shc-capsule-btn__text">-</span>
+                    </button>
+                    <span class="rate-value" role="status" aria-live="polite">0%</span>
+                    <button type="button" class="shc-capsule-btn theme-outline size-sm plus" aria-label="백화점 적립률 증가">
+                      <span class="shc-capsule-btn__text">+</span>
+                    </button>
+                  </div>
+                </div>
+                -->
+                <!-- 동적 컨텐츠 구조 E-->
+              </div>
+            </div>
+            <div id="tab-lifestyle-panel" class="shc-tab__panel" role="tabpanel" data-panel="lifestyle"
+              id="tab-panel3-2">
+              <div class="flex-container"></div>
+            </div>
+            <div id="tab-food-panel" class="shc-tab__panel" role="tabpanel" data-panel="food" id="tab-panel3-3">
+              <div class="flex-container"></div>
+            </div>
+            <div id="tab-travel-panel" class="shc-tab__panel" role="tabpanel" data-panel="travel" id="tab-panel3-4">
+              <div class="flex-container"></div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute_area">
+          <button type="button" class="shc-fab-btn theme-primary size-lg" onclick="gfn_layered.open('TCM032', event)">            
+            <span id="total-rate" class="total-rate">17%</span>
+          </button>
+        </div>
+      </section>
+      <section class="shc-section accrual-rate17">
+
+      </section>
+
+      <section class="shc-cta-area">
+        <div class="shc-btn-group" id="disabbtn">
+          <button type="button" class="shc-btn theme-secondary size-xl" id="all-1-button">
+            <span class="shc-btn__text">모든 영역 1% 설정</span>
+          </button>
+          <button type="button" class="shc-btn theme-primary size-xl">
+            <span class="shc-btn__text">다음</span>
+          </button>
+        </div>
+      </section>
+    </main>
+    <inject file="./layered/TCM032.html" label="항목별 비율 한눈에 보기" />
+    <!-- 공통 FOOTER inject -->
+    <inject file="/components/footer.html" label="카드 / 카드 찾기" />
+
+  </div>
+  <script>
+// Swiper 초기화 (Initialization)
+const aiSwiper = new Swiper('.ai-recommend-slide', {
+    slidesPerView: 3,
+    slidesPerGroup: 3,
+    spaceBetween: 20,
+    //loop: true,
+    pagination: {
+        el: '.shc-slide__control .swiper-pagination', // Ensure this selector is correct
+        clickable: true,
+    },
+    // Dynamically loading slides means observer: true and observeParents: true are useful
+    observer: true,
+    observeParents: true,
+    breakpoints: {
+        320: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            spaceBetween: 10
+        },
+        768: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            spaceBetween: 10
+        },
+        1024: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+            spaceBetween: 10
+        }
+    },
+    // Swiper 슬라이드 변경 시 애니메이션 재시작
+    on: {
+        slideChangeTransitionEnd: (swiper) => {
+            // Functionality to restart a CSS animation on the active slide here, if needed
+        //setChart(0);
+      // renderAISlides(aiRecommendedRates);
+        
+        },
+
+       // init: restartActiveSlideAnimation,
+       //slideChangeTransitionEnd: restartActiveSlideAnimation,
+        
+    }
+});
+
+// AI 추천 카드 데이터
+const aiRecommendedRates = [
+    { label: '소셜 커머스', rate: 4, iconClass: 'shc-icon--ai-user' },
+    { label: '패션&뷰티', rate: 1, iconClass: 'shc-icon--ai-magic' },
+    { label: '병원', rate: 2, iconClass: 'shc-icon--ai-hospital' },
+    { label: '마트', rate: 3, iconClass: 'shc-icon--ai-basket' },
+    { label: '온라인 쇼핑', rate: 1, iconClass: 'shc-icon--ai-online-shop' },
+    { label: '주유', rate: 2, iconClass: 'shc-icon--ai-gas-pump' },
+    { label: '커피 전문점', rate: 3, iconClass: 'shc-icon--ai-food-return' },
+    { label: '배달 앱', rate: 4, iconClass: 'shc-icon--ai-delivery-app' },
+    { label: '해외', rate: 2, iconClass: 'shc-icon--ai-overseas' },
+];
+
+// AI 추천 항목을 Swiper 슬라이드로 동적 렌더링하는 함수
+const renderAISlides = (data) => {
+    const swiperWrapper = document.querySelector('.ai-recommend-slide .swiper-wrapper');
+    if (!swiperWrapper) return;
+
+    // Remove existing slides
+    swiperWrapper.innerHTML = '';
+    
+    // Create new slides
+    const newSlides = data.map(item => {
+        // Calculate the data-chart-value for the circle chart (assuming 5 is max/full)
+        const chartValue = item.rate; 
+        
+        return `
+            <div class="swiper-slide" data-chart-value="${chartValue}">
+                <div class="swiper-inner">
+                    <div class="shc-chart--circle" data-chart-value="${chartValue}">
+                        <svg viewBox="0 0 40 40">
+                            <circle class="shc-chart--circle__bg" cx="20" cy="20" r="18"></circle>
+                            <circle class="shc-chart--circle__progress" cx="20" cy="20" r="18"></circle>
+                        </svg>
+                        <div class="shc-chart--circle__lines">
+                            <span class="shc-chart--circle__line"></span>
+                            <span class="shc-chart--circle__line"></span>
+                            <span class="shc-chart--circle__line"></span>
+                            <span class="shc-chart--circle__line"></span>
+                            <span class="shc-chart--circle__line"></span>
+                        </div>
+                        <div class="shc-chart--circle__text">${item.rate}%</div>
+                    </div>
+                    <strong class="name">${item.label}</strong>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    swiperWrapper.innerHTML = newSlides;
+
+    // After adding new slides, you must update the Swiper instance
+    // to recalculate its size, slides count, and pagination.
+    if (aiSwiper) {
+        aiSwiper.update();
+        // Option to go to the first slide after new content load
+        aiSwiper.slideTo(0, 0); 
+    }
+};
+
+
+const chart = document.querySelector('.shc-chart--circle');
+                function setChart(value){
+                  console.log("setChart");
+                  
+                    chart.setAttribute('data-chart-value', value);
+                    chart.querySelector('.shc-chart--circle__text').textContent = value + '%';
+                }  
+
+
+// const restartActiveSlideAnimation = (swiper) => {
+//   console.log(swiper);
+  
+//             // 현재 보이는 슬라이드 그룹의 시작 인덱스
+//             const startIndex = swiper.activeIndex;
+//             // 슬라이드 3개를 처리하되, 전체 슬라이드 개수를 초과하지 않도록 합니다.
+//             const endIndex = Math.min(startIndex + 3, swiper.slides.length);
+//             const ANIMATION_CLASS = 'is-animated';
+
+//             console.log(`Starting animation restart from index ${startIndex} to ${endIndex - 1}`);
+
+//             for (let i = startIndex; i < endIndex; i++) {
+//                 const slide = swiper.slides[i];
+//                 if (slide) {
+//                     const chartCircle = slide.querySelector('.shc-chart--circle');
+//                      chartCircle.setAttribute('data-chart-value', value);
+//                     chartCircle.querySelector('.shc-chart--circle__text').textContent = value + '%';
+
+//                 }
+//             }
+//         };
+
+
+// 페이지 로드 시 AI 추천 슬라이드를 렌더링합니다. (AI 토글이 켜져있다고 가정)
+// 초기 슬라이드 생성
+renderAISlides(aiRecommendedRates);
+
+
+
+
+
+      
+
+      
+
+      
+
+// --- 탭 기능 ---
+      const tabs = document.querySelectorAll('.shc-tab__btn');
+      const panels = document.querySelectorAll('.shc-tab__panel');
+      const totalRateElement = document.getElementById('total-rate');
+      const aiToggle = document.getElementById('ai-toggle');
+      const aiContent = document.querySelector('.ai-recommendation__status--contents');
+
+
+// 동적으로 생성할 카드 데이터 배열
+      const cardData = [
+        // 쇼핑 카테고리
+        { category: 'shopping', label: '백화점', iconClass: 'shc-icon--ai-store', href: '#' },
+        { category: 'shopping', label: '마트', iconClass: 'shc-icon--ai-basket', href: '#' },
+        { category: 'shopping', label: '홈 쇼핑', iconClass: 'shc-icon--ai-laptop', href: '#' },
+        { category: 'shopping', label: '온라인 쇼핑', iconClass: 'shc-icon--ai-online-shop', href: '#' },
+        { category: 'shopping', label: '소셜 커머스', iconClass: 'shc-icon--ai-user', href: '#' },
+        { category: 'shopping', label: '패션&뷰티', iconClass: 'shc-icon--ai-magic', href: '#' },
+        // 생활 카테고리
+        { category: 'lifestyle', label: '주유', iconClass: 'shc-icon--ai-gas-pump', href: '#' },
+        { category: 'lifestyle', label: '교육', iconClass: 'shc-icon--ai-education', href: '#' },
+        { category: 'lifestyle', label: '병원', iconClass: 'shc-icon--ai-hospital', href: '#' },
+        { category: 'lifestyle', label: '이동통신', iconClass: 'shc-icon--ai-mobile', href: '#' },
+        { category: 'lifestyle', label: '대중교통', iconClass: 'shc-icon--ai-vehicle-car', href: '#' },
+        // 푸드 카테고리
+        { category: 'food', label: '커피 전문점', iconClass: 'shc-icon--ai-food-return', href: '#' },
+        { category: 'food', label: '편의점', iconClass: 'shc-icon--ai-convenience-store', href: '#' },
+        { category: 'food', label: '베이커리', iconClass: 'shc-icon--ai-cookiee-bite', href: '#' },
+        { category: 'food', label: '배달 앱', iconClass: 'shc-icon--ai-delivery-app', href: '#' },
+        // 여행 카테고리
+        { category: 'travel', label: '항공&amp;면세점', iconClass: 'shc-icon--ai-duty-free', href: '#' },
+        { category: 'travel', label: '해외', iconClass: 'shc-icon--ai-overseas', href: '#' },
+      ];
+
+      // AI 추천 적립률을 객체로 변환하여 사용
+      const aiRatesMap = aiRecommendedRates.reduce((acc, curr) => {
+        acc[curr.label] = curr.rate;
+        return acc;
+      }, {});
+
+
+
+      // 카드별 현재 적립률을 저장할 객체. 초기값 설정.
+      // let cardRates = {
+      //   '소셜 커머스': 4,
+      //   '패션&뷰티': 3
+      // };
+
+      // 카드별 현재 적립률을 저장할 객체. 초기값 설정.
+      let cardRates = {};
+      const initialAIToggleState = aiToggle.checked;
+      if (initialAIToggleState) {
+        cardRates = { ...aiRatesMap };
+      }
+
+      // 총 적립률을 계산하고 표시하는 함수
+      const updateTotalRateDisplay = () => {
+        const total = Object.values(cardRates).reduce((sum, rate) => sum + rate, 0);
+        totalRateElement.textContent = `${total}%`;
+        if (total === 17) {
+          totalRateElement.classList.add('target-reached');
+        } else {
+          totalRateElement.classList.remove('target-reached');
+        }
+      };
+
+      // 카드를 동적으로 렌더링하는 함수
+      const renderCards = (category) => {
+        const flexContainer = document.querySelector(`#tab-${category}-panel .flex-container`);
+        if (!flexContainer) return;
+
+        flexContainer.innerHTML = ''; // 기존 카드 제거
+        const filteredCards = cardData.filter(card => card.category === category);
+        const isAIToggleChecked = aiToggle.checked;
+
+        filteredCards.forEach(item => {
+          console.log(item.href);
+
+          const cardElement = document.createElement('div');
+          cardElement.className = 'item-card';
+
+          const currentRate = cardRates[item.label] || 0;
+          if (currentRate > 0) {
+            cardElement.classList.add('is-active');
+          }
+
+          cardElement.innerHTML = `
+            <a href="${item.href}" class="item-link" aria-label="${item.label} 상세 정보 보기">
+              <span class="shc-icon ${item.iconClass} size-40"></span>
+              <span class="label"></span>
+              <button type="button" class="shc-txt-btn theme-secondary size-md">
+                <span class="shc-txt-btn__text">${item.label}</span>
+                <span class="shc-icon shc-icon--chevron"></span>
+              </button>              
+            </a>
+            <div class="rate-control">
+              <button type="button" class="shc-capsule-btn theme-outline size-sm minus" aria-label="${item.label} 적립률 감소" ${isAIToggleChecked ? 'disabled' : ''}>
+                <span class="shc-capsule-btn__text">-</span>
+              </button>
+              <span class="rate-value" role="status" aria-live="polite">${currentRate}%</span>
+              <button type="button" class="shc-capsule-btn theme-outline size-sm plus" aria-label="${item.label} 적립률 증가" ${isAIToggleChecked ? 'disabled' : ''}>
+                <span class="shc-capsule-btn__text">+</span>
+              </button>
+            </div>
+          `;
+
+          // 이벤트 리스너를 동적으로 추가
+          const minusBtn = cardElement.querySelector('.minus');
+          const plusBtn = cardElement.querySelector('.plus');
+          const rateValueSpan = cardElement.querySelector('.rate-value');
+
+          minusBtn.addEventListener('click', () => {
+            // let currentValue = parseInt(rateValueSpan.textContent);
+            let currentValue = cardRates[item.label] || 0;
+            if (currentValue > 0) {
+              currentValue--;
+              cardRates[item.label] = currentValue; // 상태 업데이트
+              rateValueSpan.textContent = `${currentValue}%`;
+              if (currentValue === 0) {
+                cardElement.classList.remove('is-active');
+              }
+              updateTotalRateDisplay();
+            }
+          });
+
+          plusBtn.addEventListener('click', () => {
+            let currentValue = parseInt(rateValueSpan.textContent);
+            if (currentValue < 5) {
+              currentValue++;
+              cardRates[item.label] = currentValue; // 상태 업데이트
+              rateValueSpan.textContent = `${currentValue}%`;
+              if (currentValue > 0) {
+                cardElement.classList.add('is-active');
+              }
+              updateTotalRateDisplay();
+            }
+          });
+          flexContainer.appendChild(cardElement);
+        });
+      };
+
+
+      // 탭 클릭 이벤트 리스너
+      tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          const targetTab = e.target;
+          const category = tab.dataset.tab;        
+          const targetPanel = document.querySelector(`#tab-${category}-panel`);
+
+          // 모든 탭 및 패널 비활성화
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+            t.setAttribute('tabindex', '-1');
+          });
+          panels.forEach(p => {
+            p.classList.remove('active');
+            p.setAttribute('hidden', '');
+          });
+
+          // 클릭된 탭 및 해당 패널 활성화
+          targetTab.classList.add('active');
+          targetTab.setAttribute('aria-selected', 'true');
+          targetTab.setAttribute('tabindex', '0');
+          targetPanel.classList.add('active');
+          targetPanel.removeAttribute('hidden');
+          //카드를 동적으로 렌더링
+          renderCards(category);
+        });
+      });
+      renderCards('shopping');
+
+
+       // AI 추천 토글 스위치 이벤트 리스너
+      aiToggle.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        console.log(isChecked);
+        
+        if (isChecked) {
+          // AI 추천 콘텐츠 표시
+          aiContent.classList.add('is-active');
+          // AI 추천 적용: 모든 적립률 초기화 후 AI 추천값으로 설정
+          cardRates = { ...aiRatesMap };
+        } else {
+          // AI 추천 콘텐츠 숨기기
+          aiContent.classList.remove('is-active');
+          // 수동 설정: 모든 적립률을 0으로 초기화
+          cardRates = {};
+        }
+
+        // 현재 활성화된 탭의 카드를 다시 렌더링하여 UI 업데이트
+        const activeTab = document.querySelector('.shc-tab__btn.is-active');
+        const activeCategory = activeTab.dataset.tab;
+        renderCards(activeCategory);
+        updateTotalRateDisplay();
+
+      });
+
+
+
+
+// '모든 영역 1% 설정' 버튼 이벤트 리스너
+      document.getElementById('all-1-button').addEventListener('click', () => {
+        // AI 추천 토글 해제 및 UI 업데이트
+        aiToggle.checked = false;
+        //aiContent.classList.add('hidden');
+        aiContent.classList.remove('is-active');
+
+        // 모든 카드의 적립률을 1%로 설정
+        cardData.forEach(item => {
+          cardRates[item.label] = 1;
+        });
+
+        // 현재 활성화된 탭의 카드를 다시 렌더링하여 UI 업데이트
+        const activeTab = document.querySelector('.shc-tab__btn.is-active');
+        console.log(activeTab);
+        
+        const activeCategory = activeTab.dataset.tab;
+        renderCards(activeCategory);
+
+        updateTotalRateDisplay();
+      });
+
+
+      // 초기 렌더링: '쇼핑' 탭의 카드들을 표시
+      renderCards('shopping');
+      updateTotalRateDisplay();
+      
+
+
+
+  </script>
+</body>
+
+</html>
