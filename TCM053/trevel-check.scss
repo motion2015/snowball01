@@ -1,0 +1,127 @@
+@use '../../mixin' as *;
+
+.travel-check {
+  .shc-tab {
+    position: relative;
+    margin: -58px auto 0;
+  }
+}
+
+.main-visual {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  &__tit {
+    position: absolute;
+    top: 69px;
+    left: 32px;
+    color: #fff;
+  }
+  &__tit-desc {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    color: #fff;
+  }
+  &__img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: visualSlideAnimation 6s infinite;
+    &.visual1 {
+      animation-delay: 0s;
+      background-image: url('/static/images/card/travel/top_img.png');
+    }
+    &.visual2 {
+      animation-delay: 3s;
+      background-image: url('/static/images/card/travel/top_img2.png');
+    }
+  }
+}
+
+@keyframes visualSlideAnimation {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.benefits {
+  &__title {
+    @include font-headLine($size: S, $weight: 700);
+    color: var(--Text-text-primary);
+    margin-bottom: var(--spacing-2xl);
+  }
+}
+.benefit-card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--Border-border-secondary);
+  padding: var(--spacing-3xl);
+  &:not(.with-allview-btn) {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  margin-bottom: var(--spacing-lg);
+  &.with-allview-btn .inner-box {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  &__tag {
+    @include font-body($size: M, $weight: 300);
+    color: var(--Text-text-tertiary);
+  }
+  &__description {
+    @include font-title($size: L, $weight: 700);
+  }
+  .theme-tonal {
+    width: 100%;
+  }
+}
+
+.daily-benefit {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--Border-border-secondary);
+  padding: var(--spacing-3xl);
+  &-item {
+    display: flex;
+
+    padding-bottom: 16px;
+    & ~ & {
+      padding-top: 16px;
+      border-top: 1px solid #eee;
+    }
+  }
+}
+.extra-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  &-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 16px;
+    border-radius: var(--radius-xl);
+    background: var(--Background-bg-graylight);
+    padding: var(--spacing-lg);
+  }
+}
