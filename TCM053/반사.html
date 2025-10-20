@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS 로고 반사 효과</title>
+
+  <style>
+    /* 추가적인 커스텀 CSS */
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* 로고 이미지를 감싸는 컨테이너 */
+    .logo-container {
+      position: relative;
+      /* ::after 요소를 위치시킬 기준점 */
+      display: inline-block;
+      /* 컨테이너 크기를 로고에 맞춤 */
+    }
+
+    /* 원본 로고 이미지 스타일 */
+    .logo-img {
+      display: block;
+      /* 이미지 아래쪽의 불필요한 여백 제거 */
+      width: 80px;
+      /* 로고 크기 */
+      height: auto;
+      border-radius: 12px;
+      border-radius: 16.9px;
+
+      /* 로고의 둥근 모서리에 맞춰 조정 */
+    }
+
+    /* 반사 효과를 만들 가상 요소 (::after) */
+    .logo-container::after {
+      content: '';
+      /* 가상 요소는 content 속성이 필수입니다. */
+      position: absolute;
+      border-radius: 16.9px;
+      opacity: 0.2;
+      /* 원본 이미지 바로 아래에 배치 */
+      top: 100%;
+      left: 0;
+      width: 100%;
+
+      /* 반사될 영역의 높이 (원본의 60%) */
+      height: 20%;
+
+      /* 원본과 반사된 이미지 사이의 미세한 간격 */
+      margin-top: 4px;
+
+      /* 중요: 원본과 같은 이미지를 배경으로 지정하고, 반복하지 않음 */
+      background: linear-gradient(180deg, rgba(8, 32, 247, 0) 0%, #0456fc 28.57%), url('./image_263.png') lightgray 0px 0px / 100% 221.429% no-repeat;
+
+      /* background: url('./image_263.png') no-repeat; */
+      /* 배경 이미지를 ::after 요소 크기에 꽉 채움 */
+      background-size: 100% 100%;
+
+      /* Y축(세로) 기준으로 이미지를 뒤집어 반사 효과를 만듦 */
+      transform: scaleY(-1);
+
+      /* * 마스크를 이용해 반사된 이미지가 아래로 갈수록 점점 투명해지게 만듭니다.
+             * 마스크의 검은색 부분은 보이고, 투명한 부분은 가려집니다.
+             */
+      mask-image: linear-gradient(to top,
+          rgba(0, 0, 0, 0.8),
+          /* 위쪽(원본과 가까운 곳)은 40% 불투명도 */
+          rgba(0, 0, 0, 0.0)
+          /* 아래쪽(멀어지는 곳)은 완전히 투명 */
+        );
+
+      /* Chrome, Safari 등 WebKit 기반 브라우저 호환성을 위한 접두사 */
+      -webkit-mask-image: linear-gradient(to top,
+          rgba(0, 0, 0, 0.8),
+          rgba(0, 0, 0, 0.0));
+    }
+  </style>
+</head>
+
+<body>
+
+  <div">
+    <div class="logo-container">
+      <!-- 사용자가 업로드한 이미지 -->
+      <img src="./image_263.png" alt="신한 SOL Bank 로고" class="logo-img">
+    </div>
+    </div>
+
+</body>
+
+</html>
