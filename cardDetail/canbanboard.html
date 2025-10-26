@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>협업 칸반 보드</title>
+  <!-- Tailwind CSS 로드 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fb;
+    }
+
+    /* 커스텀 스크롤바 스타일링 */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app" class="min-h-screen p-4 sm:p-8">
+    <header class="mb-6 pb-4 border-b border-gray-300">
+      <h1 class="text-3xl font-extrabold text-blue-700 tracking-tight">
+        협업 칸반 보드 🚀
+      </h1>
+      <p class="text-sm text-gray-500 mt-1">
+        사용자 ID: <span id="user-id-display" class="font-mono bg-gray-200 px-2 py-0.5 rounded text-xs">로딩 중...</span>
+        <br />
+        (실시간으로 모든 사용자와 카드가 공유됩니다.)
+      </p>
+    </header>
+
+    <!-- 로딩 및 오류 메시지 -->
+    <div id="loading" class="flex justify-center items-center h-40 text-xl text-gray-500">
+      데이터 로딩 중...
+    </div>
+    <div id="error-message" class="hidden p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
+      <p class="font-bold">오류 발생:</p>
+      <p id="error-text"></p>
+    </div>
+
+    <!-- 메인 칸반 보드 영역 -->
+    <div id="kanban-board" class="hidden flex space-x-4 overflow-x-auto h-[calc(100vh-160px)] pb-4">
+      <!-- 리스트들이 여기에 렌더링됩니다. -->
+    </div>
+
+  </div>
+
+  <!-- Firebase 및 애플리케이션 로직 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, query, addDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // ---------------------------------------------------------------------
+    // 1. 전역 설정 및 초기화
+    // ---------------------------------------------------------------------
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+    let db;
+    let auth;
+    let currentUserId = null;
+
+    const lists = [
+      { id: 'todo', title: '할 일 (To Do)' },
+      { id: 'doing', title: '진행 중 (In Progress)' },
+      { id: 'done', title: '완료 (Done)' }
+    ];
+
+    const getCardsCollectionRef = () => {
+      return collection(db, 'artifacts', appId, 'public', 'data', 'kanban_cards');
+    };
+
+    const kanbanBoardElement = document.getElementById('kanban-board');
+    const loadingElement = document.getElementById('loading');
+    const errorElement = document.getElementById('error-message');
+    const errorTextElement = document.getElementById('error-text');
+    const userIdDisplay = document.getElementById('user-id-display');
+
+    // 오류 표시 함수
+    const displayError = (message) => {
+      loadingElement.classList.add('hidden');
+      kanbanBoardElement.classList.add('hidden');
+      errorElement.classList.remove('hidden');
+      errorTextElement.textContent = message;
+    };
+
+    // ---------------------------------------------------------------------
+    // 2. 렌더링 함수
+    // ---------------------------------------------------------------------
+
+    /**
+     * 개별 카드를 DOM 요소로 생성합니다.
+     */
+    const createCardElement = (card) => {
+      const cardDiv = document.createElement('div');
+      const creatorId = card.userId ? card.userId.substring(0, 4) : 'Unknown';
+
+      cardDiv.className = 'bg-white p-3 mb-2 rounded-lg shadow-sm border border-gray-200';
+      cardDiv.innerHTML = `
+                <p class="text-sm font-medium text-gray-800 break-words">${card.title}</p>
+                <p class="text-xs text-gray-400 mt-1">
+                    작성자 ID: ${creatorId}...
+                </p>
+            `;
+      return cardDiv;
+    };
+
+    /**
+     * 카드 추가 폼을 DOM 요소로 생성합니다.
+     */
+    const createAddCardForm = (listId, onComplete) => {
+      const formDiv = document.createElement('div');
+      formDiv.className = 'p-2 bg-white rounded-lg shadow-md mb-2';
+      formDiv.innerHTML = `
+                <form data-list-id="${listId}">
+                    <div id="form-error-${listId}" class="text-red-500 text-sm mb-2 hidden"></div>
+                    <textarea
+                        name="cardTitle"
+                        placeholder="카드 제목을 입력하세요..."
+                        rows="3"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                        required
+                    ></textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <button
+                            type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1 px-3 rounded-lg transition duration-150 shadow-md disabled:opacity-50"
+                        >
+                            카드 추가
+                        </button>
+                        <button
+                            type="button"
+                            class="cancel-button text-gray-500 hover:text-gray-700 text-sm font-medium ml-2"
+                        >
+                            취소
+                        </button>
+                    </div>
+                </form>
+            `;
+
+      const form = formDiv.querySelector('form');
+      const cancelButton = formDiv.querySelector('.cancel-button');
+      const submitButton = formDiv.querySelector('[type="submit"]');
+      const formErrorDiv = formDiv.querySelector(`#form-error-${listId}`);
+      const titleTextarea = formDiv.querySelector('textarea[name="cardTitle"]');
+
+
+      // 폼 제출 이벤트 핸들러
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = titleTextarea.value.trim();
+
+        if (!title || !db || !currentUserId) {
+          formErrorDiv.textContent = "제목과 사용자 ID가 필요합니다.";
+          formErrorDiv.classList.remove('hidden');
+          return;
+        }
+
+        formErrorDiv.classList.add('hidden');
+        submitButton.textContent = '추가 중...';
+        submitButton.disabled = true;
+
+        const newCard = {
+          title: title,
+          listId: listId,
+          userId: currentUserId,
+          createdAt: serverTimestamp(),
+        };
+
+        try {
+          await addDoc(getCardsCollectionRef(), newCard);
+          titleTextarea.value = ''; // 입력 필드 초기화
+          onComplete(); // 폼 닫기
+        } catch (err) {
+          console.error("Error adding document: ", err);
+          formErrorDiv.textContent = "카드 추가 중 오류가 발생했습니다.";
+          formErrorDiv.classList.remove('hidden');
+        } finally {
+          submitButton.textContent = '카드 추가';
+          submitButton.disabled = false;
+        }
+      });
+
+      // 취소 버튼 이벤트 핸들러
+      cancelButton.addEventListener('click', onComplete);
+
+      return formDiv;
+    };
+
+    /**
+     * 모든 리스트를 렌더링하고 카드 데이터를 채웁니다.
+     */
+    const renderLists = (cards) => {
+      kanbanBoardElement.innerHTML = ''; // 보드 초기화
+
+      lists.forEach(list => {
+        const listDiv = document.createElement('div');
+        listDiv.className = 'flex-shrink-0 w-80 bg-gray-100 p-3 rounded-xl shadow-lg h-full max-h-full flex flex-col';
+
+        // 현재 리스트의 카드만 필터링하고 생성 시간 순으로 정렬
+        const listCards = cards
+          .filter(card => card.listId === list.id)
+          .sort((a, b) => (a.createdAt?.toMillis() || 0) - (b.createdAt?.toMillis() || 0));
+
+        const header = document.createElement('h2');
+        header.className = 'text-lg font-bold text-gray-800 mb-3 border-b pb-2';
+        header.textContent = `${list.title} (${listCards.length})`;
+        listDiv.appendChild(header);
+
+        // 카드 목록 컨테이너
+        const cardsContainer = document.createElement('div');
+        cardsContainer.className = 'flex-grow overflow-y-auto pr-1 custom-scrollbar';
+        listCards.forEach(card => {
+          cardsContainer.appendChild(createCardElement(card));
+        });
+        listDiv.appendChild(cardsContainer);
+
+        // 카드 추가 영역
+        const addCardArea = document.createElement('div');
+        addCardArea.className = 'mt-3 flex-shrink-0';
+
+        const addButton = document.createElement('button');
+        addButton.id = `add-button-${list.id}`;
+        addButton.className = 'w-full flex items-center justify-center p-2 text-sm text-gray-600 hover:bg-gray-200 rounded-lg transition duration-150';
+        addButton.innerHTML = `
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
+                    + 카드 추가
+                `;
+        addCardArea.appendChild(addButton);
+
+        // 카드 추가 버튼 클릭 이벤트
+        addButton.addEventListener('click', () => {
+          addButton.classList.add('hidden');
+          const form = createAddCardForm(list.id, () => {
+            // 폼 닫기 콜백
+            form.remove();
+            addButton.classList.remove('hidden');
+          });
+          addCardArea.insertBefore(form, addButton);
+        });
+
+        listDiv.appendChild(addCardArea);
+        kanbanBoardElement.appendChild(listDiv);
+      });
+    };
+
+    // ---------------------------------------------------------------------
+    // 3. 초기화 및 데이터 로드
+    // ---------------------------------------------------------------------
+
+    window.onload = async () => {
+      if (Object.keys(firebaseConfig).length === 0) {
+        displayError("Firebase 설정이 로드되지 않았습니다.");
+        return;
+      }
+
+      try {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+        setLogLevel('debug');
+
+        // 인증 처리
+        try {
+          if (initialAuthToken) {
+            await signInWithCustomToken(auth, initialAuthToken);
+          } else {
+            await signInAnonymously(auth);
+          }
+        } catch (e) {
+          console.error("Firebase Auth Error:", e);
+          await signInAnonymously(auth);
+        }
+
+        // 인증 상태 변화 리스너
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            currentUserId = user.uid;
+          } else {
+            // 사용자 ID가 없으면 랜덤 UUID 사용
+            currentUserId = crypto.randomUUID();
+          }
+          userIdDisplay.textContent = currentUserId;
+
+          // 인증 완료 후 실시간 데이터 리스너 시작
+          startDataListener();
+        });
+
+      } catch (e) {
+        console.error("Firebase Initialization Error:", e);
+        displayError("Firebase 초기화 중 오류가 발생했습니다: " + e.message);
+      }
+    };
+
+    /**
+     * Firestore 실시간 데이터 리스너 시작
+     */
+    const startDataListener = () => {
+      console.log("Attaching Firestore listener...");
+
+      const cardsQuery = query(getCardsCollectionRef());
+
+      onSnapshot(cardsQuery, (snapshot) => {
+        const fetchedCards = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        renderLists(fetchedCards);
+
+        // 로딩 상태 해제 및 보드 표시
+        loadingElement.classList.add('hidden');
+        kanbanBoardElement.classList.remove('hidden');
+        errorElement.classList.add('hidden');
+
+        console.log(`Fetched ${fetchedCards.length} cards in real-time.`);
+      }, (err) => {
+        console.error("Firestore Snapshot Error:", err);
+        displayError("데이터 로드 중 실시간 오류가 발생했습니다: " + err.message);
+      });
+    };
+
+  </script>
+</body>
+
+</html>

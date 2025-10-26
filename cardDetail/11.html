@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CJ ONE 멤버십 약관 동의</title>
+  <style>
+    /* Block: page */
+    .page {
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      background-color: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      line-height: 1.6;
+      max-width: 420px;
+      /* Mobile size */
+      margin: 0 auto;
+      background-color: #fff;
+    }
+
+    /* Block: banner */
+    .banner {
+      background-color: #2b3038;
+      color: #fff;
+      padding: 40px 0;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Element: banner__logo */
+    .banner__logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #FF6F00, #FFD54F);
+      margin: 0 auto 10px;
+      position: relative;
+    }
+
+    .banner__logo::before {
+      content: "C J";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    /* Element: banner__title */
+    .banner__title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    /* Element: banner__desc */
+    .banner__desc {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    /* Block: content-area */
+    .content-area {
+      padding: 0 20px 30px;
+    }
+
+    /* Block: agree-all */
+    .agree-all {
+      display: flex;
+      align-items: center;
+      padding: 15px 0;
+      margin-bottom: 25px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    /* Element: agree-all__icon */
+    .agree-all__icon {
+      color: #4a90e2;
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    /* Element: agree-all__label */
+    .agree-all__label {
+      font-size: 17px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Block: term-card */
+    .term-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+    }
+
+    /* Element: term-card__header */
+    .term-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 5px 0;
+    }
+
+    /* Element: term-card__title */
+    .term-card__title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Element: term-card__required */
+    .term-card__required {
+      color: #4a90e2;
+      margin-right: 5px;
+    }
+
+    /* Element: term-card__dropdown-icon */
+    .term-card__dropdown-icon {
+      font-size: 20px;
+      color: #999;
+    }
+
+    /* Element: term-card__content */
+    .term-card__content {
+      border-top: 1px solid #eee;
+      margin-top: 10px;
+      padding-top: 10px;
+      font-size: 13px;
+      color: #555;
+      display: none;
+    }
+
+    /* Block: term-list */
+    .term-list {
+      margin-top: 30px;
+    }
+
+    /* Element: term-list__item */
+    .term-list__item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    .term-list__item:last-child {
+      border-bottom: none;
+    }
+
+    /* Element: term-list__info */
+    .term-list__info {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Block: connect-button */
+    .connect-button {
+      width: 100%;
+      padding: 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .connect-button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Modifier for checkbox icon in term-list items */
+    /* Element: term-list__icon */
+    .term-list__icon {
+      font-size: 24px;
+      margin-right: 10px;
+      color: #999;
+    }
+
+    /* Modifier for checked state */
+    .term-list__icon--checked {
+      color: #4a90e2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+    <div class="banner">
+      <div class="banner__logo"></div>
+      <div class="banner__title">CJ ONE</div>
+      <div class="banner__desc">구매금액의 일정률 포인트 적립</div>
+    </div>
+
+    <div class="content-area">
+      <div class="agree-all" onclick="toggleAllTerms()">
+        <span class="agree-all__icon">☑️</span>
+        <span class="agree-all__label">전체 동의할게요</span>
+      </div>
+
+      <div class="term-card">
+        <div class="term-card__header" onclick="toggleContent('term1')">
+          <div class="term-card__title">
+            <span class="term-card__required">[필수]</span> 개인정보 제3자 제공동의
+          </div>
+          <span class="term-card__dropdown-icon" id="icon-term1">▲</span>
+        </div>
+
+        <div class="term-card__content" id="term1" style="display: block;">
+          <p style="margin-bottom: 10px;">
+            [필수]멀티멤버십 서비스 가입 및 이용을 위한 개인정보 제3자 제공 동의<br>
+            신한카드(주)는 멀티멤버십 서비스 가입 및 이용을 위해 아래와 같은 정보를 제공합니다.
+          </p>
+          <ol style="padding-left: 20px; margin: 0; list-style-type: decimal;">
+            <li>제공받는 자 : 씨제이올리브네트웍스(주)</li>
+            <li>제공하는 항목 : **본인확인값(아이핀연계번호), 바코드번호, 이름, 휴대폰번호,** 법정생년월일, 성별</li>
+            <li>제공목적 :
+              <ul style="padding-left: 15px; margin-top: 5px; list-style-type: '- ';">
+                <li>서비스 가입 및 회원식별</li>
+                <li>고객문의 대응</li>
+              </ul>
+            </li>
+            <li>보유 및 이용기간 : 씨제이올리브네트웍스(주)와(의) 멀티멤버십 가입계약 해지시 (멤버십 회원 탈퇴시) (멀티멤버십 해지시 씨제이올리브네트웍스(주)에 제공한 개인정보는 삭제되지
+              않습니다.)</li>
+          </ol>
+          <p style="margin-top: 10px; color: #f00; font-size: 12px;">
+            * 제3자 제공에 동의를 거부하실 수 있습니다. 단, 동의하지 않으시는 경우 씨제이올리브네트웍스(주)가 제공하는 서비스 가입 및 이용이 불가합니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="term-list">
+        <div class="term-list__item" onclick="toggleContent('term2')">
+          <div class="term-list__info">
+            <span class="term-list__icon term-list__icon--checked">☑️</span>
+            <span class="term-card__required">[필수]</span> 이용약관
+          </div>
+          <span class="term-card__dropdown-icon" id="icon-term2" style="font-size: 20px;">&gt;</span>
+        </div>
+        <div class="term-list__item" onclick="toggleContent('term3')">
+          <div class="term-list__info">
+            <span class="term-list__icon term-list__icon--checked">☑️</span>
+            <span class="term-card__required">[필수]</span> 개인정보처리방침
+          </div>
+          <span class="term-card__dropdown-icon" id="icon-term3" style="font-size: 20px;">&gt;</span>
+        </div>
+        <div class="term-list__item" onclick="toggleContent('term4')">
+          <div class="term-list__info">
+            <span class="term-list__icon term-list__icon--checked">☑️</span>
+            <span class="term-card__required">[필수]</span> 제3자 정보제공 및 활용동의
+          </div>
+          <span class="term-card__dropdown-icon" id="icon-term4" style="font-size: 20px;">&gt;</span>
+        </div>
+      </div>
+
+      <button class="connect-button">
+        멤버십 연결하기
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 항목을 클릭했을 때 내용을 토글하는 함수
+    function toggleContent(id) {
+      const content = document.getElementById(id);
+      const icon = document.getElementById('icon-' + id);
+
+      // 첫 번째 섹션 (term-card)은 내용 토글
+      if (id === 'term1') {
+        if (content.style.display === 'block') {
+          content.style.display = 'none';
+          icon.innerHTML = '▼'; // 닫힐 때 아래 화살표
+        } else {
+          content.style.display = 'block';
+          icon.innerHTML = '▲'; // 열릴 때 위 화살표
+        }
+      }
+      // 나머지 term-list 항목들은 페이지 이동 시뮬레이션
+      else {
+        // 실제 웹 환경에서는 여기에서 해당 약관 페이지로 이동합니다.
+        console.log(id + ' 약관 페이지로 이동');
+        // alert(id + ' 약관의 상세 내용을 확인합니다. (실제 기능은 페이지 이동)');
+      }
+    }
+
+    // 전체 동의 기능 (체크박스/아이콘 상태만 토글)
+    function toggleAllTerms() {
+      const allAgreeIcon = document.querySelector('.agree-all__icon');
+      const listIcons = document.querySelectorAll('.term-list__icon');
+      const isChecked = allAgreeIcon.textContent === '☑️';
+
+      if (isChecked) {
+        allAgreeIcon.textContent = '☐'; // 해제
+        allAgreeIcon.style.color = '#999';
+        listIcons.forEach(icon => {
+          icon.textContent = '☐';
+          icon.classList.remove('term-list__icon--checked');
+        });
+      } else {
+        allAgreeIcon.textContent = '☑️'; // 체크
+        allAgreeIcon.style.color = '#4a90e2';
+        listIcons.forEach(icon => {
+          icon.textContent = '☑️';
+          icon.classList.add('term-list__icon--checked');
+        });
+      }
+    }
+
+    // 초기 로드시 term1의 화살표 상태를 '▲'로 설정
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const term1Icon = document.getElementById('icon-term1');
+      if (term1Icon) {
+        term1Icon.innerHTML = '▲';
+      }
+      // 초기 로드시 모든 목록 아이콘이 체크된 상태를 가지도록 설정
+      document.querySelectorAll('.term-list__icon').forEach(icon => {
+        icon.textContent = '☑️';
+        icon.classList.add('term-list__icon--checked');
+      });
+    });
+
+  </script>
+
+</body>
+
+</html>

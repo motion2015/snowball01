@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L.POINT 제휴사 목록 팝업</title>
+  <style>
+    /* Block: popup (Full-screen overlay) */
+    .popup {
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      /* 흰색 배경 */
+      z-index: 1000;
+      overflow-y: auto;
+      /* 내용이 길 경우 스크롤 가능 */
+      padding-top: 20px;
+    }
+
+    /* Block: container */
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+      /* 하단 여백 추가 */
+    }
+
+    /* Block: grid-list */
+    .grid-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      /* 3열 그리드 */
+      gap: 20px 10px;
+      text-align: center;
+    }
+
+    /* Block: grid-item (Logo + Text container) */
+    .grid-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #333;
+    }
+
+    /* Element: grid-item__logo-box */
+    .grid-item__logo-box {
+      width: 100%;
+      height: 60px;
+      /* 로고 이미지 크기 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    /* Element: grid-item__logo-img (Placeholder for actual logo) */
+    .grid-item__logo-img {
+      /* Placeholder styling */
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #f8d4d4;
+      /* 롯데 레드 계열의 배경색 */
+      position: relative;
+    }
+
+    /* Modifier: grid-item__logo-img--text-logo (For H&B, Duty Free, etc. which use full text logos) */
+    .grid-item__logo-img--text-logo {
+      width: 100%;
+      height: 30px;
+      border-radius: 0;
+      background-color: transparent;
+      /* Placeholder for actual complex text logos */
+      font-size: 14px;
+      font-weight: bold;
+      color: #d11d1d;
+    }
+
+    /* Element: grid-item__text */
+    .grid-item__text {
+      font-size: 13px;
+      color: #333;
+      line-height: 1.3;
+    }
+
+    /* Block: footer-info */
+    .footer-info {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #f8f8f8;
+      padding: 15px 20px;
+      border-top: 1px solid #eee;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.03);
+      text-align: center;
+    }
+
+    /* Element: footer-info__text-box */
+    .footer-info__text-box {
+      background-color: #f1f5f9;
+      /* 배경색: 이미지와 유사한 연한 회색 */
+      padding: 15px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.5;
+      max-width: 380px;
+      /* 중앙 정렬을 위한 최대 너비 */
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="popup">
+    <div class="container">
+
+      <div class="grid-list">
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데ON</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데마트</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데백화점</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데슈퍼</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데시네마</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데홈쇼핑</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데호텔&amp;리조트</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img grid-item__logo-img--text-logo">LOHB's</div>
+          </div>
+          <span class="grid-item__text">롭스</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img grid-item__logo-img--text-logo">Lotte Duty Free</div>
+          </div>
+          <span class="grid-item__text">롯데면세점</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img grid-item__logo-img--text-logo">T-ELEVEN</div>
+          </div>
+          <span class="grid-item__text">세븐일레븐</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데월드</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데하이마트</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img grid-item__logo-img--text-logo">롯데렌터카</div>
+          </div>
+          <span class="grid-item__text">롯데렌터카</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img"></div>
+          </div>
+          <span class="grid-item__text">롯데월드타워</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img grid-item__logo-img--text-logo">LOTTERIA</div>
+          </div>
+          <span class="grid-item__text">롯데리아</span>
+        </a>
+
+        <a href="#" class="grid-item">
+          <div class="grid-item__logo-box">
+            <div class="grid-item__logo-img" style="background-color: #000; border-radius: 0;"></div>
+          </div>
+          <span class="grid-item__text">연제리너스</span>
+        </a>
+      </div>
+
+    </div>
+
+    <div class="footer-info">
+      <div class="footer-info__text-box">
+        - 모든 적립 가맹점을 엘포인트 홈페이지<br>
+        [<a href="https://www.lpoint.com" target="_blank"
+          style="color: #555; text-decoration: none;">www.lpoint.com</a>]에서 확인할 수 있어요.
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

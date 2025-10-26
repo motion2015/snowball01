@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>멤버십 혜택 상세</title>
+  <style>
+    /* Block: page */
+    .page {
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      background-color: #fff;
+      margin: 0 auto;
+      max-width: 420px;
+      padding: 0 0 30px;
+      color: #333;
+    }
+
+    /* Block: banner */
+    .banner {
+      background-color: #191970;
+      /* Happy Point Navy Blue */
+      color: #fff;
+      padding: 40px 20px 30px;
+      text-align: center;
+      margin-bottom: 25px;
+      border-radius: 0 0 15px 15px;
+      /* 하단 모서리만 둥글게 */
+    }
+
+    /* Element: banner__logo */
+    .banner__logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 10px;
+      /* Happy Point 로고 Placeholder: 흰색 웃는 얼굴 모양 */
+      position: relative;
+      background-color: transparent;
+      border-radius: 50%;
+    }
+
+    .banner__logo::before {
+      content: "😊";
+      /* 이모지로 로고 대체 */
+      font-size: 50px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      line-height: 1;
+    }
+
+    /* Element: banner__desc */
+    .banner__desc {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    /* Block: button-group */
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* Block: button */
+    .button {
+      padding: 12px 15px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      width: 50%;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+
+    /* Modifier: button--outline (Brand View) */
+    .button--outline {
+      background-color: transparent;
+      color: #fff;
+      border: 1px solid #fff;
+    }
+
+    .button--outline:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Modifier: button--filled (Happy Point Shortcut) */
+    .button--filled {
+      background-color: #fff;
+      color: #191970;
+      border: 1px solid #fff;
+    }
+
+    .button--filled:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Block: benefit-section */
+    .benefit-section {
+      padding: 0 20px;
+    }
+
+    /* Element: benefit-section__title */
+    .benefit-section__title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    /* Block: data-table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    /* Element: data-table__header-cell (Left Column) */
+    .data-table__header-cell {
+      width: 25%;
+      font-weight: bold;
+      text-align: center;
+      background-color: #f7f7f7;
+      padding: 12px 10px;
+      border: 1px solid #eee;
+      color: #555;
+    }
+
+    /* Element: data-table__content-cell (Right Column) */
+    .data-table__content-cell {
+      padding: 12px 15px;
+      border: 1px solid #eee;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+
+    /* Element: data-table__content-cell--highlight */
+    .data-table__content-cell--highlight {
+      color: #007bff;
+      /* 고객센터 번호 하이라이트 */
+      font-weight: bold;
+    }
+
+    /* Block: bottom-button */
+    .bottom-button {
+      width: calc(100% - 40px);
+      max-width: 380px;
+      margin: 0 20px;
+      padding: 15px;
+      background-color: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      transition: background-color 0.2s;
+    }
+
+    .bottom-button:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="banner">
+      <div class="banner__logo"></div>
+      <div class="banner__desc">구매금액의 일정률 포인트 적립</div>
+
+      <div class="button-group">
+        <a href="#" class="button button--outline">브랜드 보기</a>
+        <a href="#" class="button button--filled">해피포인트 바로가기</a>
+      </div>
+    </div>
+
+    <div class="benefit-section">
+      <div class="benefit-section__title">멤버십 혜택</div>
+
+      <table class="data-table">
+        <tbody>
+          <tr>
+            <td class="data-table__header-cell">적립</td>
+            <td class="data-table__content-cell">제휴브랜드 기준에 따라 0.5~5% 적립</td>
+          </tr>
+          <tr>
+            <td class="data-table__header-cell">사용</td>
+            <td class="data-table__content-cell">
+              1,000원 이상 적립 시 사용가능 (사용 시 해피포인트 앱을 가입하셔야 합니다)
+            </td>
+          </tr>
+          <tr>
+            <td class="data-table__header-cell">소멸</td>
+            <td class="data-table__content-cell">
+              포인트 적립일로부터 36개월 유효기간 내에 사용하지 않은 경우 해당 소멸 일자 영업 종료시간에 자동소멸
+            </td>
+          </tr>
+          <tr>
+            <td class="data-table__header-cell">기타</td>
+            <td class="data-table__content-cell">
+              * Deep Making, Deep Taking카드 소지 회원만 등록 가능하며 등록 또는 해지 신청시 익일 반영됩니다.
+            </td>
+          </tr>
+          <tr>
+            <td class="data-table__header-cell">고객센터</td>
+            <td class="data-table__content-cell data-table__content-cell--highlight">
+              080-320-1234
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button class="bottom-button">
+      멤버십 연결 끊기
+    </button>
+  </div>
+
+</body>
+
+</html>

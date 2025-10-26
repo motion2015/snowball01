@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드 목록 및 바코드</title>
+  <style>
+    /* Block: page */
+    .page {
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      background-color: #f4f6f9;
+      margin: 0 auto;
+      max-width: 420px;
+      padding: 0 0 30px;
+    }
+
+    /* Block: barcode-area */
+    .barcode-area {
+      background-color: #eef1f6;
+      padding: 30px 20px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    /* Element: barcode-area__image */
+    .barcode-area__image {
+      width: 100%;
+      max-width: 250px;
+      height: 80px;
+      /* 실제 바코드 이미지 크기에 맞게 조정 */
+      background-color: #000;
+      margin: 0 auto 10px;
+    }
+
+    /* Element: barcode-area__number */
+    .barcode-area__number {
+      font-family: monospace;
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* Block: card-section */
+    .card-section {
+      padding: 0 20px;
+    }
+
+    /* Element: card-section__title */
+    .card-section__title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    /* Block: card-grid */
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    /* Modifier for card-grid: one column grid */
+    .card-grid--one-col {
+      gap: 20px;
+    }
+
+    /* Block: card-item */
+    .card-item {
+      width: calc(50% - 6px);
+      /* 2열 레이아웃 */
+      height: 120px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    /* Modifier for card-item: full width (for S-OIL, CU) */
+    .card-item--full {
+      width: 100%;
+      height: 140px;
+      color: #fff;
+      justify-content: space-between;
+      padding: 20px;
+      align-items: flex-start;
+      flex-direction: row;
+    }
+
+    /* Modifier for card-item: green background (S-OIL) */
+    .card-item--green {
+      background-color: #008f51;
+      /* S-OIL green */
+    }
+
+    /* Modifier for card-item: purple background (CU) */
+    .card-item--purple {
+      background-color: #5d3596;
+      /* CU purple */
+    }
+
+    /* Element: card-item__logo-container */
+    .card-item__logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Element: card-item__logo */
+    .card-item__logo {
+      width: 80px;
+      /* 로고 크기 */
+      height: auto;
+      /* 실제 로고 이미지를 사용할 경우 배경 색을 투명으로 설정 */
+    }
+
+    /* Element: card-item__logo--happypoint (Specific Logo Styling) */
+    .card-item__logo--happypoint {
+      /* Placeholder for Happy Point logo */
+      width: 60px;
+      height: 60px;
+      background-color: #007bc4;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .card-item__logo--happypoint::after {
+      content: "H";
+      color: #fff;
+      font-weight: bold;
+      font-size: 24px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Element: card-item__logo--cjone */
+    .card-item__logo--cjone {
+      /* Placeholder for CJ ONE logo */
+      width: 80px;
+      height: 30px;
+      background: linear-gradient(90deg, #ff8c00, #ff4500, #5c40ee);
+      border-radius: 5px;
+    }
+
+    /* Element: card-item__logo--lpoint */
+    .card-item__logo--lpoint {
+      /* Placeholder for L.POINT logo */
+      width: 80px;
+      height: 30px;
+      background-color: #ee1d23;
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 30px;
+    }
+
+    /* Element: card-item__logo--s-oil */
+    .card-item__logo--s-oil {
+      /* Placeholder for S-OIL logo */
+      width: 100px;
+      height: 40px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+
+    /* Element: card-item__logo--cu */
+    .card-item__logo--cu {
+      /* Placeholder for CU logo */
+      width: 100px;
+      height: 40px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+
+    /* Element: card-item__tag */
+    .card-item__tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 12px;
+      padding: 3px 6px;
+      border: 1px solid #4a90e2;
+      color: #4a90e2;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 10;
+    }
+
+    /* Element: card-item__action-icon */
+    .card-item__action-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: #999;
+      background-color: #fff;
+      z-index: 10;
+    }
+
+    /* Element: card-item__arrow */
+    .card-item__arrow {
+      font-size: 20px;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <div class="barcode-area">
+      <svg class="barcode-area__image" viewBox="0 0 100 30" preserveAspectRatio="none">
+        <rect x="0" y="0" width="100" height="30" fill="white" />
+        <rect x="5" y="5" width="2" height="20" fill="black" />
+        <rect x="9" y="5" width="1" height="20" fill="black" />
+        <rect x="12" y="5" width="3" height="20" fill="black" />
+        <rect x="18" y="5" width="1" height="20" fill="black" />
+        <rect x="20" y="5" width="3" height="20" fill="black" />
+        <rect x="25" y="5" width="2" height="20" fill="black" />
+        <rect x="30" y="5" width="1" height="20" fill="black" />
+        <rect x="33" y="5" width="3" height="20" fill="black" />
+        <rect x="39" y="5" width="2" height="20" fill="black" />
+        <rect x="44" y="5" width="1" height="20" fill="black" />
+        <rect x="47" y="5" width="3" height="20" fill="black" />
+        <rect x="53" y="5" width="1" height="20" fill="black" />
+        <rect x="56" y="5" width="3" height="20" fill="black" />
+        <rect x="62" y="5" width="1" height="20" fill="black" />
+        <rect x="65" y="5" width="3" height="20" fill="black" />
+        <rect x="71" y="5" width="2" height="20" fill="black" />
+        <rect x="76" y="5" width="1" height="20" fill="black" />
+        <rect x="79" y="5" width="3" height="20" fill="black" />
+        <rect x="85" y="5" width="1" height="20" fill="black" />
+        <rect x="87" y="5" width="3" height="20" fill="black" />
+        <rect x="93" y="5" width="2" height="20" fill="black" />
+      </svg>
+      <div class="barcode-area__number">1489-9901-1680-5870</div>
+    </div>
+
+    <div class="card-section">
+      <div class="card-section__title">Deep Making, Deep Taking 카드 전용</div>
+
+      <div class="card-grid">
+        <div class="card-item">
+          <div class="card-item__tag">추가가능</div>
+          <div class="card-item__action-icon">+</div>
+          <div class="card-item__logo-container">
+            <div class="card-item__logo--happypoint"></div>
+          </div>
+        </div>
+
+        <div class="card-item">
+          <div class="card-item__tag">추가가능</div>
+          <div class="card-item__action-icon">+</div>
+          <div class="card-item__logo-container">
+            <div class="card-item__logo--cjone"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-section">
+      <div class="card-section__title">전체 카드 전용</div>
+
+      <div class="card-grid card-grid--one-col">
+        <div class="card-item card-item--full card-item--green">
+          <div class="card-item__logo--s-oil"></div>
+          <div class="card-item__arrow">&gt;</div>
+        </div>
+
+        <div class="card-item card-item--full card-item--purple">
+          <div class="card-item__logo--cu"></div>
+          <div class="card-item__arrow">&gt;</div>
+        </div>
+
+        <div class="card-item" style="width: 100%; height: 120px; box-shadow: none;">
+          <div class="card-item__tag">추가가능</div>
+          <div class="card-item__action-icon">+</div>
+          <div class="card-item__logo-container">
+            <div class="card-item__logo--lpoint">L.POINT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
