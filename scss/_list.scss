@@ -1,0 +1,123 @@
+@use '../../mixin' as *;
+
+@counter-style hangeul {
+  system: cyclic;
+  symbols: '가.' '나.' '다.' '라.' '마.' '바.' '사.' '아.' '자.' '차.' '카.'
+    '타.' '파.' '하.';
+  suffix: ' ';
+}
+@counter-style circleBlankNumeric {
+  system: cyclic;
+  symbols: '①' '②' '③' '④' '⑤' '⑥' '⑦' '⑧' '⑨' '⑩' '⑪' '⑫' '⑬' '⑭' '⑮' '⑯' '⑰'
+    '⑱' '⑲' '⑳';
+  suffix: ' ';
+}
+@counter-style circleFillNumeric {
+  system: cyclic;
+  symbols: '❶' '❷' '❸' '❹' '❺' '❻' '❼' '❽' '❾' '❿' '⓫' '⓬' '⓭' '⓮' '⓯' '⓰' '⓱'
+    '⓲' '⓳' '⓴';
+  suffix: ' ';
+}
+
+.shc-ul {
+  display: flex;
+  flex-direction: column;
+
+  //border-bottom
+  &.border-bottom {
+    & > li {
+      padding: var(--spacing-lg) var(--spacing-2xl);
+      border-bottom: 1px solid var(--Border-border-secondary);
+    }
+  }
+
+  //리스트 타입
+  &[data-type] {
+    & > li {
+      position: relative;
+      &::before {
+        content: '';
+        position: absolute;
+        left: 1px;
+        color: var(--Text-text-quaternary);
+      }
+    }
+  }
+
+  &[data-type='dot'] {
+    > li {
+      padding-left: var(--spacing-md);
+      &::before {
+        top: 0.7em;
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+        background-color: var(--Text-text-quaternary);
+      }
+    }
+  }
+  &[data-type='dash'] {
+    > li {
+      padding-left: var(--spacing-lg);
+      &::before {
+        top: 10px;
+        width: 6px;
+        height: 1px;
+        background-color: var(--Text-text-quaternary);
+      }
+    }
+  }
+
+  &[data-type='asterisk'] {
+    > li {
+      padding-left: var(--spacing-lg);
+      &::before {
+        content: '*';
+        top: 2px;
+        @include font-body($size: M, $weight: 300);
+      }
+    }
+  }
+  &[data-type='circleNumeric'] {
+    > li {
+      display: flex;
+      align-items: flex-start;
+      padding-left: var(----spacing-none);
+      p {
+        padding-left: var(--spacing-sm);
+      }
+    }
+  }
+  &[data-type='hangeul'] {
+    margin-left: var(--spacing-2xl);
+    > li {
+      list-style: hangeul;
+    }
+  }
+  &[data-type='circleBlankNumeric'] {
+    margin-left: var(--spacing-2xl);
+    > li {
+      list-style: circleBlankNumeric;
+    }
+  }
+  &[data-type='circleFillNumeric'] {
+    margin-left: var(--spacing-2xl);
+    > li {
+      list-style: circleFillNumeric;
+    }
+  }
+  &[data-type='numeric'] {
+    counter-reset: number;
+    > li {
+      padding-left: 25px;
+      counter-increment: number;
+      &::before {
+        content: counter(number) '. ';
+        width: 21px;
+        height: 24px;
+        text-align: center;
+        color: currentColor;
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div class="v-field__field" data-no-activator="" bis_skin_checked="1">
+    <label class="v-label v-field-label v-field-label--floating" for="surName" style=""><!---->영문 성</label><!---->
+    <input placeholder="예) KIM" size="7" type="text" id="surName" aria-describedby="surName-messages" maxlength="10"
+      unprotect="on" class="v-field__input" value="PARK">
+  </div>
+  <div class="v-field__field" data-no-activator="" bis_skin_checked="1">
+    <label class="v-label v-field-label v-field-label--floating" for="givenName" style=""><!---->영문 이름</label><!---->
+    <input placeholder="예) SHINHAN" size="1" type="text" id="givenName" aria-describedby="givenName-messages"
+      maxlength="12" unprotect="on" class="v-field__input"><!---->
+  </div>
+  <div id="givenName-messages" class="v-input__details" role="alert" aria-live="polite" bis_skin_checked="1">
+    <div class="v-messages" bis_skin_checked="1">
+      <div class="v-messages__message" tabindex="0" bis_skin_checked="1">영문 이름을 입력해주세요.</div>
+    </div><!---->
+  </div>
+  <p class="input_message">여권 이름과 같아야 해외에서 카드를 사용할 수 있어요.</p>
+  <div id="inputTarget" class="input_item" tabindex="0" bis_skin_checked="1">
+    <label for="uniqueNumber" tabindex="-1">주민등록번호(외국인등록번호)</label>
+    <input id="uniqueNumber" maxlength="13" v-model="" data-npkencrypt="db" data-keypad-type="num"
+      nppfs-formatter-type="jumin" data-keypad-preview="off" data-keypad-type-x="default" data-keypad-type-y="auto"
+      data-keypad-toggle-active="false" data-keypad-theme="default" type="text" placeholder="13자리 숫자"
+      data-keypad-next="uniqueNumberNext" data-keypad-enter="inputTarget" data-keypad-close="inputTarget"
+      autocomplete="off" mode="kpd" readonly="true" class="kpd-active nppfs-npv" nppfs-npv="true"
+      data-gtm-form-interact-field-id="1">
+  </div>
+  <p class="input_message text-error">주민등록번호를 입력해주세요.</p>
+
+</body>
+
+</html>

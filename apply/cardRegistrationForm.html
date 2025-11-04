@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드 사용 등록 폼</title>
+  <style>
+    /* BEM BLOCK: card-form */
+    .card-form {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* BEM ELEMENT: form-group */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    /* BEM ELEMENT: form-group__label */
+    .form-group__label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #4b5563;
+      /* Tailwind gray-700 대신 사용 */
+    }
+
+    /* BEM ELEMENT: form-group__input */
+    .form-group__input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      /* Tailwind gray-300 대신 사용 */
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group__input:focus {
+      border-color: #3b82f6;
+      /* Tailwind blue-500 대신 사용 */
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+
+    /* BEM ELEMENT: form-group__input-group (Flex 컨테이너) */
+    .form-group__input-group {
+      display: flex;
+      align-items: center;
+    }
+
+    /* BEM MODIFIER: form-group__input--short (생년월일 6자리) */
+    .form-group__input--short {
+      flex: 1 1 45%;
+      /* 비율 조정 */
+      min-width: 0;
+      margin-right: 8px;
+      text-align: left;
+    }
+
+    /* BEM ELEMENT: form-group__separator (주민번호 하이픈) */
+    .form-group__separator {
+      font-size: 24px;
+      color: #9ca3af;
+      /* Tailwind gray-400 대신 사용 */
+      margin: 0 4px;
+      line-height: 1;
+    }
+
+    /* BEM ELEMENT: form-group__back-part (뒷자리 두 입력칸을 감싸는 Flex 컨테이너) */
+    .form-group__back-part {
+      display: flex;
+      flex: 1 1 50%;
+      /* 남은 공간을 차지하도록 설정 */
+    }
+
+    /* BEM MODIFIER: form-group__input--masked-first (뒷자리 첫 번째, 입력 가능) */
+    .form-group__input--masked-first {
+      flex-grow: 0;
+      flex-shrink: 0;
+      width: 35px;
+      /* 고정 너비로 한 글자만 보이게 설정 */
+      text-align: center;
+      padding: 12px 0;
+      /* 좌우 패딩 제거 */
+
+      /* 다음 입력 필드와 시각적으로 연결 */
+      border-right: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    /* BEM MODIFIER: form-group__input--masked-rest (뒷자리 나머지, readonly) */
+    .form-group__input--masked-rest {
+      flex: 1;
+      /* 남은 공간을 모두 차지 */
+      min-width: 0;
+      background-color: #f3f4f6;
+      /* Tailwind gray-100 대신 사용 */
+      color: #1f2937;
+
+      /* 이전 입력 필드와 시각적으로 연결 */
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      padding-left: 4px;
+    }
+
+    /* --- 카드 번호 분할을 위한 CSS 추가 --- */
+    /* BEM ELEMENT: form-group__card-segment (카드 번호 4개 세그먼트) */
+    .form-group__card-segment {
+      flex: 1;
+      /* 4개 입력칸이 동일한 너비를 갖도록 */
+      text-align: center;
+      padding: 12px 0;
+      margin: 0 4px;
+      min-width: 0;
+    }
+
+    .form-group__card-segment:first-of-type {
+      margin-left: 0;
+    }
+
+    .form-group__card-segment:last-of-type {
+      margin-right: 0;
+    }
+
+    /* BEM ELEMENT: form-group__card-separator (카드번호 하이픈) */
+    .form-group__card-separator {
+      font-size: 16px;
+      color: #9ca3af;
+      margin: 0 4px;
+      line-height: 1;
+    }
+
+    /* CVC 및 비밀번호 입력 칸 크기 조정 */
+    .form-group--cvc .form-group__input,
+    .form-group--card-password .form-group__input {
+      max-width: 100%;
+    }
+
+    /* BEM BLOCK: form-notice */
+    .form-notice {
+      margin-top: 30px;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #f8fafc;
+      /* Tailwind blue-50 대신 사용 */
+      border: 1px solid #e0f2f1;
+      /* 은은한 테두리 */
+    }
+
+    /* BEM ELEMENT: form-notice__header */
+    .form-notice__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      cursor: pointer;
+    }
+
+    /* BEM ELEMENT: form-notice__title */
+    .form-notice__title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+      color: #374151;
+      /* Tailwind gray-700 대신 사용 */
+    }
+
+    /* BEM ELEMENT: form-notice__toggle (토글 아이콘) */
+    .form-notice__toggle {
+      font-size: 12px;
+      color: #6b7280;
+      transition: transform 0.3s;
+    }
+
+    .form-notice__toggle::after {
+      content: '▲';
+    }
+
+    /* BEM ELEMENT: form-notice__list */
+    .form-notice__list {
+      list-style: none;
+      padding-top: 10px;
+    }
+
+    /* BEM ELEMENT: form-notice__item */
+    .form-notice__item {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #6b7280;
+      margin-bottom: 10px;
+      padding-left: 15px;
+      position: relative;
+    }
+
+    .form-notice__item::before {
+      content: '•';
+      /* 리스트 마커 대체 */
+      position: absolute;
+      left: 0;
+      color: #9ca3af;
+      font-weight: bold;
+    }
+
+    /* BEM ELEMENT: card-form__submit-button */
+    .card-form__submit-button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 30px;
+      background-color: #4c51bf;
+      /* Tailwind indigo-700 대신 사용 */
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-form__submit-button:hover {
+      background-color: #434190;
+    }
+
+    /* 기타 스타일 */
+    body {
+      background-color: #f9fafb;
+      /* Tailwind gray-50 대신 사용 */
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- BEM BLOCK: card-form -->
+  <div class="card-form">
+
+    <!-- BEM BLOCK: form-group (주민등록번호) -->
+    <div class="form-group form-group--resident-id">
+      <label for="resident-id-front" class="form-group__label">주민등록번호</label>
+      <!-- BEM ELEMENT: form-group__input-group (Flexbox 사용) -->
+      <div class="form-group__input-group">
+        <input type="text" id="resident-id-front" class="form-group__input form-group__input--short"
+          placeholder="생년월일 6자리" maxlength="6" inputmode="numeric">
+        <!-- BEM ELEMENT: form-group__separator -->
+        <span class="form-group__separator">-</span>
+
+        <!-- 주민등록번호 뒷자리 분할 (첫 번째 입력 가능, 나머지는 마스킹/readonly) -->
+        <div class="form-group__back-part">
+          <input type="password" id="resident-id-back-first" class="form-group__input form-group__input--masked-first"
+            placeholder="○" maxlength="1" inputmode="numeric">
+          <input type="password" id="resident-id-back-rest" class="form-group__input form-group__input--masked-rest"
+            placeholder="●●●●●●" maxlength="6" inputmode="numeric" readonly>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEM BLOCK: form-group (카드 번호 - 4개 분할 입력) -->
+    <div class="form-group form-group--card-number">
+      <label class="form-group__label">카드 번호</label>
+      <!-- BEM ELEMENT: form-group__input-group (Flexbox 사용) -->
+      <div class="form-group__input-group">
+        <!-- BEM ELEMENT: form-group__card-segment -->
+        <input type="text" id="card-number-1" class="form-group__input form-group__card-segment" maxlength="4"
+          inputmode="numeric" placeholder="••••">
+        <!-- BEM ELEMENT: form-group__card-separator -->
+        <span class="form-group__card-separator">-</span>
+        <input type="text" id="card-number-2" class="form-group__input form-group__card-segment" maxlength="4"
+          inputmode="numeric" placeholder="••••">
+        <span class="form-group__card-separator">-</span>
+        <input type="text" id="card-number-3" class="form-group__input form-group__card-segment" maxlength="4"
+          inputmode="numeric" placeholder="••••">
+        <span class="form-group__card-separator">-</span>
+        <input type="text" id="card-number-4" class="form-group__input form-group__card-segment" maxlength="4"
+          inputmode="numeric" placeholder="••••">
+      </div>
+    </div>
+
+    <!-- BEM BLOCK: form-group (CVC) -->
+    <div class="form-group form-group--cvc">
+      <label for="cvc-number" class="form-group__label">CVC 번호(카드 뒷면 숫자 3자리)</label>
+      <input type="password" id="cvc-number" class="form-group__input" placeholder="○○○" maxlength="3"
+        inputmode="numeric">
+    </div>
+
+    <!-- BEM BLOCK: form-group (카드 비밀번호) -->
+    <div class="form-group form-group--card-password">
+      <label for="card-password" class="form-group__label">카드 비밀번호</label>
+      <input type="password" id="card-password" class="form-group__input" placeholder="○○○○" maxlength="4"
+        inputmode="numeric">
+    </div>
+
+    <!-- BEM BLOCK: form-notice -->
+    <div class="form-notice" id="notice-section">
+      <div class="form-notice__header">
+        <!-- BEM ELEMENT: form-notice__title -->
+        <h2 class="form-notice__title">꼭! 알아두세요</h2>
+        <!-- BEM ELEMENT: form-notice__toggle -->
+        <span class="form-notice__toggle"></span>
+      </div>
+      <!-- BEM ELEMENT: form-notice__list -->
+      <ul class="form-notice__list" style="display: block;">
+        <li class="form-notice__item">신청하신 카드의 부정사용 예방 및 사용의 안정성을 높이기 위해 고객님께서 카드를 수령하신 후 직접 카드 사용 등록을 한 경우에만 카드 사용이
+          가능하도록 한 제도입니다.</li>
+        <li class="form-notice__item">카드 사용 등록을 하시는 즉시 카드를 사용하실 수 있습니다.</li>
+        <li class="form-notice__item">카드 사용 등록을 원하시는 카드번호와 다음 항목을 모두 정확히 입력해 주시기 바랍니다. (단, 법인카드 제외)</li>
+        <li class="form-notice__item">가족카드 사용 등록 시, 가족개인정보 및 가족카드정보를 입력해 주시기 바랍니다. ARS(1544-0036)를 이용해 등록 가능합니다.</li>
+        <li class="form-notice__item">카드고유확인번호/비밀번호 등록오류 시 ARS(1544-7000)를 통해 오류해제 후 이용하실 수 있습니다.</li>
+      </ul>
+    </div>
+
+    <!-- BEM ELEMENT: card-form__submit-button -->
+    <button type="button" class="card-form__submit-button">카드 사용 등록하기</button>
+  </div>
+
+  <script>
+    // 간단한 토글 기능 (JS 추가)
+    const noticeHeader = document.querySelector('.form-notice__header');
+    const noticeList = document.querySelector('.form-notice__list');
+    const toggleIcon = document.querySelector('.form-notice__toggle');
+
+    noticeHeader.addEventListener('click', () => {
+      const isVisible = noticeList.style.display === 'block';
+      noticeList.style.display = isVisible ? 'none' : 'block';
+      toggleIcon.style.transform = isVisible ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- BEM 구조 시작 -->
+  <section class="promo-page">
+
+    <!-- 1. mtr 상단 배너 -->
+    <div class="promo-top">
+      <p class="promo-top__subtitle">전세계 400여개 유명 가맹점</p>
+      <h2 class="promo-top__title">마스터카드는 가맹점 <b>최대 10% 캐시백</b></h2>
+      <p class="promo-top__details">분기별로 가맹점이 업데이트 됩니다.</p>
+
+      <div class="promo-top__card">
+        <span class="promo-top__link-text">Mastercard Travel Rewards</span>
+        <span class="promo-top__icon"></span>
+        <div class="tooltip_cont">카드번호만 등록하면<br>자동으로 지급되는 캐시백 혜택</div>
+      </div>
+    </div>
+
+    <!-- 2. 이용 전 필수 -->
+    <div class="prerequisites">
+      <h3 class="prerequisites__title">이용 전 필수!</h3>
+      <ul class="prerequisites__list">
+        <li class="prerequisites__item">혜택 결제하기 전 미리 신청해야 혜택이 제공됩니다.</li>
+        <li class="prerequisites__item">캐시백은 등록 카드로 결제 시에만 적용됩니다.</li>
+      </ul>
+    </div>
+
+    <!-- 3. 이용 방법 -->
+    <div class="how-to-steps">
+      <h3 class="how-to-steps__main-title">이용 방법</h3>
+
+      <!-- 3-1. MTS 회원가입 -->
+      <div class="how-to-steps__item">
+        <h4 class="how-to-steps__item-title">1. MTS 회원가입</h4>
+
+        <div class="swiper shc-slide travel-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <div class="swiper-inner">
+                <div class="content-box">
+                  <picture><img data-src="/static/images/card/travel/currency_exchange.png" alt="MTS 회원가입 화면 예시">
+                  </picture>
+                  <div class="text_area">
+                    <h5>마스터카드 서비스 웹사이트<br>접속 후 [전체 메뉴] 선택</h5>
+                    <p></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="shc-slide__utils">
+            <div class="shc-slide__control">
+              <span class="swiper-pagination"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-2. 캐시백 신청하기 -->
+      <div class="how-to-steps__item">
+        <h4 class="how-to-steps__item-title">2. 캐시백 신청하기</h4>
+        <div class="swiper shc-slide travel-swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <div class="swiper-inner">
+                <div class="content-box">
+                  <picture aria-hidden="true"><img data-src="/static/images/card/travel/currency_exchange.png" alt="">
+                  </picture>
+                  <div class="text_area">
+                    <h5>[로그인] 진행</h5>
+                    <p></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="shc-slide__utils">
+            <div class="shc-slide__control">
+              <span class="swiper-pagination"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-3. 캐시백 받기 -->
+      <div class="how-to-steps__item">
+        <h4 class="how-to-steps__item-title">3. 캐시백 받기</h4>
+
+        <ul class="step-guide">
+          <li class="step-guide__item">
+            <picture aria-hidden="true"><img data-src="/static/svg/logo/card/usa.svg" alt="아이콘"></picture>
+            <div class="step-guide__item-text">
+              <strong>1. 혜택 바로받는 가맹점</strong>
+              <span>평균 10일(최대 90일)내 지급</span>
+            </div>
+          </li>
+          <li class="step-guide__item">
+            <picture aria-hidden="true"><img data-src="/static/svg/logo/card/usa.svg" alt="아이콘"></picture>
+            <div class="step-guide__item-text">
+              <strong>2. 혜택 신청하는 가맹점</strong>
+              <span>평균 10일(최대 90일)내 지급</span>
+            </div>
+          </li>
+          <li class="step-guide__item">
+            <picture aria-hidden="true"><img data-src="/static/svg/logo/card/usa.svg" alt="아이콘"></picture>
+            <div class="step-guide__item-text">
+              <strong>3. 온라인 가맹점</strong>
+              <span>평균 90일(최대 120일)내 지급</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4. 유의사항 -->
+    <!-- 꼭! 알아두세요 -->
+    <section class="shc-important-note mt--4xl">
+      <div class="shc-accordion">
+        <button type="button" class="shc-accordion__trigger" id="accordion5" aria-controls="section5"
+          aria-expanded="true">
+          <span class="shc-accordion__text">꼭! 알아두세요</span>
+        </button>
+        <div class="shc-accordion__content" id="section5" role="region" aria-labelledby="accordion5"
+          aria-label="SOL트래블J 체크이용 꼭 알아두세요 상세 내용">
+          <ul class="shc-important-note__list">
+            <li>
+              <ul class="shc-ul shc-important-list" data-type="dot">
+                <li>가맹점별로 정확한 수령기간은 다를 수 있습니다.</li>
+                <li>‘홈페이지 로그인 > 마이페이지 > 내 리워드보기’에서 결제 내역과 캐시백 현황을 확인할 수 있습니다.</li>
+                <li>명세서에는 Mccashback, TravelRewards 이름으로 캐시백이 제공됩니다.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="shc-info-box mt--3xl mb--4xl">준법감시 심의필
+        제20250516-Dpi-002호<br>(2025.05.16~2026.05.15)</div>
+    </section>
+
+    <!-- 5. 하단 고정 CTA -->
+    <section class="shc-cta-area is-sticky">
+      <div class="shc-btn-group">
+        <button type="button" class="shc-btn theme-primary size-xl" onclick="gfn_layered.open('TCM063', event)">
+          <span class="shc-btn__text">신청하기</span>
+        </button>
+      </div>
+    </section>
+
+
+  </section> <!-- .promo-page 끝 -->
+
+
+
+</body>
+
+</html>

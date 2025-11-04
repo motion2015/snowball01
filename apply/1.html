@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정보 입력 및 본인 확인 (BEM Style)</title>
+  <style>
+    /* CSS Reset and Variables */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary-color: #3b82f6;
+      /* Blue-500 */
+      --text-color: #1f2937;
+      /* Gray-800 */
+      --placeholder-color: #6b7280;
+      /* Gray-500 */
+      --input-border-color: #d1d5db;
+      /* Gray-300 */
+      --input-bg-color: #f3f4f6;
+      /* Gray-100/input-bg */
+      --background-color: #f7f7f7;
+      --info-box-bg: #f9fafb;
+      /* Gray-50 */
+      --radius: 0.75rem;
+      /* rounded-xl */
+      --dark-color: #374151;
+      /* Gray-700 for tabs */
+
+      /* Consent Label Colors */
+      --label-benefit-bg: #dcfce7;
+      /* Green-100 */
+      --label-benefit-text: #16a34a;
+      /* Green-600 */
+      --label-normal-bg: #fef3c7;
+      /* Yellow-100 */
+      --label-normal-text: #d97706;
+      /* Yellow-700 */
+      --label-safe-bg: #dbeafe;
+      /* Indigo-100 */
+      --label-safe-text: #4f46e5;
+      /* Indigo-600 */
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: var(--background-color);
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      font-size: 1rem;
+      /* 기본 폰트 크기를 16px (1rem)으로 다시 설정 */
+    }
+
+    /* -------------------------------------- */
+    /* BEM: registration-form Block */
+    /* -------------------------------------- */
+    .registration-form {
+      width: 100%;
+      max-width: 640px;
+      background-color: #fff;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      /* shadow-xl */
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      /* p-6 */
+      margin: 2rem 0;
+      /* my-8 */
+    }
+
+    /* Responsive padding for larger screens */
+    @media (min-width: 640px) {
+      body {
+        padding: 2rem;
+        /* sm:p-8 */
+      }
+
+      .registration-form {
+        padding: 2rem;
+        /* sm:p-8 */
+      }
+    }
+
+    /* -------------------------------------- */
+    /* BEM: form-field Element */
+    /* -------------------------------------- */
+    .form-field {
+      margin-bottom: 1.75rem;
+      /* 간격 조정 */
+    }
+
+    .form-field__label {
+      display: block;
+      font-size: 0.9375rem;
+      /* 15px */
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-field__input {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      /* 10px 14px */
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      /* rounded-lg */
+      outline: none;
+      font-size: 0.9375rem;
+      /* 15px */
+      background-color: var(--input-bg-color);
+      transition: border-color 0.15s;
+    }
+
+    .form-field__input::placeholder {
+      color: var(--placeholder-color);
+    }
+
+    .form-field__input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 1px var(--primary-color);
+    }
+
+    /* Modifier for Resident Number and Name inputs (Underline style) */
+    .form-field__input--underline {
+      border: none;
+      border-bottom: 2px solid var(--input-border-color);
+      border-radius: 0;
+      padding: 0.625rem 0;
+      font-size: 1.125rem;
+      /* 18px */
+      background-color: transparent;
+    }
+
+    .form-field__input--underline:focus {
+      border-color: var(--primary-color);
+      box-shadow: none;
+    }
+
+    /* -------------------------------------- */
+    /* BEM: info-box Block (English Name) */
+    /* -------------------------------------- */
+    .info-box {
+      padding: 0.875rem;
+      /* 14px */
+      background-color: var(--info-box-bg);
+      border: 1px solid #e5e7eb;
+      /* Gray-200 */
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      /* space-x-3 */
+    }
+
+    .info-box__checkbox-container {
+      padding-top: 0.2rem;
+    }
+
+    .info-box__checkbox {
+      height: 1.125rem;
+      /* 18px */
+      width: 1.125rem;
+      /* 18px */
+      color: var(--primary-color);
+      border-color: var(--input-border-color);
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+
+    .info-box__content .label {
+      font-weight: 500;
+      color: #374151;
+      /* Gray-700 */
+      cursor: pointer;
+      display: block;
+      font-size: 0.9375rem;
+      /* 15px */
+    }
+
+    .info-box__content .description {
+      color: var(--placeholder-color);
+      font-size: 0.875rem;
+      /* 14px */
+      margin-top: 0.125rem;
+    }
+
+    /* BEM: input-group Block (Surname/Given Name) */
+    .input-group {
+      margin-top: 0.875rem;
+      /* 14px */
+      display: flex;
+      gap: 0.875rem;
+      /* 14px */
+    }
+
+    .input-group__item {
+      flex: 1 1 0%;
+    }
+
+    .input-group__item .label {
+      display: block;
+      font-size: 0.75rem;
+      /* 12px */
+      font-weight: 500;
+      color: var(--placeholder-color);
+      margin-bottom: 0.25rem;
+    }
+
+    /* -------------------------------------- */
+    /* BEM: dropdown-field Block (Income/Score) */
+    /* -------------------------------------- */
+    .dropdown-field {
+      position: relative;
+    }
+
+    .dropdown-field__select {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      /* 10px 14px */
+      padding-right: 2.5rem;
+      /* Space for the custom arrow */
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      outline: none;
+      font-size: 0.9375rem;
+      /* 15px */
+      background-color: #fff;
+      appearance: none;
+      /* Hide default select arrow */
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .dropdown-field__select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 1px var(--primary-color);
+    }
+
+    .dropdown-field__arrow {
+      position: absolute;
+      top: 50%;
+      right: 0.5rem;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem;
+      color: #4b5563;
+      /* Gray-700 */
+      pointer-events: none;
+    }
+
+    /* -------------------------------------- */
+    /* Tooltip/Info icon styling for labels */
+    /* -------------------------------------- */
+    .form-field__label-group,
+    .identity-block__header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-field__label-group .info-icon,
+    .identity-block__header .info-icon {
+      color: #9ca3af;
+      /* Gray-400 */
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* -------------------------------------- */
+    /* BEM: agreement-block Block (Mobile Auth) */
+    /* -------------------------------------- */
+    .agreement-block {
+      margin-bottom: 1.75rem;
+      /* 28px */
+    }
+
+    .agreement-block__title {
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.875rem;
+      /* 14px */
+      font-size: 1rem;
+      /* 16px */
+    }
+
+    /* -------------------------------------- */
+    /* BEM: consent-group Block (Small for Mobile Auth) */
+    /* -------------------------------------- */
+    .consent-group {
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 1.75rem;
+      /* 28px */
+      overflow: hidden;
+    }
+
+    .consent-group__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.875rem 1rem;
+      /* 14px 16px */
+      cursor: pointer;
+      background-color: var(--info-box-bg);
+      font-weight: 600;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--input-border-color);
+      font-size: 1rem;
+      /* 16px */
+    }
+
+    .consent-group__header-text {
+      display: flex;
+      align-items: center;
+    }
+
+    .consent-group__toggle-icon {
+      transition: transform 0.2s;
+      display: block;
+    }
+
+    .consent-group--expanded .consent-group__toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .consent-group__detail {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out;
+      background-color: #fff;
+    }
+
+    .consent-group--expanded .consent-group__detail {
+      max-height: 1000px;
+      /* Sufficient height for smooth transition */
+      padding: 0.5rem 1rem;
+    }
+
+    /* -------------------------------------- */
+    /* BEM: consent-item Element */
+    /* -------------------------------------- */
+    .consent-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      /* 8px */
+      border-bottom: 1px dashed #eee;
+    }
+
+    .consent-item:last-child {
+      border-bottom: none;
+    }
+
+    .consent-item--nested {
+      padding-left: 1.5rem;
+    }
+
+    /* Icon styling for checkmark and dropdown chevron */
+    .icon {
+      color: var(--primary-color);
+      font-weight: bold;
+      margin-right: 0.5rem;
+      line-height: 1;
+    }
+
+    .icon--chevron {
+      color: var(--placeholder-color);
+      margin-right: 0;
+    }
+
+    .consent-item__text {
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+      /* 14px */
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+
+    /* Optional/Required text styling */
+    .consent-item__text .required {
+      color: var(--primary-color);
+      margin-right: 0.25rem;
+    }
+
+    .consent-item__text .optional {
+      color: var(--placeholder-color);
+      margin-right: 0.25rem;
+    }
+
+    .consent-item__link {
+      font-size: 0.875rem;
+      /* 14px */
+      color: var(--placeholder-color);
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 1px solid var(--placeholder-color);
+    }
+
+    .consent-item__link:hover {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+
+    /* -------------------------------------- */
+    /* BEM: carrier-selector Block */
+    /* -------------------------------------- */
+    .carrier-selector {
+      margin-bottom: 1.75rem;
+      /* 28px */
+    }
+
+    .carrier-selector__title {
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.875rem;
+      /* 14px */
+      font-size: 0.9375rem;
+      /* 15px */
+    }
+
+    .carrier-selector__grid {
+      display: flex;
+      /* grid 대신 flex 사용 */
+      flex-wrap: wrap;
+      /* 반응형 래핑 */
+      gap: 0.5rem;
+    }
+
+    .carrier-selector__button {
+      padding: 0.75rem 0.5rem;
+      /* 12px 8px */
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      font-weight: 500;
+      color: var(--text-color);
+      background-color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+      line-height: 1.5;
+      /* Ensure text fits well */
+      font-size: 1rem;
+      /* 16px */
+
+      /* 2열 레이아웃 설정 (모바일 기본) */
+      width: calc(50% - 0.25rem);
+    }
+
+    @media (min-width: 480px) {
+      .carrier-selector__button {
+        /* 4열 레이아웃 설정 (데스크톱/태블릿) */
+        width: calc(25% - 0.375rem);
+        /* (100% - 3*0.5rem gap) / 4 */
+      }
+    }
+
+    .carrier-selector__button:hover {
+      background-color: var(--input-bg-color);
+    }
+
+    /* Modifier: Selected state */
+    .carrier-selector__button--selected {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      background-color: #e0f2fe;
+      /* Light blue background */
+      font-weight: 700;
+      box-shadow: 0 0 0 1px var(--primary-color);
+    }
+
+    /* -------------------------------------- */
+    /* BEM: verification-input Block */
+    /* -------------------------------------- */
+    .verification-input {
+      margin-bottom: 1.25rem;
+      /* 20px */
+    }
+
+    .verification-input__label {
+      display: block;
+      font-size: 0.9375rem;
+      /* 15px */
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .verification-input__group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .verification-input__text {
+      flex-grow: 1;
+      padding: 0.625rem 0.875rem;
+      /* 10px 14px */
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      outline: none;
+      font-size: 0.9375rem;
+      /* 15px */
+      background-color: var(--input-bg-color);
+    }
+
+    .verification-input__text::placeholder {
+      color: var(--placeholder-color);
+    }
+
+    .verification-input__button {
+      padding: 0.625rem 0.875rem;
+      /* 10px 14px */
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      font-weight: 500;
+      white-space: nowrap;
+      color: var(--text-color);
+      background-color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-size: 0.9375rem;
+      /* 15px */
+    }
+
+    .verification-input__button:hover {
+      background-color: var(--input-bg-color);
+    }
+
+    /* -------------------------------------- */
+    /* BEM: identity-block Block (ID Info) */
+    /* -------------------------------------- */
+    .identity-block {
+      margin-top: 1.75rem;
+      /* 28px */
+      margin-bottom: 1.75rem;
+      /* 28px */
+    }
+
+    .identity-block__header {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 1.25rem;
+      /* 20px */
+      font-size: 1.125rem;
+      /* 18px */
+    }
+
+    .identity-block__later-check {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.625rem 0;
+      /* 10px */
+      margin-bottom: 0.875rem;
+      /* 14px */
+    }
+
+    .identity-block__later-check .icon {
+      color: var(--primary-color);
+      font-size: 1.25rem;
+      /* 20px */
+      margin-right: 0.5rem;
+      line-height: 1;
+    }
+
+    .identity-block__later-check .text {
+      font-size: 0.9375rem;
+      /* 15px */
+      color: var(--text-color);
+      line-height: 1.4;
+    }
+
+    /* BEM: tab-selector Block */
+    .tab-selector {
+      display: flex;
+      border-radius: 0.5rem 0.5rem 0 0;
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+      /* 20px */
+      border: 1px solid var(--dark-color);
+    }
+
+    .tab-selector__button {
+      flex: 1 1 50%;
+      padding: 0.875rem 1rem;
+      /* 14px 16px */
+      font-weight: 600;
+      background-color: #fff;
+      /* Default white */
+      color: var(--dark-color);
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      font-size: 1rem;
+      /* 16px */
+    }
+
+    .tab-selector__button:first-child {
+      border-right: 1px solid var(--dark-color);
+    }
+
+    /* Modifier: Selected tab */
+    .tab-selector__button--selected {
+      background-color: var(--dark-color);
+      /* Dark background */
+      color: #fff;
+    }
+
+    .tab-selector__button--selected+.tab-selector__button {
+      border-left: none;
+    }
+
+    /* BEM: driver-card Block (Mockup) */
+    .driver-card {
+      background-color: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      /* 20px */
+      margin: 0 auto 1.25rem auto;
+      /* Center the card */
+      max-width: 300px;
+      /* 300px */
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    /* BEM: input-selector Block */
+    .input-selector {
+      display: flex;
+      gap: 0.875rem;
+      /* 14px */
+      margin-bottom: 0.5rem;
+    }
+
+    .input-selector__select {
+      flex-shrink: 0;
+      width: 90px;
+      /* 90px */
+      padding: 0.625rem 0.875rem;
+      /* 10px 14px */
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      appearance: none;
+      cursor: pointer;
+      font-size: 0.9375rem;
+      /* 15px */
+      background-color: var(--input-bg-color);
+    }
+
+    .input-selector__input-group {
+      flex-grow: 1;
+    }
+
+    .input-selector__input-group .label {
+      font-size: 0.9375rem;
+      /* 15px */
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .input-selector__description {
+      font-size: 0.875rem;
+      /* 14px */
+      color: var(--placeholder-color);
+      margin-top: 0.5rem;
+    }
+
+    /* -------------------------------------- */
+    /* BEM: card-agreement-block Block (Card Agreements) */
+    /* -------------------------------------- */
+    .card-agreement-block {
+      margin-top: 1.75rem;
+      /* 28px */
+      margin-bottom: 2.5rem;
+      /* 40px */
+    }
+
+    .card-agreement-block__title {
+      font-weight: 600;
+      color: var(--text-color);
+      font-size: 1.125rem;
+      /* 18px */
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #d1d5db;
+      margin-bottom: 0.875rem;
+      /* 14px */
+    }
+
+    /* BEM: all-consent-button */
+    .all-consent-button {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      /* 14px 16px */
+      font-weight: 700;
+      font-size: 1rem;
+      /* 16px */
+      background-color: #fff;
+      color: var(--dark-color);
+      border: 1px solid var(--input-border-color);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-bottom: 1.25rem;
+      /* 20px */
+    }
+
+    .all-consent-button--selected {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      box-shadow: 0 0 0 1px var(--primary-color);
+    }
+
+    /* BEM: agreement-list Block */
+    .agreement-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+      /* 14px */
+    }
+
+    /* BEM: consent-group--large Block (Top-level agreements) */
+    .consent-group--large {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin-bottom: 0.875rem;
+      /* 14px */
+    }
+
+    .consent-group--large .consent-item {
+      padding: 0.875rem 1rem;
+      /* 14px 16px */
+      border-bottom: none;
+      cursor: default;
+      /* Items in large group are not individually collapsible/clickable here */
+    }
+
+    .consent-group--large .consent-item__text {
+      font-size: 0.9375rem;
+      /* 15px */
+      font-weight: 500;
+    }
+
+    /* Large Group Header Style */
+    .consent-group--large__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 0.875rem 1rem;
+      /* 14px 16px */
+      cursor: pointer;
+      background-color: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .consent-group--large__header-text {
+      flex-grow: 1;
+    }
+
+    .consent-group--large__header .icon {
+      font-size: 1.25rem;
+      /* 20px */
+      margin-right: 0.625rem;
+      /* 10px */
+      padding-top: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .consent-group--large__header-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+      /* 15px */
+      color: var(--text-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .consent-group--large__header-description {
+      font-size: 0.875rem;
+      /* 14px */
+      color: var(--placeholder-color);
+      line-height: 1.4;
+    }
+
+    .consent-group--large__toggle-icon {
+      transition: transform 0.2s;
+      color: var(--placeholder-color);
+      margin-left: 0.875rem;
+      /* 14px */
+      padding-top: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .consent-group--large--expanded .consent-group--large__toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .consent-group--large__detail {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out;
+      background-color: var(--info-box-bg);
+    }
+
+    .consent-group--large--expanded .consent-group--large__detail {
+      max-height: 2000px;
+      /* Sufficient height */
+    }
+
+    /* Modifier for sub-items within large groups */
+    .consent-item--sub {
+      padding: 0.625rem 0.875rem 0.625rem 2.5rem;
+      /* 10px 14px 10px 40px */
+      border-bottom: 1px dashed #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .consent-item--sub:last-child {
+      border-bottom: none;
+    }
+
+    /* BEM: Consent Label */
+    .consent-label {
+      display: inline-block;
+      padding: 0.05rem 0.4rem;
+      /* 패딩 조정 */
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      /* 12px */
+      font-weight: 600;
+      margin-left: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .consent-label--benefit {
+      background-color: var(--label-benefit-bg);
+      color: var(--label-benefit-text);
+    }
+
+    .consent-label--normal {
+      background-color: var(--label-normal-bg);
+      color: var(--label-normal-text);
+    }
+
+    .consent-label--safe {
+      background-color: var(--label-safe-bg);
+      color: var(--label-safe-text);
+    }
+
+    /* Final button style */
+    .final-button {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      /* 14px 16px */
+      border-radius: 0.5rem;
+      /* rounded-lg */
+      font-weight: 700;
+      font-size: 1rem;
+      /* 16px */
+      background-color: var(--input-border-color);
+      /* Initial gray/disabled look */
+      color: #fff;
+      border: none;
+      cursor: not-allowed;
+      transition: background-color 0.2s;
+    }
+
+    .final-button--active {
+      background-color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .final-button--active:hover {
+      background-color: #2563eb;
+    }
+
+    /* Apply primary color to the final button */
+    .final-button--submit {
+      background-color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    .final-button--submit:hover {
+      background-color: #2563eb;
+    }
+  </style>
+  <script>
+    // 토글 기능 (BEM 클래스 제어)
+    function toggleConsentDetail() {
+      const group = document.getElementById('full-consent-group');
+      group.classList.toggle('consent-group--expanded');
+    }
+
+    // 통신사 선택 기능 (BEM 클래스 제어)
+    function selectCarrier(carrierId) {
+      const buttons = document.querySelectorAll('.carrier-selector__button');
+      buttons.forEach(btn => btn.classList.remove('carrier-selector__button--selected'));
+
+      const selectedButton = document.getElementById(carrierId);
+      if (selectedButton) {
+        selectedButton.classList.add('carrier-selector__button--selected');
+      }
+    }
+
+    // 신분증 탭 선택 기능
+    function selectIdType(tabId) {
+      const tabs = document.querySelectorAll('.tab-selector__button');
+      tabs.forEach(tab => tab.classList.remove('tab-selector__button--selected'));
+      document.getElementById(`tab-${tabId}`).classList.add('tab-selector__button--selected');
+
+      console.log(`Selected ID type: ${tabId}`);
+    }
+
+    // 대형 약관 그룹 토글 기능
+    function toggleLargeConsentGroup(groupId) {
+      const group = document.getElementById(groupId);
+      group.classList.toggle('consent-group--large--expanded');
+    }
+
+    // 전체 동의 버튼 토글 기능
+    function toggleAllConsents(buttonId) {
+      const button = document.getElementById(buttonId);
+      // 전체 동의 버튼의 상태를 토글
+      button.classList.toggle('all-consent-button--selected');
+
+      // 해당 섹션의 모든 그룹을 확장/축소 (예시)
+      const isSelected = button.classList.contains('all-consent-button--selected');
+
+      // 이 예시에서는 카드 발급 서비스 동의 섹션의 그룹만 처리 (consent-service-group-1, 2)
+      const serviceGroups = [
+        document.getElementById('consent-service-group-1'),
+        document.getElementById('consent-service-group-2')
+      ];
+
+      serviceGroups.forEach(group => {
+        if (group) {
+          if (isSelected) {
+            group.classList.add('consent-group--large--expanded');
+          } else {
+            group.classList.remove('consent-group--large--expanded');
+          }
+        }
+      });
+
+      console.log("Toggle All Consents clicked.");
+    }
+
+    // 초기 로드 시 휴대폰 인증 및 신분증 탭 선택 상태 설정
+    window.onload = function () {
+      // 초기 로드 시 SKT를 선택된 상태로 설정 (예시)
+      selectCarrier('carrier-skt');
+      // 초기 로드 시 운전면허증 탭을 선택된 상태로 설정
+      selectIdType('driver-license');
+
+      // 서비스 동의 그룹 기본값: 첫 번째 그룹은 확장 상태, 두 번째 그룹은 축소 상태
+      document.getElementById('consent-service-group-1').classList.add('consent-group--large--expanded');
+      document.getElementById('consent-service-group-2').classList.add('consent-group--large--expanded');
+    }
+  </script>
+</head>
+
+<body>
+  <div class="registration-form">
+    <form onsubmit="return false;">
+
+      <!-- 1. Resident Registration Number (주민등록번호) -->
+      <div class="form-field">
+        <label for="reg-number" class="form-field__label">주민등록번호</label>
+        <input type="text" id="reg-number" placeholder="- 없이 숫자 13자리 입력"
+          class="form-field__input form-field__input--underline">
+      </div>
+
+      <!-- 2. Name (이름) -->
+      <div class="form-field">
+        <label for="name" class="form-field__label">이름</label>
+        <input type="text" id="name" placeholder="실명 입력" class="form-field__input form-field__input--underline">
+      </div>
+
+      <!-- 3. English Name (영문이름) -->
+      <div class="form-field">
+        <label class="form-field__label">영문이름</label>
+
+        <!-- English Name Info Box -->
+        <div class="info-box">
+          <div class="info-box__checkbox-container">
+            <input id="auto-english-name" type="checkbox" checked class="info-box__checkbox">
+          </div>
+          <div class="info-box__content">
+            <label for="auto-english-name" class="label">한글이름 영문자 자동 표기</label>
+            <p class="description">여권의 영문이름과 동일한지 확인해주세요.</p>
+          </div>
+        </div>
+
+        <!-- Surname / Given Name Inputs -->
+        <div class="input-group">
+          <div class="input-group__item">
+            <label for="surname" class="label">성(Surname)</label>
+            <input type="text" id="surname" class="form-field__input">
+          </div>
+          <div class="input-group__item">
+            <label for="given-name" class="label">이름(Given name)</label>
+            <input type="text" id="given-name" class="form-field__input">
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Annual Income (연소득) -->
+      <div class="form-field">
+        <div class="form-field__label-group">
+          <label for="annual-income" class="form-field__label" style="margin-bottom: 0;">연소득</label>
+          <!-- Tooltip/Info icon -->
+          <span class="info-icon" title="연소득 정보에 대한 안내">ⓘ</span>
+        </div>
+        <div class="dropdown-field">
+          <select id="annual-income" class="dropdown-field__select">
+            <option value="" disabled selected>선택</option>
+            <option value="under20">2천만원 이하</option>
+            <option value="20to40">2천만원 초과 ~ 4천만원 이하</option>
+            <option value="40to60">4천만원 초과 ~ 6천만원 이하</option>
+            <option value="over60">6천만원 초과</option>
+          </select>
+          <!-- Custom dropdown arrow (SVG) -->
+          <div class="dropdown-field__arrow">
+            <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20">
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Credit Score (신용점수) -->
+      <div class="form-field" style="margin-bottom: 2.25rem;">
+        <label for="credit-score" class="form-field__label">신용점수</label>
+        <div class="dropdown-field">
+          <select id="credit-score" class="dropdown-field__select">
+            <option value="" disabled selected>선택</option>
+            <option value="1000">1000점 이상</option>
+            <option value="800">800점대</option>
+            <option value="600">600점대</option>
+            <option value="under600">600점 미만</option>
+          </select>
+          <!-- Custom dropdown arrow (SVG) -->
+          <div class="dropdown-field__arrow">
+            <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20">
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Agreement Block (약관동의 및 휴대폰 인증) -->
+      <div class="agreement-block">
+        <h3 class="agreement-block__title">약관동의</h3>
+
+        <!-- Full Consent Group (Mobile Auth) -->
+        <div class="consent-group consent-group--expanded" id="full-consent-group">
+          <div class="consent-group__header" onclick="toggleConsentDetail()">
+            <div class="consent-group__header-text">
+              <!-- Check icon placeholder -->
+              <span class="icon" style="font-size: 1.25rem;">✓</span>
+              <span>휴대폰 본인확인 전체 동의</span>
+            </div>
+            <!-- Dropdown Arrow Icon (Chevron) -->
+            <span class="consent-group__toggle-icon">
+              <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </span>
+          </div>
+
+          <!-- Detail Consent Items -->
+          <div class="consent-group__detail">
+            <div class="consent-item">
+              <span class="consent-item__text"><span class="required">[필수]</span> 휴대폰 본인확인 이용 동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item">
+              <span class="consent-item__text"><span class="필수">[필수]</span> 고유식별정보 처리 동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item">
+              <span class="consent-item__text"><span class="required">[필수]</span> 통신사 이용약관 동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item">
+              <span class="consent-item__text"><span class="required">[필수]</span> 개인정보 수집 및 이용 동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item">
+              <span class="consent-item__text"><span class="required">[필수]</span> 개인정보 제3자 제공 동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item">
+              <span class="consent-item__text"><span class="required">[필수]</span> 서비스 약관 및 개인정보 제3자 제공 동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+
+            <!-- Nested items for the last consent -->
+            <div class="consent-item consent-item--nested">
+              <span class="consent-item__text"><span class="icon">✓</span> 모바일 안심 서비스 약관동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item consent-item--nested">
+              <span class="consent-item__text"><span class="icon">✓</span> 모바일 안심 플러스 개인정보 제3자 제공동의</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item consent-item--nested">
+              <span class="consent-item__text"><span class="icon">✓</span> 개인정보 제3자 제공동의(KCB)</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+            <div class="consent-item consent-item--nested" style="border-bottom: none;">
+              <span class="consent-item__text"><span class="icon">✓</span> 개인정보 제3자 제공동의(이동통신사)</span>
+              <span class="consent-item__link">내용보기</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Carrier Selection -->
+        <div class="carrier-selector">
+          <h4 class="carrier-selector__title">통신사선택</h4>
+          <!-- display: grid -> display: flex로 변경 -->
+          <div class="carrier-selector__grid">
+            <button type="button" id="carrier-skt" class="carrier-selector__button carrier-selector__button--selected"
+              onclick="selectCarrier('carrier-skt')">SKT</button>
+            <button type="button" id="carrier-kt" class="carrier-selector__button"
+              onclick="selectCarrier('carrier-kt')">KT</button>
+            <button type="button" id="carrier-lgu" class="carrier-selector__button"
+              onclick="selectCarrier('carrier-lgu')">LGU+</button>
+            <button type="button" id="carrier-mvno" class="carrier-selector__button"
+              onclick="selectCarrier('carrier-mvno')">알뜰폰</button>
+          </div>
+        </div>
+
+        <!-- Mobile Phone Number Input -->
+        <div class="verification-input">
+          <label for="mobile-number" class="verification-input__label">휴대폰번호</label>
+          <div class="verification-input__group">
+            <input type="text" id="mobile-number" placeholder="- 없이 숫자만 입력" class="verification-input__text">
+            <button type="button" class="verification-input__button">인증번호전송</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Identity Block (신분증 정보) -->
+      <div class="identity-block">
+        <div class="identity-block__header">
+          신분증정보
+          <!-- Tooltip/Info icon -->
+          <span class="info-icon" title="신분증 정보 입력 안내">ⓘ</span>
+        </div>
+
+        <!-- 신분증 나중에 확인 체크박스/정보 -->
+        <div class="identity-block__later-check">
+          <!-- Check icon placeholder (v) -->
+          <span class="icon" style="font-size: 1.25rem;">✓</span>
+          <span class="text">
+            <span style="font-weight: 500;">신분증정보 나중에 확인</span><br>
+            신분증 확인(필수)이 지금 어렵다면, 상담원과 통화 시 확인 후 진행 가능합니다.
+          </span>
+        </div>
+
+        <!-- 탭 셀렉터: 운전면허증 / 주민등록증 -->
+        <div class="tab-selector">
+          <button type="button" id="tab-driver-license" class="tab-selector__button"
+            onclick="selectIdType('driver-license')">
+            운전면허증
+          </button>
+          <button type="button" id="tab-resident-id" class="tab-selector__button" onclick="selectIdType('resident-id')">
+            주민등록증
+          </button>
+        </div>
+
+        <!-- 운전면허증 목업 카드 (Active Content Area) -->
+        <div class="driver-card">
+          <!-- Placeholder SVG/Image for illustration -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
+            <div style="font-size: 0.875rem; font-weight: 600;">2종보통</div>
+            <div style="font-size: 1.0625rem; font-weight: 700;">자동차운전면허증</div>
+          </div>
+
+          <div class="driver-card__info-row">
+            <div class="driver-card__photo">
+              <!-- Placeholder person icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"
+                class="text-gray-500">
+                <path
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              </svg>
+            </div>
+            <div class="driver-card__details">
+              <div class="driver-card__number-label" style="font-size: 0.8125rem;">면허번호</div>
+              <div class="driver-card__number-value" style="color: #2563eb; font-size: 1.1875rem;">11 12-345678-90</div>
+              <div
+                style="height: 0.4rem; width: 60%; background-color: #e5e7eb; border-radius: 0.2rem; margin-bottom: 0.5rem;">
+              </div>
+              <div style="height: 0.4rem; width: 40%; background-color: #e5e7eb; border-radius: 0.2rem;"></div>
+            </div>
+            <div class="driver-card__photo" style="width: 28px; height: 28px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+                class="text-gray-500">
+                <path
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              </svg>
+            </div>
+          </div>
+
+          <div style="text-align: right; margin-top: 0.875rem;">
+            <span style="font-size: 0.8125rem; font-weight: 600; color: #1f2937; margin-right: 0.5rem;">일련번호</span>
+            <span style="font-size: 1rem; font-weight: 700; color: #2563eb;">123456</span>
+            <div class="driver-card__issuer" style="margin-top: 0.2rem; font-size: 0.8125rem;">서울지방경찰청장</div>
+          </div>
+        </div>
+
+        <!-- 신분증 입력 필드 -->
+        <div class="input-selector">
+          <div class="input-selector__input-group">
+            <label for="id-select" class="input-selector__input-group .label">선택</label>
+            <select id="id-select" class="input-selector__select" style="width: 100%;">
+              <option value="" disabled selected>선택</option>
+              <option value="seoul">서울</option>
+              <option value="gyeonggi">경기</option>
+            </select>
+          </div>
+          <div class="input-selector__input-group">
+            <label for="id-number" class="input-selector__input-group .label">면허번호 입력</label>
+            <input type="text" id="id-number" placeholder="- 없이 숫자만 입력" class="form-field__input"
+              style="background-color: #fff;">
+          </div>
+        </div>
+        <p class="input-selector__description">지역이나 앞 두자리를 선택합니다.</p>
+      </div>
+
+      <!-- 8. Card Agreement Block (카드 발급 관련 동의) -->
+      <div class="card-agreement-block">
+        <h3 class="card-agreement-block__title">카드발급 관련 동의</h3>
+
+        <!-- 전체 동의 버튼 -->
+        <button type="button" class="all-consent-button" id="all-card-consent-btn"
+          onclick="toggleAllConsents('all-card-consent-btn')">
+          전체 동의합니다
+        </button>
+
+        <div class="agreement-list">
+
+          <!-- 8.1 약관 동의에 관한 동의 -->
+          <div class="consent-group--large" id="consent-group-1">
+            <div class="consent-group--large__header" onclick="toggleLargeConsentGroup('consent-group-1')">
+              <span class="icon" style="font-size: 1.25rem;">✓</span>
+              <div class="consent-group--large__header-text">
+                <span class="consent-group--large__header-title">약관 동의에 관한 동의</span>
+              </div>
+              <span class="consent-group--large__toggle-icon">
+                <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+            </div>
+            <div class="consent-group--large__detail">
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 신용카드 개인회원 약관 및 부속약관(<span
+                    class="required">필수</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 신용카드 금융소비자의 권익에 관한 중요사항(<span
+                    class="required">필수</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8.2 개인(신용)정보 필수적 동의 -->
+          <div class="consent-group--large" id="consent-group-2">
+            <div class="consent-group--large__header" onclick="toggleLargeConsentGroup('consent-group-2')">
+              <span class="icon" style="font-size: 1.25rem;">✓</span>
+              <div class="consent-group--large__header-text">
+                <span class="consent-group--large__header-title">개인(신용)정보 필수적 동의</span>
+              </div>
+              <span class="consent-group--large__toggle-icon">
+                <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+            </div>
+            <div class="consent-group--large__detail">
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 개인(신용)정보 수집・이용에 관한 동의(<span
+                    class="required">필수</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 개인(신용)정보 필수 조회에 관한 동의(<span
+                    class="required">필수</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 개인(신용)정보 필수 제공에 관한 동의(<span
+                    class="required">필수</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8.3 회원가입 및 발급신청 동의 -->
+          <div class="consent-group--large" id="consent-group-3">
+            <div class="consent-group--large__header" onclick="toggleLargeConsentGroup('consent-group-3')">
+              <span class="icon" style="font-size: 1.25rem;">✓</span>
+              <div class="consent-group--large__header-text">
+                <span class="consent-group--large__header-title">회원가입 및 발급신청 동의</span>
+                <span class="consent-group--large__header-description">본인은 카드 실제 소유자와 동일하며, 위 기재된 사실과 다름이 없음을 확인하고 회원가입을
+                  신청합니다.</span>
+              </div>
+              <span class="consent-group--large__toggle-icon">
+                <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+            </div>
+            <div class="consent-group--large__detail">
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 발급신청 내용 확인 및 동의 (<span
+                    class="required">필수</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8.4 카드발급 관련 개인(신용)정보 동의 -->
+          <div class="consent-group--large" id="consent-group-4">
+            <div class="consent-group--large__header" onclick="toggleLargeConsentGroup('consent-group-4')">
+              <span class="icon" style="font-size: 1.25rem;">✓</span>
+              <div class="consent-group--large__header-text">
+                <span class="consent-group--large__header-title">카드발급 관련 개인(신용)정보 동의</span>
+              </div>
+              <span class="consent-group--large__toggle-icon">
+                <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+            </div>
+            <div class="consent-group--large__detail">
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 공공 마이데이터 개인(신용)정보 수집・이용 동의 및
+                  제공요구서</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 신용평가기관 정보활용 신청정보 자동입력(<span
+                    class="optional">선택</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 9. Card Service Agreement Block (카드 발급 관련 서비스 동의) - NEW SECTION -->
+      <div class="card-agreement-block">
+        <h3 class="card-agreement-block__title">카드발급 관련 서비스 동의</h3>
+
+        <!-- 전체 동의 버튼 (별도의 버튼) -->
+        <button type="button" class="all-consent-button" id="all-service-consent-btn"
+          onclick="toggleAllConsents('all-service-consent-btn')">
+          전체 동의합니다
+        </button>
+
+        <div class="agreement-list">
+
+          <!-- 9.1 개인(신용)정보 동의(선택) -->
+          <div class="consent-group--large" id="consent-service-group-1">
+            <div class="consent-group--large__header" onclick="toggleLargeConsentGroup('consent-service-group-1')">
+              <span class="icon" style="font-size: 1.25rem;">✓</span>
+              <div class="consent-group--large__header-text">
+                <span class="consent-group--large__header-title">개인(신용)정보 동의(<span class="optional"
+                    style="margin-right: 0;">선택</span>)</span>
+                <div class="form-field__label-group" style="margin-top: 0.25rem;">
+                  <span style="font-size: 0.875rem; color: var(--placeholder-color);">동의 등급제 안내</span>
+                  <!-- Tooltip/Info icon -->
+                  <span class="info-icon" title="동의 등급제 안내">ⓘ</span>
+                </div>
+              </div>
+              <span class="consent-group--large__toggle-icon">
+                <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+            </div>
+            <div class="consent-group--large__detail">
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 카드 및 금융상품・서비스 안내 및 이용권유를 위한
+                  수집・이용 <span class="consent-label consent-label--benefit">다소혜택</span></span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 카드 및 금융상품・서비스 이외의 부수서비스 안내 등을
+                  위한 수집・이용 <span class="consent-label consent-label--normal">보통</span></span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 신한금융그룹 자회사 및 손자회사에 개인(신용)정보를
+                  제공 <span class="consent-label consent-label--safe">안심</span></span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 부정사용 방지 등의 목적을 위해 개인(신용)정보 제공
+                  <span class="consent-label consent-label--safe">안심</span></span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 신한은행 거래정보 제공 <span
+                    class="consent-label consent-label--safe">안심</span></span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 9.2 카드발급 및 금융서비스 동의 -->
+          <div class="consent-group--large" id="consent-service-group-2">
+            <div class="consent-group--large__header" onclick="toggleLargeConsentGroup('consent-service-group-2')">
+              <span class="icon" style="font-size: 1.25rem;">✓</span>
+              <div class="consent-group--large__header-text">
+                <span class="consent-group--large__header-title">카드발급 및 금융서비스 동의</span>
+              </div>
+              <span class="consent-group--large__toggle-icon">
+                <svg class="fill-current" style="height: 1rem; width: 1rem;" xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </span>
+            </div>
+            <div class="consent-group--large__detail">
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 장기카드대출(카드론) 이용동의(<span
+                    class="optional">선택</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 단기카드대출(현금서비스) 이용동의(<span
+                    class="optional">선택</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+              <div class="consent-item consent-item--sub">
+                <span class="consent-item__text"><span class="icon icon--chevron">〉</span> 해외원화결제(DCC)차단서비스 이용동의(<span
+                    class="optional">선택</span>)</span>
+                <span class="consent-item__link">내용보기</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Final Verification Button (신청완료) -->
+      <button type="submit" class="final-button final-button--submit">
+        신청완료
+      </button>
+
+    </form>
+  </div>
+</body>
+
+</html>

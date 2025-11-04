@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>순수 CSS 슬라이더</title>
+  <style>
+    /* 기본 스타일 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* 1. 슬라이더 전체 컨테이너 */
+    .slider-container {
+      width: 800px;
+      /* 화면이 800px보다 작아지면 꽉 채움 */
+      max-width: 100%;
+      height: 500px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      /* [중요] 이 영역 밖으로 나가는 이미지를 숨김 */
+      overflow: hidden;
+
+      /* 버튼 배치를 위한 기준점 */
+      position: relative;
+    }
+
+    /* 2. 모든 슬라이드(이미지)를 감싸는 래퍼 */
+    .slider-wrapper {
+      /* 이미지들을 가로로 나열 */
+      display: flex;
+
+      height: 100%;
+
+      /* [애니메이션] 
+               transform 속성이 바뀔 때 0.5초 동안 부드럽게 
+               '날아오는' 효과를 줍니다.
+            */
+      transition: transform 0.5s ease-in-out;
+    }
+
+    /* 3. 개별 슬라이드 (이미지 1개) */
+    .slide {
+      /* [중요] 각 슬라이드가 컨테이너의 100% 너비를 가짐 */
+      min-width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      /* 패딩, 테두리 포함 */
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      /* 이미지가 찌그러지지 않고 꽉 차게 */
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 4. 좌/우 화살표 버튼 스타일 */
+    .slider-btn {
+      position: absolute;
+      /* 세로 중앙 정렬 */
+      top: 50%;
+      transform: translateY(-50%);
+
+      z-index: 10;
+      /* 이미지보다 위에 표시 */
+      background-color: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.2s;
+    }
+
+    .slider-btn:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    #prev-btn {
+      left: 15px;
+    }
+
+    #next-btn {
+      right: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 5. 슬라이더 HTML 구조 -->
+  <div class="slider-container">
+    <!-- 이미지 래퍼 -->
+    <div class="slider-wrapper">
+
+      <!-- ▼▼▼ 여기에 5개의 이미지 경로를 넣어주세요 ▼▼▼ -->
+
+      <!-- 슬라이드 1 -->
+      <div class="slide">
+        <img src="https://placehold.co/800x500/007aff/ffffff?text=Image+1" alt="이미지 1">
+      </div>
+
+      <!-- 슬라이드 2 -->
+      <div class="slide">
+        <img src="https://placehold.co/800x500/ff3b30/ffffff?text=Image+2" alt="이미지 2">
+      </div>
+
+      <!-- 슬라이드 3 -->
+      <div class="slide">
+        <img src="https://placehold.co/800x500/34c759/ffffff?text=Image+3" alt="이미지 3">
+      </div>
+
+      <!-- 슬라이드 4 -->
+      <div class="slide">
+        <img src="https://placehold.co/800x500/ff9500/ffffff?text=Image+4" alt="이미지 4">
+      </div>
+
+      <!-- 슬라이드 5 -->
+      <div class="slide">
+        <img src="https://placehold.co/800x500/5856d6/ffffff?text=Image+5" alt="이미지 5">
+      </div>
+
+      <!-- ▲▲▲ 여기까지 이미지 5개 입니다 ▲▲▲ -->
+    </div>
+
+    <!-- 좌/우 버튼 -->
+    <button id="prev-btn" class="slider-btn">&lt;</button>
+    <button id="next-btn" class="slider-btn">&gt;</button>
+  </div>
+
+  <!-- 6. 버튼 제어를 위한 JavaScript -->
+  <script>
+    // 필요한 HTML 요소들을 가져옵니다.
+    const sliderWrapper = document.querySelector('.slider-wrapper');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    // 총 슬라이드 개수 (여기서는 5개)
+    const totalSlides = 5;
+
+    // 현재 보여지는 슬라이드 번호 (0부터 시작)
+    let currentSlide = 0;
+
+    // 슬라이드를 이동시키는 함수
+    function goToSlide(slideIndex) {
+      // 5번(index 4)에서 다음 누르면 1번(index 0)으로
+      if (slideIndex >= totalSlides) {
+        slideIndex = 0;
+      }
+      // 1번(index 0)에서 이전 누르면 5번(index 4)으로
+      else if (slideIndex < 0) {
+        slideIndex = totalSlides - 1;
+      }
+
+      // 현재 슬라이드 번호 업데이트
+      currentSlide = slideIndex;
+
+      // [핵심] slider-wrapper를 X축으로 이동시킵니다.
+      // CSS의 'transition' 속성 때문에 부드럽게 "날아가는" 애니메이션이 됩니다.
+      sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    // '다음' 버튼 클릭 시
+    nextBtn.addEventListener('click', () => {
+      goToSlide(currentSlide + 1);
+    });
+
+    // '이전' 버튼 클릭 시
+    prevBtn.addEventListener('click', () => {
+      goToSlide(currentSlide - 1);
+    });
+
+    // 페이지 로드 시 첫 번째 슬라이드로 초기화
+    goToSlide(0);
+  </script>
+
+</body>
+
+</html>

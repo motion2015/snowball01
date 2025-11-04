@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <template>
+    id: MOBFM036R2201
+    workid:TCM189
+    title:
+    menu: 카드 > 기타 > 멀티멥버십 > HAPPY POINT
+    publish: 박민숙
+    publishVersion: 0.8_
+    rework:
+    status: 완료
+  </template>
+  <inject file="/components/head-meta.html" label="카드" />
+  <inject file="/components/head-css.html" />
+  <inject file="/components/head-js.html" hub_css=",'/assets/css/pages/card.scss'" />
+
+  <script>
+    window.pageBreadcrumb = [
+      { text: "카드", url: "/card" },
+      { text: "멀티멤버십", url: "/card/#" }
+      { text: "멀티멤버십", url: "/card/#/#" }
+    ];
+  </script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 공통 HEADER inject -->
+    <inject file="/components/header.html" label="카드 / 카드 찾기" />
+    <!-- Main Content -->
+    <main id="shcMainContent" class="shc-main bottom-spacing muiti-membership">
+      <section class="shc-section multi-membership">
+        <h1 class="sr-only">멀티멤버십</h1>
+        <div class="miltimembership-terms happypoint">
+          <div class="inner-box">
+            <picture><img data-src="/static/svg/logo/card/happy-white.svg" alt="Happy Poing Logo"></picture>
+            <p>구매금액의 일정률 포인트 적립</p>
+          </div>
+        </div>
+
+        <div class="shc-accordion type-terms is-open">
+          <div class="shc-terms__main mt--4xl">
+            <label class="shc-checkbox">
+              <input type="checkbox" class="shc-checkbox__input" />
+              <span class="shc-checkbox__label">전체 동의할게요</span>
+            </label>
+          </div>
+          <button class="shc-accordion__trigger is-active" id="termsAccordion1" aria-controls="termsAccordionSection1"
+            aria-expanded="false" aria-label="약관 전체 보기" hidden></button>
+
+          <div class="shc-accordion__content mt--4xl" id="termsAccordionSection1" role="region"
+            aria-labelledby="termsAccordion1">
+
+            <div class="shc-terms__row">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수]개인정보 제3자 제공동의</span>
+                </label>
+              </div>
+              <button class="shc-accordion__trigger" id="termsProcessAccordion1-1"
+                aria-controls="termsProcessAccordionSection1-1" aria-expanded="false"
+                aria-label="개인정보 제공 동의 약관 보기"></button>
+              <div class="shc-accordion__content" id="termsProcessAccordionSection1-1"
+                aria-labelledby="termsProcessAccordion1-1">
+                <ul class="shc-ul">
+                  <li>[필수]멤버십 서비스 가입 및 이용을 위한 개인정보<br>
+                    제3자 제공 동의<br>
+                    신한카드㈜는 멀티 멤버십 서비스 가입 및 이용을 위해 아래와 같은 정보를 제공합니다.
+                  </li>
+                  <li>1. 제공받는 자: (주)에스피씨클라우드</li>
+                  <li>2. 제공항목 및 목적</li>
+                  <li>
+                    <ul class="shc-ul shc-important-list ml--xl" data-type="dash">
+                      <li>서비스 가입 및 회원식별: 이름, 본인확인값(CI), 핸드폰번호, 생년월일, 성별</li>
+                      <li>고객문의대응: 이름, 핸드폰번호</li>
+                    </ul>
+                  </li>
+                  <li>3. 보유 및 이용기간: (주)에스피씨클라우드가 제공하는 서비스 탈퇴 시까지
+
+                    <ul class="shc-ul shc-important-list ml--xl" data-type="asterisk">
+                      <li>제3자 제공에 동의를 거부하실 수 있습니다. 단, 동의 하지 않으시는 경우, (주)에스피씨클라우드 가 제공하는 서비스 가입 및 이용이 불가능합니다.</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <h2 class="title--s mt--3xl">제휴사 약관</h2>
+
+            <div class="shc-terms__row mt--md">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수]이용약관</span>
+                </label>
+              </div>
+              <button type="button" class="shc-ico-btn shc-icon--chevron--gray" aria-label="이용약관 보기">
+              </button>
+            </div>
+            <div class="shc-terms__row mt--md mb--4xl">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수]개인정보처리방침</span>
+                </label>
+              </div>
+              <button type="button" class="shc-ico-btn shc-icon--chevron--gray" aria-label="개인정보처리방침 보기">
+              </button>
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+      </section>
+
+      <section class="shc-cta-area is-sticky">
+        <div class="shc-btn-group">
+          <button type="button" class="shc-btn theme-primary size-xl" onclick="gfn_layered.open('TCM063', event)">
+            <span class="shc-btn__text">멤버십 연결하기</span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 공통 FOOTER inject -->
+    <inject file="/components/footer.html" label="카드 / 카드 찾기" />
+
+  </div>
+  <script>
+    function membership() {
+
+
+
+
+
+    }
+    ScriptHub.onReady('core', function () {
+      membership();
+    }); 
+  </script>
+</body>
+
+</html>

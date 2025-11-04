@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>순수 CSS 자동 슬라이더 (고유 BEM)</title>
+  <style>
+    /* 기본 스타일 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* 1. 슬라이더 블록 (Block) - 이름 변경 */
+    .custom-slider {
+      width: 800px;
+      max-width: 100%;
+      height: 500px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 2. 슬라이더 래퍼 (Element) - 이름 변경 */
+    .custom-slider__wrapper {
+      display: flex;
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    /* 3. 개별 슬라이드 (Element) - 이름 변경 */
+    .custom-slider__slide {
+      min-width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .custom-slider__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 5. 슬라이더 HTML 구조 (고유 BEM 적용) -->
+  <div class="custom-slider"> <!-- .slider -> .custom-slider -->
+    <!-- 이미지 래퍼 -->
+    <div class="custom-slider__wrapper"> <!-- .slider__wrapper -> .custom-slider__wrapper -->
+
+      <!-- ▼▼▼ 여기에 5개의 이미지 경로를 넣어주세요 ▼▼▼ -->
+
+      <!-- 슬라이드 1 -->
+      <div class="custom-slider__slide"> <!-- .slider__slide -> .custom-slider__slide -->
+        <img src="https://placehold.co/800x500/007aff/ffffff?text=Image+1" alt="이미지 1">
+      </div>
+
+      <!-- 슬라이드 2 -->
+      <div class="custom-slider__slide">
+        <img src="https://placehold.co/800x500/ff3b30/ffffff?text=Image+2" alt="이미지 2">
+      </div>
+
+      <!-- 슬라이드 3 -->
+      <div class="custom-slider__slide">
+        <img src="https://placehold.co/800x500/34c759/ffffff?text=Image+3" alt="이미지 3">
+      </div>
+
+      <!-- 슬라이드 4 -->
+      <div class="custom-slider__slide">
+        <img src="https://placehold.co/800x500/ff9500/ffffff?text=Image+4" alt="이미지 4">
+      </div>
+
+      <!-- 슬라이드 5 -->
+      <div class="custom-slider__slide">
+        <img src="https://placehold.co/800x500/5856d6/ffffff?text=Image+5" alt="이미지 5">
+      </div>
+
+      <!-- ▲▲▲ 여기까지 이미지 5개 입니다 ▲▲▲ -->
+    </div>
+
+  </div>
+
+  <!-- 6. JavaScript (고유 BEM 적용) -->
+  <script>
+    // [수정] 고유 BEM 클래스 이름으로 변경
+    const sliderWrapper = document.querySelector('.custom-slider__wrapper');
+
+    const totalSlides = 5;
+    let currentSlide = 0;
+
+    function goToSlide(slideIndex) {
+      if (slideIndex >= totalSlides) {
+        slideIndex = 0;
+      }
+      else if (slideIndex < 0) {
+        slideIndex = totalSlides - 1;
+      }
+
+      currentSlide = slideIndex;
+
+      // [핵심] custom-slider__wrapper를 X축으로 이동시킵니다.
+      sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    goToSlide(0);
+
+    setInterval(() => {
+      goToSlide(currentSlide + 1);
+    }, 3000); 
+  </script>
+
+</body>
+
+</html>
