@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>약관 동의 (BEM)</title>
+  <style>
+    /* 기본 스타일 초기화 */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    ul,
+    ol {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    /* --- BEM Blocks --- */
+
+    /* Block: agreement-form */
+    .agreement-form {
+      width: 100%;
+      max-width: 500px;
+      background-color: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .agreement-form__title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 24px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .agreement-form__agree-all {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .agreement-form__agree-all-checkbox {
+      width: 20px;
+      height: 20px;
+      margin-right: 12px;
+    }
+
+    .agreement-form__agree-all-label {
+      font-size: 18px;
+      font-weight: 500;
+      color: #111;
+    }
+
+    .agreement-form__group {
+      border-top: 1px solid #eee;
+    }
+
+    /* Block: accordion */
+    .accordion__item {
+      border-bottom: 1px solid #eee;
+    }
+
+    .accordion__header {
+      cursor: pointer;
+      padding: 18px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 500;
+      color: #444;
+      outline: none;
+    }
+
+    .accordion__header:focus-visible {
+      outline: 2px solid #007aff;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    .accordion__chevron {
+      font-weight: bold;
+      transition: transform 0.2s ease-in-out;
+      color: #999;
+      width: 16px;
+      height: 16px;
+      text-align: center;
+      line-height: 16px;
+    }
+
+    .accordion__chevron::before {
+      content: 'v';
+    }
+
+    .accordion__item--open .accordion__chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion__content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background-color: #fafafa;
+    }
+
+    .accordion__content-inner {
+      padding: 0 16px;
+    }
+
+    .accordion__content-inner--no-padding {
+      padding: 0;
+    }
+
+    /* Nested accordion items */
+    .accordion__item .accordion__item {
+      border-top: 1px solid #f0f0f0;
+      border-bottom: none;
+    }
+
+    .accordion__item .accordion__item:first-child {
+      border-top: none;
+    }
+
+    .accordion__item .accordion__header {
+      font-size: 15px;
+      font-weight: 400;
+      padding: 14px 0;
+      color: #555;
+    }
+
+    .accordion__item .accordion__chevron {
+      font-size: 12px;
+    }
+
+    /* Block: sub-item (static list item) */
+    .sub-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      /* 0 padding left/right combined with parent */
+      font-size: 15px;
+      color: #555;
+      background-color: #fafafa;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .sub-item--numbered {
+      padding-bottom: 10px;
+      border-top: 1px dashed #e0e0e0;
+      background-color: transparent;
+      /* Override static */
+    }
+
+    .sub-item--numbered:first-child {
+      border-top: none;
+    }
+
+    .sub-item__title {
+      font-weight: 400;
+      color: #555;
+      padding: 12px 0;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    /* Block: link */
+    .link {
+      text-decoration: none;
+      color: #888;
+      font-size: 13px;
+      white-space: nowrap;
+      margin-left: 16px;
+      flex-shrink: 0;
+    }
+
+    .link--group-details {
+      display: block;
+      text-align: right;
+      padding-bottom: 14px;
+      padding-right: 4px;
+      margin-left: 0;
+    }
+
+    .link--info {
+      display: inline-block;
+      font-size: 14px;
+      color: #555;
+      padding: 16px 0 8px 0;
+      margin-left: 0;
+    }
+
+    .link__icon {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 1px solid #999;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 14px;
+      font-size: 10px;
+      font-style: normal;
+      color: #999;
+      margin-left: 4px;
+    }
+
+    /* Block: list */
+    .list {
+      padding: 8px 0 16px 16px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .list__item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+
+    .list--numbered>.accordion__item {
+      border-top: 1px dashed #e0e0e0;
+      padding-bottom: 10px;
+    }
+
+    .list--numbered .accordion__header {
+      font-size: 14px;
+      padding: 12px 0;
+      line-height: 1.5;
+    }
+
+    .list--numbered .list {
+      padding-top: 0;
+    }
+
+    .list--checked {
+      padding: 8px 0 16px 0;
+    }
+
+    .list--checked>.list__item {
+      position: relative;
+      padding: 8px 0 8px 30px;
+      display: block;
+      color: #555;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .list--checked>.list__item::before {
+      content: '✓';
+      position: absolute;
+      left: 4px;
+      top: 8px;
+      color: #666;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .list--checked .list {
+      padding: 8px 0 8px 16px;
+    }
+
+    .list--checked .list__item {
+      color: #666;
+      font-size: 14px;
+      padding: 4px 0;
+      display: block;
+    }
+
+    .list--checked.list--no-bullet>.list__item {
+      padding-left: 16px;
+    }
+
+    .list--checked.list--no-bullet>.list__item::before {
+      display: none;
+    }
+
+    .list--checked.list--no-bullet>.list__item--has-bullet::before {
+      display: block;
+    }
+
+    .list--top-border {
+      border-top: 1px solid #f0f0f0;
+    }
+
+    /* Block: text-block */
+    .text-block {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #666;
+      padding: 16px 4px;
+      margin: 0;
+    }
+
+    .text-block--subtle {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.5;
+      padding: 4px 0 0 0;
+      margin: 0;
+    }
+
+    .text-block--info {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #888;
+      padding: 16px 4px;
+      margin: 0;
+    }
+
+    .text-block--info li {
+      margin-bottom: 8px;
+    }
+
+    /* Block: tag */
+    .tag {
+      font-weight: 600;
+    }
+
+    .tag--required {
+      color: #007aff;
+      margin-right: 6px;
+    }
+
+    .tag--assurance {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-right: 6px;
+      color: #fff;
+      vertical-align: middle;
+    }
+
+    .tag--assurance-low {
+      background-color: #f59e0b;
+    }
+
+    .tag--assurance-medium {
+      background-color: #d97706;
+    }
+
+    .tag--assurance-high {
+      background-color: #0b69d9;
+    }
+
+    /* === Helper styles from IDs (now classes) === */
+    .content-1-1 .text-block {
+      padding: 16px 16px 0 16px;
+      margin: 0;
+      background-color: #fafafa;
+    }
+
+    .content-1-1 .list {
+      padding-top: 8px;
+    }
+
+    .content-1-2 .text-block {
+      padding: 16px 4px 0 4px;
+    }
+
+    .content-5 .text-block--info {
+      padding: 16px 16px 0 16px;
+    }
+
+    .content-5 .list--checked {
+      padding: 8px 0 0 0;
+    }
+
+    .content-5-3 .text-block--subtle {
+      padding-left: 0;
+    }
+
+    .content-6 .text-block {
+      padding: 16px 4px 0 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="agreement-form">
+    <h2 class="agreement-form__title">카드를 신청하려면<br>약관에 동의해주세요</h2>
+
+    <div class="agreement-form__agree-all">
+      <input type="checkbox" id="agreeAll" class="agreement-form__agree-all-checkbox">
+      <label for="agreeAll" class="agreement-form__agree-all-label">전체 동의할게요</label>
+    </div>
+
+    <div class="agreement-form__group">
+
+      <!-- 1. 약관 등에 관한 동의 -->
+      <div class="accordion__item accordion__item--open">
+        <div class="accordion__header" role="button" tabindex="0" aria-expanded="true" aria-controls="content-1">
+          <span class="accordion__title">약관 등에 관한 동의</span>
+          <span class="accordion__chevron"></span>
+        </div>
+        <div class="accordion__content" id="content-1">
+          <div class="accordion__content-inner accordion__content-inner--no-padding">
+            <!-- Inner padding removed, handled by items -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-1-1">
+                <span class="accordion__title"><span class="tag tag--required">[필수]</span>신용카드 개인회원 약관 및 부속 약관</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content content-1-1" id="content-1-1">
+                <p class="text-block">
+                  개인신용카드 발급 및 이용과 관련하여 귀사의 신용카드 개인회원 약관 및 부속약관에 동의합니다.
+                </p>
+                <ul class="list">
+                  <li class="list__item">
+                    <span>신용카드 개인회원 약관</span>
+                    <a href="#" class="link">자세히 보기 &gt;</a>
+                  </li>
+                  <li class="list__item">
+                    <span>신용카드 개인회원 부속약관</span>
+                    <a href="#" class="link">자세히 보기 &gt;</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-1-2">
+                <span class="accordion__title"><span class="tag tag--required">[필수]</span>신용카드 금융소비자의 권익에 관한 중요사항</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content content-1-2" id="content-1-2">
+                <div class="accordion__content-inner">
+                  <p class="text-block">
+                    금융소비자의 권익에 관한 중요사항입니다.
+                  </p>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 개인(신용)정보 필수적 동의 -->
+      <div class="accordion__item accordion__item--open">
+        <div class="accordion__header" role="button" tabindex="0" aria-expanded="true" aria-controls="content-2">
+          <span class="accordion__title">개인(신용)정보 필수적 동의</span>
+          <span class="accordion__chevron"></span>
+        </div>
+        <div class="accordion__content" id="content-2">
+          <div class="accordion__content-inner"> <!-- Replaces sub-group-list wrapper -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-2-1">
+                <span class="accordion__title"><span class="tag tag--required">[필수]</span>개인(신용)정보 필수 조회에 관한 동의</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-2-1">
+                <ul class="list">
+                  <li class="list__item"><span>고유식별정보 제공 동의·이용 동의</span></li>
+                  <li class="list__item"><span>개인신용정보 제공 동의·이용 동의</span></li>
+                </ul>
+                <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+              </div>
+            </div>
+
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-2-2">
+                <span class="accordion__title"><span class="tag tag--required">[필수]</span>개인(신용)정보 필수 제공에 관한 동의</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-2-2">
+                <ul class="list">
+                  <li class="list__item"><span>고유식별정보 제공 동의·이용 동의</span></li>
+                  <li class="list__item"><span>개인신용정보 제공 동의·이용 동의</span></li>
+                </ul>
+                <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+              </div>
+            </div>
+
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-2-3">
+                <span class="accordion__title"><span class="tag tag--required">[필수]</span>개인(신용)정보 필수적 제공에 관한 동의</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-2-3">
+                <div class="list list--numbered">
+                  <div class="accordion__item accordion__item--open">
+                    <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                      aria-controls="content-2-3-1">
+                      <span class="accordion__title">1. 종합신용정보집중기관 및 신용정보회사에...</span>
+                      <span class="accordion__chevron"></span>
+                    </div>
+                    <div class="accordion__content" id="content-2-3-1">
+                      <ul class="list">
+                        <li class="list__item"><span>고유식별정보 제공 동의</span></li>
+                        <li class="list__item"><span>개인신용정보 제공 동의</span></li>
+                      </ul>
+                      <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                    </div>
+                  </div>
+                  <div class="sub-item sub-item--numbered">
+                    <div class="sub-item__title">2. 여신금융협회 등에 개인(신용) 정보 제공</div>
+                    <ul class="list">
+                      <li class="list__item"><span>고유식별정보 제공 동의</span></li>
+                      <li class="list__item"><span>개인신용정보 제공 동의</span></li>
+                    </ul>
+                    <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                  </div>
+                  <div class="sub-item sub-item--numbered">
+                    <div class="sub-item__title">3. 고객이 요청한 서비스의 이행 유지를 위한...</div>
+                    <ul class="list">
+                      <li class="list__item"><span>고유식별정보 제공 동의</span></li>
+                      <li class="list__item"><span>개인신용정보 제공 동의</span></li>
+                    </ul>
+                    <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 카드발급 관련 개인신용정보 등록 -->
+      <div class="accordion__item accordion__item--open">
+        <div class="accordion__header" role="button" tabindex="0" aria-expanded="true" aria-controls="content-3">
+          <span class="accordion__title">카드발급 관련 개인신용정보 등록</span>
+          <span class="accordion__chevron"></span>
+        </div>
+        <div class="accordion__content" id="content-3">
+          <div class="accordion__content-inner">
+            <ul class="list list--checked">
+              <li class="list__item">
+                공공 마이데이터 개인신용정보 수집·이용
+                동의 등 및 제3자 제공 요구
+                <p class="text-block text-block--subtle">
+                  고객 마이데이터(MyData) 정보를 동의하시면 신용카드
+                  발급에 필요한 재직 여부 또는 계산보유 여부
+                  등에 관한 자료를 수집하여, 보다 빠른 카드
+                  발급이 가능합니다.
+                </p>
+              </li>
+              <li class="list__item">
+                개인신용정보 수집·이용 동의
+                <ul class="list">
+                  <li class="list__item">고유식별정보 수집·이용 동의</li>
+                  <li class="list__item">개인신용정보 수집·이용 동의</li>
+                </ul>
+              </li>
+              <li class="list__item">
+                개인신용정보 등의
+                <ul class="list">
+                  <li class="list__item">고유식별정보 수집·이용 동의</li>
+                  <li class="list__item">개인신용정보 수집·이용 동의</li>
+                </ul>
+              </li>
+              <li class="list__item">
+                본인 발급 정보 제3자 제공 요구
+                <ul class="list">
+                  <li class="list__item">본인 발급 정보 제3자 제공</li>
+                </ul>
+              </li>
+            </ul>
+            <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. [선택]신용카드 이용관련... -->
+      <div class="accordion__item accordion__item--open">
+        <div class="accordion__header" role="button" tabindex="0" aria-expanded="true" aria-controls="content-4">
+          <span class="accordion__title">[선택]신용평가기관 정보활용 신청정보 자동입력</span>
+          <span class="accordion__chevron"></span>
+        </div>
+        <div class="accordion__content" id="content-4">
+          <div class="accordion__content-inner">
+            <p class="text-block">
+              귀하는 개인정보(주소 및 연락처)의 편리한 입력을 위해 이미 동의하신 개인(신용)정보의 수집 및 이용에 관한 필수적 동의에 따라 수집한(KCB) 자택, 직장정보 등을 활용하는 것에 동의하실
+              수 있습니다. 동의를 거부하실 수 경우, KCB 등록 정보 활용이 불가하여 개인정보의 간편입력 서비스의 이용이 불가능하십니다
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- === 5. 개인(신용)정보 동의(선택) === -->
+      <div class="accordion__item accordion__item--open content-5" id="accordion-5">
+        <div class="accordion__header" role="button" tabindex="0" aria-expanded="true" aria-controls="content-5">
+          <span class="accordion__title">개인(신용)정보 동의(선택)</span>
+          <span class="accordion__chevron"></span>
+        </div>
+        <div class="accordion__content" id="content-5">
+          <div class="accordion__content-inner">
+            <a href="#" class="link link--info">동의등급제 안내 <i class="link__icon">i</i></a>
+          </div>
+          <div class="accordion__content-inner"> <!-- Replaces sub-group-list wrapper -->
+
+            <!-- 5-1. [선택]개인(신용)정보 선택 수집·이용 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-5-1">
+                <span class="accordion__title">
+                  <span class="tag tag--assurance tag--assurance-low">다소안심</span>
+                  [선택]개인(신용)정보 선택 수집·이용에 관한 동의
+                </span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-5-1">
+                <div class="accordion__content-inner">
+                  <ul class="list list--checked">
+                    <li class="list__item">고유식별정보 제공 동의</li>
+                    <li class="list__item">개인신용정보 제공 동의</li>
+                  </ul>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5-2. [선택]카드 및 금융상품·서비스 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-5-2">
+                <span class="accordion__title">
+                  <span class="tag tag--assurance tag--assurance-medium">보통</span>
+                  [선택]카드 및 금융상품·서비스 이외의 부수서비스 안내 등을 위한 수집·이용
+                </span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-5-2">
+                <div class="accordion__content-inner">
+                  <ul class="list list--checked">
+                    <li class="list__item">고유식별정보 제공 동의</li>
+                    <li class="list__item">개인신용정보 제공 동의</li>
+                  </ul>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5-3. [상품 서비스 안내] -->
+            <div class="accordion__item accordion__item--open content-5-3" id="accordion-5-3">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-5-3">
+                <span class="accordion__title">[상품 서비스 안내] 전자적 전송매체를 통한 광고성 정보의 수신을 동의하시겠습니까?</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-5-3">
+                <div class="accordion__content-inner">
+                  <ul class="list list--checked list--no-bullet">
+                    <li class="list__item list__item--has-bullet">전체</li>
+                    <li class="list__item">서면</li>
+                    <li class="list__item">E-mail</li>
+                    <li class="list__item">전화</li>
+                    <li class="list__item">휴대폰 메시지
+                      <p class="text-block text-block--subtle">(카카오톡, 네이버 알림 등 모바일메시지 포함)</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- /.sub-group-list-like -->
+
+          <ul class="text-block text-block--info">
+            <li>* 카드 상품과 부수서비스의 안내 및 이용 권유에 동의하신 경우라도, 신용정보의 이용 및 보호에 관한 법률 등에 따라 이용 권유 중단(Do-Not-Call)을 요청한 경우에 동의한
+              날로부터 2년이 경과하면 연락 중지(연락중지일로부터 2년 경과 시점)가 적용됩니다.
+              [대표전화: 1544-7000 / 홈페이지: www.shinhancard.com]</li>
+            <li>* 갱신 및 상품서비스 변경 안내 등 필수 고지사항은 상기 동의 대상에서 제외됩니다.</li>
+          </ul>
+
+          <div class="list--top-border accordion__content-inner"> <!-- Replaces sub-group-list wrapper -->
+            <!-- 5-4. [선택]신한금융 자회사 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-5-4">
+                <span class="accordion__title">
+                  <span class="tag tag--assurance tag--assurance-high">안심</span>
+                  [선택]신한금융 자회사 및 손자회사에 개인(신용)정보 제공
+                </span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-5-4">
+                <div class="accordion__content-inner">
+                  <ul class="list list--checked">
+                    <li class="list__item">개인신용정보 제공 동의</li>
+                  </ul>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5-5. [선택]보험사용 방지 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-5-5">
+                <span class="accordion__title">
+                  <span class="tag tag--assurance tag--assurance-high">안심</span>
+                  [선택]보험사용 방지 등의 목적달성을 위해 개인(신용)정보 제공
+                </span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-5-5">
+                <div class="accordion__content-inner">
+                  <ul class="list list--checked">
+                    <li class="list__item">고유식별정보 제공 동의</li>
+                    <li class="list__item">개인신용정보 제공 동의</li>
+                  </ul>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5-6. [선택]신한은행 거래정보 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-5-6">
+                <span class="accordion__title">
+                  <span class="tag tag--assurance tag--assurance-high">안심</span>
+                  [선택]신한은행 거래정보 제공
+                </span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-5-6">
+                <div class="accordion__content-inner">
+                  <ul class="list list--checked">
+                    <li class="list__item">고유식별정보 제공 동의</li>
+                    <li class="list__item">개인신용정보 제공 동의</li>
+                  </ul>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /.list--top-border -->
+        </div>
+      </div>
+      <!-- === 추가된 항목 5 끝 === -->
+
+      <!-- === 6. [선택]카드발급 및 금융서비스 동의 === -->
+      <div class="accordion__item accordion__item--open content-6" id="accordion-6">
+        <div class="accordion__header" role="button" tabindex="0" aria-expanded="true" aria-controls="content-6">
+          <span class="accordion__title">[선택]카드발급 및 금융서비스 동의</span>
+          <span class="accordion__chevron"></span>
+        </div>
+        <div class="accordion__content" id="content-6">
+          <div class="accordion__content-inner"> <!-- Replaces sub-group-list wrapper -->
+
+            <!-- 6-1. [선택]장기카드대출(카드론) 이용동의 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-6-1">
+                <span class="accordion__title">[선택]장기카드대출(카드론) 이용동의</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-6-1">
+                <div class="accordion__content-inner">
+                  <p class="text-block">
+                    미동의 시 카드론을 사용하실 수 없으며, 추후 희망 시 별도의 본인확인 절차가 필요합니다.
+                  </p>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6-2. [선택]단기카드대출(현금서비스) 이용동의 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-6-2">
+                <span class="accordion__title">[선택]단기카드대출(현금서비스) 이용동의</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-6-2">
+                <div class="accordion__content-inner">
+                  <p class="text-block">
+                    해외거래에서 원화로 결제 시 추가수수료 발생을 방지하기 위해 우리나라 원화(KRW)로 결제되지 않도록 사전에 차단하는 서비스입니다.
+                  </p>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6-3. [선택]해외원화결제(DCC)차단서비스 이용동의 -->
+            <div class="accordion__item accordion__item--open">
+              <div class="accordion__header" role="button" tabindex="0" aria-expanded="true"
+                aria-controls="content-6-3">
+                <span class="accordion__title">[선택]해외원화결제(DCC)차단서비스 이용동의</span>
+                <span class="accordion__chevron"></span>
+              </div>
+              <div class="accordion__content" id="content-6-3">
+                <div class="accordion__content-inner">
+                  <p class="text-block">
+                    해외거래에서 원화로 결제 시 추가수수료 발생을 방지하기 위해 우리나라 원화(KRW)로 결제되지 않도록 사전에 차단하는 서비스입니다.
+                  </p>
+                  <a href="#" class="link link--group-details">자세히 보기 &gt;</a>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /.sub-group-list-like -->
+        </div>
+      </div>
+      <!-- === 추가된 항목 6 끝 === -->
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // BEM으로 변경된 클래스 이름 사용
+      const accordionHeaders = document.querySelectorAll('.accordion__header');
+
+      // 초기 로드 시 'accordion__item--open' 클래스를 가진 항목들의 콘텐츠 높이를 설정합니다.
+      accordionHeaders.forEach(header => {
+        const item = header.closest('.accordion__item');
+        if (item && item.classList.contains('accordion__item--open')) {
+          const content = header.nextElementSibling;
+          if (content && content.classList.contains('accordion__content')) {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }
+        }
+      });
+
+      // 각 헤더에 클릭 이벤트를 추가합니다.
+      accordionHeaders.forEach(header => {
+        header.addEventListener('click', function () {
+          toggleAccordion(this);
+        });
+
+        // Enter 또는 Space 키로도 아코디언을 토글할 수 있도록 설정
+        header.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault(); // 기본 동작(예: 스크롤) 방지
+            toggleAccordion(this);
+          }
+        });
+      });
+
+      function toggleAccordion(header) {
+        // 클릭된 헤더의 부모 .accordion__item을 찾습니다.
+        const item = header.closest('.accordion__item');
+        if (!item) return;
+
+        // .accordion__item에서 'accordion__item--open' 클래스를 토글합니다.
+        item.classList.toggle('accordion__item--open');
+
+        // 헤더 다음의 .accordion__content 요소를 찾습니다.
+        const content = header.nextElementSibling;
+        if (!content || !content.classList.contains('accordion__content')) return;
+
+        // --- FIX START: 부모 높이 재계산을 위한 트랜지션 종료 이벤트 ---
+        // 애니메이션(max-height 변경)이 끝날 때 부모 높이를 업데이트합니다.
+        const transitionEndHandler = () => {
+          updateParentHeight(item); // 부모 높이 재계산 함수 호출
+          content.removeEventListener('transitionend', transitionEndHandler); // 이벤트 리스너 1회 실행 후 제거
+        };
+        content.addEventListener('transitionend', transitionEndHandler);
+        // --- FIX END ---
+
+
+        // 아코디언 상태에 따라 ARIA 속성을 업데이트하고 max-height를 조절합니다.
+        if (item.classList.contains('accordion__item--open')) {
+          // 열릴 때 (was closed)
+          header.setAttribute('aria-expanded', 'true');
+
+          // --- FIX ---
+          // 1. 'none'으로 설정하여 실제 높이(scrollHeight)를 측정합니다.
+          content.style.maxHeight = 'none';
+          const scrollHeight = content.scrollHeight;
+
+          // 2. 0px로 다시 설정하여 트랜지션 시작점을 만듭니다.
+          content.style.maxHeight = '0px';
+
+          // 3. 브라우저가 0px를 인지하도록 잠시(0ms) 기다린 후 실제 높이로 설정
+          setTimeout(() => {
+            content.style.maxHeight = scrollHeight + 'px';
+          }, 0);
+          // --- END FIX ---
+
+        } else {
+          // 닫힐 때 (was open)
+          header.setAttribute('aria-expanded', 'false');
+          // max-height를 0으로 설정하여 닫힘 애니메이션 실행
+          content.style.maxHeight = '0px';
+        }
+      }
+
+      /**
+       * (새로 추가된 함수)
+       * 자식 아코디언이 토글된 후, 부모 아코디언의 maxHeight를 재계산합니다.
+       * @param {HTMLElement} element - 토글된 자식 아코디언의 .accordion__item
+       */
+      function updateParentHeight(element) {
+        // 현재 아이템의 부모 .accordion__content를 찾습니다.
+        const parentContent = element.closest('.accordion__content');
+        if (!parentContent) return; // 부모가 없으면 종료
+
+        // 부모의 .accordion__item을 찾습니다.
+        const parentItem = parentContent.closest('.accordion__item');
+        // 부모가 존재하고, 부모가 '열려있는' 상태일 때만 높이를 재조정합니다.
+        if (!parentItem || !parentItem.classList.contains('accordion__item--open')) return;
+
+        // 부모가 열려있다면, 높이를 재계산합니다.
+        // 'none'으로 설정하여 자식의 변경된 높이가 반영된 scrollHeight를 다시 읽습니다.
+        parentContent.style.maxHeight = 'none';
+        const parentScrollHeight = parentContent.scrollHeight;
+
+        // 'none' 상태에서 'px' 값으로 다시 설정하여
+        // 현재 '열린' 상태를 유지하도록 합니다. (트랜지션은 없음)
+        parentContent.style.maxHeight = parentScrollHeight + 'px';
+      }
+    });
+  </script>
+
+</body>
+
+</html>

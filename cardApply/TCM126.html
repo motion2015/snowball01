@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <template>
+    id:
+    workid: TCM126
+    title:
+    menu: 카드 > 카드서비스 > 카드 간편신청
+    publish: 박민숙
+    publishVersion: 0.8_
+    rework:
+    status: 작업중
+  </template>
+  <inject file="/components/head-meta.html" label="카드" />
+  <inject file="/components/head-css.html" />
+  <inject file="/components/head-js.html" hub_css=",'/assets/css/pages/card.scss'" />
+
+  <script>
+    window.pageBreadcrumb = [
+      { text: "카드", url: "/card" },
+      { text: "카드서비스", url: "/card/#" }
+      { text: "카드 간편신청", url: "/card/#/#" }
+    ];
+  </script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 공통 HEADER inject -->
+    <inject file="/components/header.html" label="카드 Header Label" type="process" />
+    <inject file="./layered/TCM116.html" />
+    <!-- Main Content -->
+    <main id="shcMainContent" class="shc-main">
+      <section class="shc-section">
+        <h1 class="headline--s mb--4xl">카드를 신청하려면<br>약관에 동의해주세요</h1>
+
+        <div class="shc-terms mt--4xl">
+          <div class="shc-terms__main">
+            <label class="shc-checkbox">
+              <input type="checkbox" class="shc-checkbox__input" />
+              <span class="shc-checkbox__label">전체 동의할게요</span>
+            </label>
+          </div>
+        </div>
+
+
+
+        <div class="shc-accordion type-terms card is-open">
+          <div class="shc-terms__main">
+            <label class="shc-checkbox type-mark">
+              <input type="checkbox" class="shc-checkbox__input" />
+              <span class="shc-checkbox__label">약관 등에 관한 동의</span>
+            </label>
+          </div>
+          <button type="button" class="shc-accordion__trigger is-active" id="multiTermsAccordion4"
+            aria-controls="multiTermsAccordionSection4" aria-expanded="true" aria-label="약관 전체 보기"></button>
+          <div class="shc-accordion__content" id="multiTermsAccordionSection4" role="region"
+            aria-labelledby="terms-content-title-4">
+
+            <span class="shc-terms__desc" id="terms-content-title-4">[필수]멤버십 서비스 가입 및 이용을 위한 개인정보 제3자 제공 동의<br>
+              신한카드㈜는 멀티멤버십 서비스 가입 및 이용을 위해 아래와 같은 정보를 제공합니다.
+            </span>
+            <ul class="shc-ul gap--sm mt--sm">
+              <li>제공받는 자: 롯데멤버스</li>
+              <li>제공항목 및 목적
+                <ul class="shc-ul gap--sm" data-type="dash">
+                  <li>서비스 가입 및 회원식별: 성명, CI, 생년월일, 휴대폰번호</li>
+                  <li>고객문의대응: 이름, 핸드폰번호</li>
+                  <li>L.point자동적립 : 고객멤버십번호, 최초동의일자, 동의여부</li>
+                </ul>
+              </li>
+              <li>보유 및 이용기간: 롯데멤버스와의 멤버십 가입계약 해지시(멤버십 회원탈회 시)
+                <ul class="shc-ul gap--sm mt--sm" data-type="asterisk">
+                  <li>제3자 제공에 동의를 거부하실 수 있습니다. 단, 동의 하지 않으시는 경우, 롯데멤버스가 제공하는 서비스 가입 및 이용이 불가능합니다.</li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="shc-ul gap--sm mt--sm ml--lg" data-type="dot">
+              <li>
+                <p><b>제공항목</b></p>
+                <p>개인신용정보</p>
+
+              </li>
+              <li>위 일반개인정보 제공에 동의합니다.</li>
+            </ul>
+
+          </div>
+        </div>
+
+        <div class="shc-accordion type-terms card is-open">
+          <div class="shc-terms__main">
+            <label class="shc-checkbox type-mark">
+              <input type="checkbox" class="shc-checkbox__input" />
+              <span class="shc-checkbox__label">[필수]개인정보 제3자 제공동의</span>
+            </label>
+          </div>
+          <button type="button" class="shc-accordion__trigger is-active" id="multiTermsAccordion2"
+            aria-controls="multiTermsAccordionSection2" aria-expanded="true" aria-label="약관 전체 보기"></button>
+          <div class="shc-accordion__content" id="multiTermsAccordionSection2" role="region"
+            aria-labelledby="terms-content-title-2">
+            <div data-bind-cms="/pconts/html/card/digital/myDIY/agree/1188673_2335.html">
+              <span class="shc-terms__desc" id="terms-content-title-2">[필수]멀티멤버십 서비스 가입 및 이용을 위해 아래와 같은 정보를 제공합니다.
+              </span>
+              <ol class="shc-ul gap--sm mt--sm" data-type="numeric">
+                <li>제공받는 자: 에쓰-오일 주식회사</li>
+                <li>제공항목 및 목적
+                  <ul class="shc-ul gap--sm" data-type="dash">
+                    <li>서비스 가입 및 회원식별: 성명, 성별, 생년월일, 휴대폰번호</li>
+                    <li>고객문의대응: 이름, 핸드폰번호</li>
+                    <li>고객문의대응</li>
+                  </ul>
+                </li>
+                <li>보유 및 이용기간: 에쓰-오일 주식회사가 제공하는 서비스 탈퇴 시까지
+                  <ul class="shc-ul gap--sm mt--sm" data-type="asterisk">
+                    <li>제3자 제공에 동의를 거부하실 수 있습니다. 단, 동의 하지 않으시는 경우, 에쓰-오일 주식회사가 제공하는 서비스 가입 및 이용이 불가능합니다.</li>
+                  </ul>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="shc-section">
+        <h1 class="headline--s mb--4xl">카드를 신청하려면<br>약관에 동의해주세요</h1>
+
+        <div class="shc-terms mt--4xl">
+          <div class="shc-terms__main">
+            <label class="shc-checkbox">
+              <input type="checkbox" class="shc-checkbox__input" />
+              <span class="shc-checkbox__label">전체 동의할게요</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="shc-accordion type-terms process" id="agreeArea1">
+          <label class="shc-checkbox">
+            <input type="checkbox" class="shc-checkbox__input" />
+            <span class="shc-checkbox__label">약관 등에 관한 동의</span>
+          </label>
+          <button type="button" class="shc-accordion__trigger is-active" id="termsAccordion1"
+            aria-controls="termsAccordionSection1" aria-expanded="false" aria-label="필수 약관 전체 보기"></button>
+
+          <div class="shc-accordion__content" id="termsAccordionSection1" role="region"
+            aria-labelledby="termsAccordion1">
+            <div class="shc-terms__row">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수]신용카드 개인회원 약관 및 부속 약관</span>
+                </label>
+              </div>
+              <button type="button" class="shc-accordion__trigger" id="termsAccordion1-1"
+                aria-controls="termsAccordionSection1-1" aria-expanded="false" aria-label="필수 대출거래 약정 약관 보기"></button>
+              <div class="shc-accordion__content" id="termsAccordionSection1-1" aria-labelledby="termsAccordion1-1">
+                <span class="shc-terms__desc">본인은 대출거래 약정에 동의합니다.</span>
+              </div>
+            </div>
+            <div class="shc-terms__row">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수] 상환방식 변경 불가</span>
+                </label>
+              </div>
+              <button type="button" class="shc-accordion__trigger" id="termsAccordion1-2"
+                aria-controls="termsAccordionSection1-2" aria-expanded="false"
+                aria-label="필수 상환방식 변경 불가 약관 보기"></button>
+              <div class="shc-accordion__content" id="termsAccordionSection1-2" aria-labelledby="termsAccordion1-2">
+                <p class="shc-terms__desc">본인은 차후 상환방식 변경이 불가할 수 있음을 동의합니다.</p>
+              </div>
+            </div>
+            <div class="shc-terms__row">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수] 신용카드 이용금액 합산 청구</span>
+                </label>
+              </div>
+              <button type="button" class="shc-accordion__trigger" id="termsAccordion1-3"
+                aria-controls="termsAccordionSection1-3" aria-expanded="false"
+                aria-label="필수 신용카드 이용금액 합산 청구 약관 보기"></button>
+              <div class="shc-accordion__content" id="termsAccordionSection1-3" aria-labelledby="termsAccordion1-3">
+                <p class="shc-terms__desc">본인은 본 대출건을 상환 시 신용카드 이용금액(일시불/할부/단기카드대출(현금서비스))와 합산되어 청구되는 점에 동의합니다.
+                  (마이너스론의 경우 신용카드 청구와 별도 운영)</p>
+              </div>
+            </div>
+            <div class="shc-terms__row">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수] 여신거래 기본약관</span>
+                </label>
+              </div>
+              <button type="button" class="shc-ico-btn shc-icon--chevron--gray" aria-label="필수 여신거래 기본약관 보기">
+              </button>
+            </div>
+            <div class="shc-terms__row">
+              <div class="shc-terms__main">
+                <label class="shc-checkbox type-mark">
+                  <input type="checkbox" class="shc-checkbox__input" />
+                  <span class="shc-checkbox__label">[필수] 금융사고 예방을 위한 개인(신용) 정보 동의</span>
+                </label>
+              </div>
+              <button type="button" class="shc-ico-btn shc-icon--chevron--gray"
+                aria-label="필수 금융사고 예방을 위한 개인(신용) 정보 동의 보기">
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="fn-loan-terms mt--xl" id="agreeArea2">
+          <div class="shc-terms">
+            <div class="shc-terms__main">
+              <label class="shc-checkbox size-sm">
+                <input type="checkbox" class="shc-checkbox__input" />
+                <span class="shc-checkbox__label">상품설명서를 확인 후 이해했어요.</span>
+              </label>
+            </div>
+            <button type="button" class="shc-ico-btn shc-icon--chevron--gray" aria-label="상품설명서 약관 보기"></button>
+          </div>
+          <div class="shc-terms">
+            <div class="shc-terms__main">
+              <label class="shc-checkbox size-sm">
+                <input type="checkbox" class="shc-checkbox__input" />
+                <span class="shc-checkbox__label">금리인하요구권을 확인했어요.</span>
+              </label>
+            </div>
+            <!-- 금리인하요구권 약관 경로 /pconts/html/agree/1214113_1131.html -->
+            <button type="button" class="shc-ico-btn shc-icon--chevron--gray" aria-label="금리인하요구권 약관 보기"></button>
+          </div>
+          <div class="shc-terms">
+            <div class="shc-terms__main">
+              <label class="shc-checkbox size-sm">
+                <input type="checkbox" class="shc-checkbox__input" />
+                <span class="shc-checkbox__label">대출 청약철회권을 확인했어요.</span>
+              </label>
+            </div>
+            <!-- 대출 청약철회권 약관 경로 /pconts/html/agree/1229885_1131.html -->
+            <button type="button" class="shc-ico-btn shc-icon--chevron--gray" aria-label="대출 청약철회권 약관 보기">
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="shc-cta-area bottom-fixed--mobile">
+        <div class="shc-btn-group">
+          <button type="button" class="shc-btn theme-primary size-xl" onclick="gfn_layered.open('TCM116', event)">
+            <span class="shc-btn__text">다음</span>
+          </button>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- 공통 FOOTER inject -->
+    <inject file="/components/footer.html" />
+
+  </div>
+  <script>
+    function isAutoDepositEnabled() {
+      const autoDepositSwitch = document.getElementById('autoDeposit');
+      const isAIToggleChecked = autoDeposit.checked;
+
+      if (autoDepositSwitch) {
+        autoDepositSwitch.addEventListener('change', function (event) {
+
+          if (this.checked) {
+            // 켜짐 상태일 때: 'TCM202-enable' 팝업을 엽니다.
+            gfn_layered.open('TCM116', event);
+          } else {
+            // 꺼짐 상태일 때: 'TCM202-disable' 팝업을 엽니다.
+            gfn_layered.open('TCM116', event);
+          }
+        });
+      }
+    }
+    ScriptHub.onReady('core', function () {
+      isAutoDepositEnabled();
+    }); 
+  </script>
+</body>
+
+</html>

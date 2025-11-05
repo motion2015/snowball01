@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <template>
+    id:
+    workid: TCM509
+    title:
+    menu: 카드 > 카드서비스 > 카드간편신청 > 대상선별 설문 > 모집인코드
+    publish: 박민숙
+    publishVersion: 0.8_
+    rework:
+    status: 작업중
+  </template>
+  <inject file="/components/head-meta.html" label="카드" />
+  <inject file="/components/head-css.html" />
+  <inject file="/components/head-js.html" hub_css=",'/assets/css/pages/card.scss'" />
+
+  <script>
+    window.pageBreadcrumb = [
+      { text: "카드", url: "/card" },
+      { text: "카드서비스", url: "/card/#" },
+      { text: "카드간편신청", url: "/card/#/#" }
+      { text: "대상선별 설문", url: "/card/#/#/#" }
+      { text: "모집인코드", url: "/card/#/#/#/#" }
+    ];
+  </script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 공통 HEADER inject -->
+    <inject file="/components/header.html" label="카드 / 카드 서비스" type="hidden" />
+    <!-- Main Content -->
+    <main id="shcMainContent" class="shc-main top-spacing-none">
+
+      <section class="shc-section">
+        <!-- 카드간편신청 > 모집인 코드 오류 s -->
+        <div class="shc-complete-msg">
+          <span class="shc-icon shc-icon--success size-68"></span>
+          <strong class="shc-complete-msg__title">서비스 이용에<br>
+            불편을 드려 죄송합니다</strong>
+        </div>
+        <!-- 카드간편신청 > 모집인 코드 오류 e -->
+        <!-- 카드간편신청 > 입력값 오류 s -->
+        <div class="shc-complete-msg">
+          <span class="shc-icon shc-icon--success size-68"></span>
+          <strong class="shc-complete-msg__title">서비스 이용에<br>
+            불편을 드려 죄송합니다</strong>
+        </div>
+        <!-- 카드간편신청 > 입력값  오류 e -->
+      </section>
+      <section class="shc-cta-area">
+        <div class="shc-btn-group">
+          <button type="button" class="shc-btn theme-primary  size-xl">
+            <span class="shc-btn__text">확인</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 공통 FOOTER inject -->
+    <inject file="/components/footer.html" label="카드 / 카드 찾기" />
+
+  </div>
+  <script>
+
+  </script>
+</body>
+
+</html>
