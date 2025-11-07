@@ -12,7 +12,9 @@
     rework:
     status: 작업중
   </template>
-  <inject file="/components/head-meta.html" label="카드" />
+  <inject
+    file="/compone    <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와     <p>본인은 카드 실제 소유자와 동일s/head-meta.html"
+    label="카드" />
   <inject file="/components/head-css.html" />
   <inject file="/components/head-js.html" hub_css=",'/assets/css/pages/card.scss'" />
 
@@ -21,7 +23,7 @@
       { text: "카드", url: "/card" },
       { text: "카드서비스", url: "/card/#" },
       { text: "카드 간편신청", url: "/card/#/#" }
-    ];
+    동일
   </script>
 </head>
 
@@ -80,61 +82,61 @@
   </div>
   <script>
     function initInquiryNextButtonBefore() {
-      const nextButton = document.getElementById('nextButton');
+        const nextButton = document.getElementById('nextButton');
 
-      if (nextButton) {
-        nextButton.addEventListener('click', function (event) {
-          const selectedOption = document.querySelector('input[name="inquiry_type"]:checked');
+        if (nextButton) {
+          nextButton.addEventListener('click', function (event) {
+            const selectedOption = document.querySelector('input[name="inquiry_type"]:checked');
 
-          if (selectedOption) {
-            const selectedValue = selectedOption.value;
-            if (selectedValue === 'other') {
-              gfn_layered.open('TCM116', event);
-            } else if (selectedValue === 'expired' || selectedValue === 'new') {
-              window.location.href = 'https://www.naver.com';
+            if (selectedOption) {
+              const selectedValue = selectedOption.value;
+              if (selectedValue === 'other') {
+                gfn_layered.open('TCM116', event);
+              } else if (selectedValue === 'expired' || selectedValue === 'new') {
+                window.location.href = 'https://www.naver.com';
+              }
+            } else {
+              //alert('원하는 상담 내용을 선택해주세요.');
             }
-          } else {
-            //alert('원하는 상담 내용을 선택해주세요.');
-          }
-        });
+          });
+        }
       }
-    }
 
     function initInquiryNextButton() {
-      const nextButton = document.getElementById('nextButton');
-      const inquiryRadios = document.querySelectorAll('input[name="inquiry_type"]');
+        const nextButton = document.getElementById('nextButton');
+        const inquiryRadios = document.querySelectorAll('input[name="inquiry_type"]');
 
-      if (nextButton && inquiryRadios.length > 0) {
-        const selectedOptionOnLoad = document.querySelector('input[name="inquiry_type"]:checked');
+        if (nextButton && inquiryRadios.length > 0) {
+          const selectedOptionOnLoad = document.querySelector('input[name="inquiry_type"]:checked');
 
-        if (!selectedOptionOnLoad) {
-          nextButton.disabled = true;
-        }
-
-        inquiryRadios.forEach(function (radio) {
-          radio.addEventListener('change', function () {
-            nextButton.disabled = false;
-          });
-        });
-
-        nextButton.addEventListener('click', function (event) {
-          const selectedOption = document.querySelector('input[name="inquiry_type"]:checked');
-
-          if (selectedOption) {
-            const selectedValue = selectedOption.value;
-
-            if (selectedValue === 'other') {
-              gfn_layered.open('TCM116', event);
-            } else if (selectedValue === 'expired' || selectedValue === 'new') {
-              window.location.href = 'https://www.naver.com';
-            }
+          if (!selectedOptionOnLoad) {
+            nextButton.disabled = true;
           }
-        });
+
+          inquiryRadios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+              nextButton.disabled = false;
+            });
+          });
+
+          nextButton.addEventListener('click', function (event) {
+            const selectedOption = document.querySelector('input[name="inquiry_type"]:checked');
+
+            if (selectedOption) {
+              const selectedValue = selectedOption.value;
+
+              if (selectedValue === 'other') {
+                gfn_layered.open('TCM116', event);
+              } else if (selectedValue === 'expired' || selectedValue === 'new') {
+                window.location.href = 'https://www.naver.com';
+              }
+            }
+          });
+        }
       }
-    }
     ScriptHub.onReady('core', function () {
-      initInquiryNextButton();
-    });
+        initInquiryNextButton();
+      });
 
 
 
