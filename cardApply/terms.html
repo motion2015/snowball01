@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>약관 (텍스트 클릭 적용)</title>
+    <title>약관 (체크 아이콘 수정)</title>
     <style>
         /* ======== 기본 스타일 리셋 ======== */
         body {
@@ -44,40 +44,63 @@
             line-height: 1.6;
         }
 
-        /* ======== [신규] 커스텀 체크박스 스타일 ======== */
+        /* ======== [수정] 커스텀 체크박스 스타일 ======== */
         .agree-check {
+            /* 1. 기본 브라우저 스타일 제거 */
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
 
+            /* 2. 커스텀 스타일 (테두리/배경 제거) */
+            /* 아이콘 위치를 잡기 위한 크기만 유지 */
             width: 20px;
             height: 20px;
-            border: 1px solid #ccc;
-            border-radius: 50%;
-            margin-right: 12px;
+            border: none;
+            /* 테두리 제거 */
+            border-radius: 0;
+            /* 동그라미 제거 */
+            background-color: transparent;
+            /* 배경 제거 */
 
+            margin-right: 12px;
             cursor: pointer;
             position: relative;
             flex-shrink: 0;
         }
 
-        .agree-check:checked {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        .agree-check:checked::after {
+        /* [신규] 기본 체크마크 아이콘 (회색) */
+        .agree-check::after {
             content: '';
             display: block;
+
+            /* 체크마크 모양 */
             width: 5px;
             height: 10px;
-            border: solid white;
+            border: solid #aaa;
+            /* 회색 */
             border-width: 0 2px 2px 0;
+
+            /* 위치 */
             position: absolute;
             top: 4px;
             left: 7px;
             transform: rotate(45deg);
         }
+
+        /* [수정] 체크되었을 때 배경/테두리 제거 */
+        .agree-check:checked {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        /* [수정] 체크되었을 때 체크마크 (파란색) */
+        .agree-check:checked::after {
+            border-color: #007bff;
+            /* 파란색 */
+        }
+
+        /* ============================================== */
+
 
         /* ======== <details> 태그 스타일 ======== */
         details {
@@ -108,12 +131,10 @@
             outline-offset: -2px;
         }
 
-        /* [신규] summary 안의 label에 커서 적용 */
         summary>label {
             cursor: pointer;
         }
 
-        /* 2차 Depth (h2) summary 들여쓰기 */
         body>details>.content>details>summary {
             padding-left: 32px;
         }
@@ -162,7 +183,6 @@
             border-top: none;
         }
 
-        /* 3차 Depth (2차의 .content) 들여쓰기 */
         body>details>.content>details>.content {
             padding-left: 40px;
         }
@@ -322,7 +342,7 @@
                     <input type="checkbox" class="agree-check" id="check-terms-13" onclick="event.stopPropagation()">
                     <label for="check-terms-13">
                         <h2 id="terms-heading-13">제휴사 선택적 동의</h2>
-                    </label>
+                    </LAbel>
                 </summary>
             </details>
             <details class="empty" role="region" aria-labelledby="terms-heading-14">
