@@ -4,62 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>약관</title>
+    <title>약관 (체크박스 적용)</title>
     <style>
-        /* details {
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-
-        summary {
-            background-color: #eee;
-            color: #444;
-            cursor: pointer;
-            padding: 18px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            outline: none;
-            font-size: 15px;
-            transition: 0.4s;
-            position: relative;
-            list-style: none; 
-        }
-
-        summary:hover,
-        summary:focus {
-            background-color: #ccc;
-        }
-
-        summary::after {
-            content: '\25BC';
-            font-size: 13px;
-            color: #777;
-            position: absolute;
-            right: 18px;
-        }
-
-        details[open] > summary::after {
-            content: "\25B2";
-        }
-        
-        .content {
-            padding: 0 18px;
-            background-color: white;
-            overflow: hidden;
-        }
-
-
-        details.empty > summary::after {
-            content: "\25B6";
-        }
-
-        h1, h2 {
-            display: inline;
-            font-size: inherit;
-            font-weight: inherit;
-        } */
         /* ======== 기본 스타일 리셋 ======== */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -81,7 +27,6 @@
             display: block;
         }
 
-        /* 1차 Depth (h1) 폰트 강조 */
         details>summary h1 {
             font-size: 1.15rem;
             font-weight: 700;
@@ -99,6 +44,59 @@
             line-height: 1.6;
         }
 
+        /* ======== [신규] 커스텀 체크박스 스타일 ======== */
+        .agree-check {
+            /* 1. 기본 브라우저 스타일 제거 */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+
+            /* 2. 커스텀 스타일 (디자인 참고) */
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            /* 원형 */
+            margin-right: 12px;
+            /* 텍스트와의 간격 */
+
+            cursor: pointer;
+            position: relative;
+
+            /* [중요] 텍스트가 길어져도 찌그러지지 않게 함 */
+            flex-shrink: 0;
+        }
+
+        /* [신규] 체크되었을 때 (파란 배경) */
+        .agree-check:checked {
+            background-color: #007bff;
+            /* (임의의 파란색) */
+            border-color: #007bff;
+        }
+
+        /* [신규] 체크마크 아이콘 (::after 가상 요소 사용) */
+        .agree-check:checked::after {
+            content: '';
+            display: block;
+
+            /* 체크마크 모양 */
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+
+            /* 위치 */
+            position: absolute;
+            top: 4px;
+            /* 세로 중앙 (approx) */
+            left: 7px;
+            /* 가로 중앙 (approx) */
+            transform: rotate(45deg);
+        }
+
+        /* ============================================== */
+
+
         /* ======== <details> 태그 스타일 ======== */
         details {
             background-color: #fff;
@@ -112,12 +110,13 @@
         /* ======== <summary> 태그 스타일 ======== */
         summary {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            /* [수정] 세로 중앙 정렬 */
             padding: 18px 16px;
             cursor: pointer;
             list-style: none;
-            /* 기본 화살표(마커) 제거 */
+            position: relative;
+            /* ::after 아이콘 때문 */
         }
 
         summary::-webkit-details-marker {
@@ -129,15 +128,12 @@
             outline-offset: -2px;
         }
 
-        /* * [신규] 2차 Depth (h2) summary 들여쓰기 
-         * - 1차 Depth의 기본 padding(16px)에 16px를 더해 32px로 설정합니다.
-         */
+        /* 2차 Depth (h2) summary 들여쓰기 */
         body>details>.content>details>summary {
             padding-left: 32px;
         }
 
         /* ======== 커스텀 아이콘 (::after) ======== */
-
         details:not(.empty)>summary::after {
             content: '';
             display: inline-block;
@@ -147,19 +143,31 @@
             border-right: 2px solid #555;
             transform: rotate(45deg);
             transition: transform 0.2s ease-in-out;
-            /* 아이콘이 줄어들지 않도록 */
-            flex-shrink: 0;
+
+            /* [수정] 위치를 absolute로 명확히 지정 */
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            margin-top: -6px;
+            /* (8px + 2px*2)/2 - 2px (보정) */
         }
 
         details[open]:not(.empty)>summary::after {
             transform: rotate(-135deg);
+            margin-top: -3px;
+            /* (보정) */
         }
 
         details.empty>summary::after {
             content: '❯';
             font-size: 1rem;
             color: #888;
-            flex-shrink: 0;
+
+            /* [수정] 위치를 absolute로 명확히 지정 */
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         /* ======== .content (내용 영역) 스타일 ======== */
@@ -175,9 +183,7 @@
             border-top: none;
         }
 
-        /* * [신규] 3차 Depth (2차의 .content) 들여쓰기 
-         * - 2차 Depth의 기본 padding(24px)에 16px를 더해 40px로 설정합니다.
-         */
+        /* 3차 Depth (2차의 .content) 들여쓰기 */
         body>details>.content>details>.content {
             padding-left: 40px;
         }
@@ -188,11 +194,13 @@
 
     <details role="region" aria-labelledby="terms-heading-1">
         <summary>
+            <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
             <h1 id="terms-heading-1">약관 등에 관한 동의</h1>
         </summary>
         <div class="content">
             <details role="region" aria-labelledby="terms-heading-2">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-2">신용카드 개인회원 약관 및 부속약관(필수)</h2>
                 </summary>
                 <div class="content">
@@ -206,6 +214,7 @@
 
             <details role="region" aria-labelledby="terms-heading-3">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-3">신용카드 금융소비자의 권익에 관한 중요사항(필수)</h2>
                 </summary>
                 <div class="content">
@@ -217,6 +226,7 @@
 
             <details role="region" aria-labelledby="terms-heading-4">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-4">체크카드 개인회원/자동이체 약관/마이너스통장 결제계좌 설명 안내(필수)</h2>
                 </summary>
                 <div class="content">
@@ -230,16 +240,19 @@
 
     <details role="region" aria-labelledby="terms-heading-5">
         <summary>
+            <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
             <h1 id="terms-heading-5">개인(신용)정보 필수적 동의</h1>
         </summary>
         <div class="content">
             <details class="empty" role="region" aria-labelledby="terms-heading-6">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-6">제휴사 필수적 동의</h2>
                 </summary>
             </details>
             <details role="region" aria-labelledby="terms-heading-7">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-7">회원가입 및 발급신청 동의</h2>
                 </summary>
                 <div class="content">
@@ -249,11 +262,13 @@
 
             <details class="empty" role="region" aria-labelledby="terms-heading-8">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-8">카드발급 관련 개인(신용)정보 동의</h2>
                 </summary>
             </details>
             <details role="region" aria-labelledby="terms-heading-9">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-9">공공 마이데이터 개인(신용)정보 수집·이용 동의 및 제공요구서</h2>
                 </summary>
                 <div class="content">
@@ -272,6 +287,7 @@
 
             <details role="region" aria-labelledby="terms-heading-10">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-10">신용평가기관 정보활용 신청정보 자동입력(선택)</h2>
                 </summary>
                 <div class="content">
@@ -282,33 +298,38 @@
                         <li>동의를 거부하실 수 경우, KCB 등록 정보 활용이 불가하여 개인정보의 간편입력 서비스의 이용이 불가능하십니다.</li>
                     </ul>
                 </div>
-            </details>
+                </S>
         </div>
     </details>
 
     <details role="region" aria-labelledby="terms-heading-11">
         <summary>
+            <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
             <h1 id="terms-heading-11">카드발급 관련 서비스 동의</h1>
         </summary>
         <div class="content">
             <details class="empty" role="region" aria-labelledby="terms-heading-12">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-12">개인(신용)정보 동의(선택)</h2>
                 </summary>
             </details>
             <details class="empty" role="region" aria-labelledby="terms-heading-13">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-13">제휴사 선택적 동의</h2>
                 </summary>
             </details>
             <details class="empty" role="region" aria-labelledby="terms-heading-14">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-14">카드발급 및 금융서비스 동의</h2>
                 </summary>
             </details>
 
             <details role="region" aria-labelledby="terms-heading-15">
                 <summary>
+                    <input type="checkbox" class="agree-check" onclick="event.stopPropagation()">
                     <h2 id="terms-heading-15">장기카드대출(카드론) 이용동의(선택)</h2>
                 </summary>
                 <div class="content">
@@ -319,29 +340,3 @@
             </details>
 
             <details role="region" aria-labelledby="terms-heading-16">
-                <summary>
-                    <h2 id="terms-heading-16">단기카드대출(현금서비스) 이용동의(선택)</h2>
-                </summary>
-                <div class="content">
-                    <ul>
-                        <li>미동의 시 단기카드대출(현금서비스)을 이용하실 수 없으며, 추후 이용을 원하시는 경우 별도의 절차가 필요합니다.</li>
-                    </ul>
-                </div>
-            </details>
-
-            <details role="region" aria-labelledby="terms-heading-17">
-                <summary>
-                    <h2 id="terms-heading-17">해외원화결제(DCC)차단서비스 이용동의(선택)</h2>
-                </summary>
-                <div class="content">
-                    <ul>
-                        <li>해외거래에서 원화로 결제 시 추가수수료 발생을 방지하기 위해 우리나라 원화(KRW)로 결제되지 않도록 사전에 차단하는 서비스입니다.</li>
-                    </ul>
-                </div>
-            </details>
-        </div>
-    </details>
-
-</body>
-
-</html>
