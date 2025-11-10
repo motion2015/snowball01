@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>동의서 뷰어</title>
+    <!-- Tailwind CSS 로드 스크립트를 제거하고 순수 CSS를 사용합니다. -->
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+      /* 기본 스타일 */
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f7f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px 0;
+        box-sizing: border-box;
+      }
+
+      /* 뷰어 컨테이너 (main 대체) */
+      .viewer-container {
+        height: 70vh;
+        max-width: 400px;
+        width: 95%;
+        background-color: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* 1. 상단 탭 영역 스타일 */
+      .tab-area {
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        background-color: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .tab-switcher {
+        display: flex;
+        padding: 4px;
+        background-color: #e5e7eb;
+        border-radius: 9999px;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        max-width: 320px;
+        width: 100%;
+      }
+
+      /* 탭 버튼 스타일 */
+      .tab-button {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: #6b7280;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+        flex: 1;
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
+      }
+
+      .tab-button.active {
+        background-color: white;
+        color: #1f2937;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+          0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      }
+
+      /* ARIA hidden 속성 대신 HTML hidden 속성을 사용하며, CSS로 hidden을 오버라이드하지 않습니다. */
+
+      /* 2. 내용 표시 영역 스타일 */
+      .agreement-content {
+        flex-grow: 1;
+        padding: 1.25rem;
+        overflow-y: auto;
+        color: #4b5563;
+        position: relative;
+      }
+
+      .agreement-content h2 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+      }
+
+      .agreement-content p {
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .agreement-content ul {
+        list-style: disc;
+        padding-left: 20px;
+        margin-bottom: 1rem;
+        font-size: 0.875rem;
+      }
+
+      .agreement-content ul li {
+        margin-bottom: 0.25rem;
+      }
+
+      .agreement-content .note {
+        margin-top: 1rem;
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+
+      .agreement-content .dummy-content {
+        margin-top: 2rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+
+      .agreement-content .dummy-content p {
+        margin-bottom: 0.75rem;
+      }
+
+      .full-text .indent {
+        margin-left: 1rem;
+      }
+
+      /* 3. 페이지네이션 컨트롤 스타일 */
+      .pagination-control {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        background-color: rgba(31, 41, 55, 0.7);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+      }
+
+      .pagination-control:hover {
+        background-color: rgba(31, 41, 55, 0.8);
+      }
+
+      .pagination-control button {
+        background-color: transparent;
+        border: none;
+        color: white;
+        padding: 4px;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, opacity 0.3s ease;
+        display: flex;
+        align-items: center;
+      }
+
+      .pagination-control button:hover:not(:disabled) {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .pagination-control button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .pagination-control .page-indicator {
+        font-size: 0.875rem;
+        font-weight: 600;
+        white-space: nowrap;
+        margin: 0 8px;
+      }
+
+      .pagination-control .prev-btn {
+        margin-right: 8px;
+      }
+
+      .pagination-control .next-btn {
+        margin-left: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="viewer-container">
+      <main role="document" aria-label="동의서 내용 뷰어">
+        <!-- 1. 상단 탭 영역 (내비게이션) -->
+        <nav class="tab-area" aria-label="동의서 종류">
+          <div class="tab-switcher" role="tablist">
+            <button
+              id="summary-tab"
+              class="tab-button active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="summary-panel"
+            >
+              요약 동의서
+            </button>
+            <button
+              id="full-tab"
+              class="tab-button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="full-panel"
+            >
+              전체 동의서
+            </button>
+          </div>
+        </nav>
+
+        <!-- 2. 내용 표시 영역 및 탭 패널 -->
+        <div id="agreement-content" class="agreement-content">
+          <!-- 요약 동의서 탭 패널 -->
+          <div id="summary-panel" role="tabpanel" aria-labelledby="summary-tab">
+            <div id="summary-text"></div>
+          </div>
+
+          <!-- 전체 동의서 탭 패널 (초기에는 hidden 속성으로 숨김) -->
+          <div
+            id="full-panel"
+            role="tabpanel"
+            aria-labelledby="full-tab"
+            hidden
+          >
+            <div id="full-text"></div>
+          </div>
+
+          <!-- 3. 페이지네이션 컨트롤 (내비게이션) -->
+          <nav class="pagination-control" aria-label="페이지네이션">
+            <button id="prev-page" class="prev-btn" aria-label="이전 페이지">
+              <!-- Lucide Icon: Chevron Left -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-left"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+            <span
+              id="page-indicator"
+              class="page-indicator"
+              aria-live="polite"
+              aria-atomic="true"
+              >1 / 3</span
+            >
+            <button id="next-page" class="next-btn" aria-label="다음 페이지">
+              <!-- Lucide Icon: Chevron Right -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-right"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // 페이지 콘텐츠 정의 (요약 동의서와 전체 동의서 각각 3페이지 분량)
+      const pageContent = {
+        summary: [
+          `
+                <h2>요약 동의서 - 1페이지</h2>
+                <p><strong>[핵심 사항]</strong> 개인 정보 수집 및 이용에 대한 핵심 내용입니다. 서비스 제공을 위해 필요한 최소한의 정보를 수집합니다. 동의하지 않을 권리가 있지만, 서비스 이용이 제한될 수 있습니다.</p>
+                <ul>
+                    <li>수집 항목: 이름, 연락처, 이메일</li>
+                    <li>보유 기간: 회원 탈퇴 시까지</li>
+                </ul>
+                <div class="dummy-content">
+                    <p><strong>제1조 (목적)</strong> 본 약관은 [서비스명]이 제공하는 모든 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
+                    <p><strong>제2조 (수집 항목)</strong> 이름, 전화번호, 이메일 주소 등 서비스 이용에 필수적인 항목만 수집합니다.</p>
+                </div>
+            `,
+          `
+                <h2>요약 동의서 - 2페이지</h2>
+                <p><strong>[이용 목적]</strong> 수집된 개인정보는 오직 서비스 제공, 고객 상담, 이벤트 안내 등의 명시된 목적으로만 사용됩니다. 제3자 제공은 동의 없이 이루어지지 않습니다.</p>
+                <ul>
+                    <li>이용 목적: 서비스 제공, 고객 상담</li>
+                    <li>제공 제한: 제3자에게 제공되지 않음</li>
+                </ul>
+                <div class="dummy-content">
+                    <p><strong>제3조 (서비스 이용 시간)</strong> 서비스 이용은 연중무휴 1일 24시간을 원칙으로 합니다. 시스템 점검 등의 경우 일시적으로 중단될 수 있습니다.</p>
+                    <p><strong>제4조 (회원의 의무)</strong> 회원은 관계 법령, 본 약관의 규정, 주의사항 등을 준수해야 합니다.</p>
+                </div>
+            `,
+          `
+                <h2>요약 동의서 - 3페이지</h2>
+                <p><strong>[동의 철회 및 불이익]</strong> 고객님은 언제든지 동의를 철회할 권리가 있으며, 철회 시 모든 정보는 즉시 파기됩니다. 동의 거부 시, 서비스의 일부 기능 이용이 제한될 수 있습니다.</p>
+                <ul>
+                    <li>동의 철회: 언제든지 가능</li>
+                    <li>불이익: 일부 서비스 기능 제한</li>
+                </ul>
+                <div class="dummy-content">
+                    <p><strong>제5조 (면책 조항)</strong> 회사는 천재지변 또는 불가항력으로 인한 서비스 제공 불능에 대해 책임이 면제됩니다.</p>
+                    <p><strong>제6조 (분쟁 해결)</strong> 분쟁 발생 시, [서비스명]의 소재지를 관할하는 법원을 전속 관할로 합니다.</p>
+                </div>
+            `,
+        ],
+        full: [
+          `
+                <h2>전체 동의서 - 1페이지 (총칙 및 정의)</h2>
+                <div class="dummy-content">
+                    <p><strong>제1장 총칙</strong></p>
+                    <p><strong>제1조 (목적)</strong> 본 약관은 [서비스명]이 제공하는 서비스 이용에 대한 포괄적인 사항을 정함을 목적으로 합니다.</p>
+                    <p><strong>제2조 (정의)</strong> 이 약관에서 사용하는 용어의 정의는 다음과 같습니다.</p>
+                    <p class="indent">- "서비스"라 함은 [서비스명]이 제공하는 모든 인터넷 기반 서비스를 의미합니다.</p>
+                    <p class="indent">- "회원"이라 함은 본 약관에 동의하고 서비스 이용 자격을 부여받은 자를 의미합니다.</p>
+                    <p><strong>제3조 (약관의 효력)</strong> 이 약관은 회원에게 공지함으로써 효력이 발생합니다.</p>
+                    <p><strong>제4조 (약관의 변경)</strong> 회사는 필요하다고 인정되는 경우 이 약관을 변경할 수 있습니다.</p>
+                </div>
+            `,
+          `
+                <h2>전체 동의서 - 2페이지 (회원 및 개인정보)</h2>
+                <div class="dummy-content">
+                    <p><strong>제2장 회원 가입 및 탈퇴</strong></p>
+                    <p><strong>제5조 (회원 가입)</strong> 이용자는 회사가 정한 가입 양식에 따라 회원 정보를 기입한 후 이 약관에 동의한다는 의사표시를 함으로써 회원 가입을 신청합니다.</p>
+                    <p><strong>제3장 개인정보 보호</strong></p>
+                    <p><strong>제10조 (개인정보의 수집 및 이용)</strong> 개인정보는 '정보통신망 이용촉진 및 정보보호 등에 관한 법률'에 따라 수집되며, 수집된 정보는 [수집목적] 외의 용도로 사용되지 않습니다. 보유 기간은 탈퇴 시까지입니다.</p>
+                    <p><strong>제11조 (개인정보의 파기)</strong> 회사는 개인정보 이용 목적이 달성된 후에는 지체 없이 해당 정보를 파기합니다.</p>
+                    <p><strong>제12조 (개인정보보호책임자)</strong> 개인정보보호책임자의 성명 및 연락처는 서비스 화면에 명시합니다.</p>
+                </div>
+            `,
+          `
+                <h2>전체 동의서 - 3페이지 (책임 및 분쟁)</h2>
+                <div class="dummy-content">
+                    <p><strong>제4장 서비스 이용 및 제한</strong></p>
+                    <p><strong>제15조 (이용자의 의무)</strong> 이용자는 다음 행위를 하여서는 안 됩니다: 허위 사실 기재, 타인의 정보 도용, 회사의 영업 방해 등.</p>
+                    <p><strong>제16조 (서비스 제한 및 중지)</strong> 회사는 이용자가 의무를 위반한 경우 서비스 이용을 제한할 수 있습니다.</p>
+                    <p><strong>제5장 손해배상 및 기타</strong></p>
+                    <p><strong>제20조 (면책 조항)</strong> 회사는 통신 장비의 고장, 시스템 점검, 불가항력 등으로 인한 손해에 대하여 책임이 면제됩니다.</p>
+                    <p><strong>제21조 (관할 법원)</strong> 서비스 이용으로 발생한 분쟁에 대해 소송이 제기될 경우, [서비스명] 소재지 관할 법원을 전속 관할 법원으로 합니다.</p>
+                </div>
+            `,
+        ],
+      }
+
+      // 상태 변수
+      let currentPage = 1
+      let activeTab = 'summary' // 'summary' or 'full'
+
+      // DOM 요소 가져오기
+      const summaryTab = document.getElementById('summary-tab')
+      const fullTab = document.getElementById('full-tab')
+      // 탭 패널 요소를 가져옵니다.
+      const summaryPanel = document.getElementById('summary-panel')
+      const fullPanel = document.getElementById('full-panel')
+      // 내용을 표시할 div 요소를 가져옵니다.
+      const summaryText = document.getElementById('summary-text')
+      const fullText = document.getElementById('full-text')
+
+      const pageIndicator = document.getElementById('page-indicator')
+      const prevPageBtn = document.getElementById('prev-page')
+      const nextPageBtn = document.getElementById('next-page')
+      const contentArea = document.getElementById('agreement-content')
+
+      // 페이지 인디케이터 및 내용 업데이트 함수
+      const renderContent = () => {
+        const contentContainer =
+          activeTab === 'summary' ? summaryText : fullText
+        const currentContentArray = pageContent[activeTab]
+        const currentTotalPages = currentContentArray.length
+
+        // 1. 페이지 인디케이터 업데이트 (aria-live="polite" 덕분에 스크린 리더가 변경 사항을 알립니다)
+        pageIndicator.textContent = `${currentPage} / ${currentTotalPages}`
+
+        // 2. 페이지네이션 버튼의 비활성화 상태 제어
+        prevPageBtn.disabled = currentPage === 1
+        nextPageBtn.disabled = currentPage === currentTotalPages
+
+        // 버튼 스타일 업데이트
+        prevPageBtn.style.opacity = prevPageBtn.disabled ? '0.5' : '1'
+        nextPageBtn.style.opacity = nextPageBtn.disabled ? '0.5' : '1'
+
+        // 3. 내용 업데이트 (배열 인덱스는 0부터 시작하므로 currentPage - 1)
+        const contentHTML = currentContentArray[currentPage - 1]
+        if (contentHTML) {
+          contentContainer.innerHTML = contentHTML
+        } else {
+          contentContainer.innerHTML = `<h2>오류: 페이지 내용을 찾을 수 없습니다. (Page ${currentPage})</h2>`
+        }
+
+        // 4. 스크롤 위치 초기화
+        contentArea.scrollTop = 0
+      }
+
+      // 탭 변경 함수
+      const switchTab = (tabName) => {
+        if (activeTab === tabName) return
+
+        activeTab = tabName
+        currentPage = 1 // 탭 변경 시 1페이지로 리셋
+
+        // 탭과 패널 리셋
+        ;[summaryTab, fullTab].forEach((tab) => {
+          tab.classList.remove('active')
+          tab.setAttribute('aria-selected', 'false')
+        })
+        ;[summaryPanel, fullPanel].forEach((panel) => {
+          panel.setAttribute('hidden', 'true')
+        })
+
+        // 선택된 탭 활성화
+        if (tabName === 'summary') {
+          summaryTab.classList.add('active')
+          summaryTab.setAttribute('aria-selected', 'true')
+          summaryPanel.removeAttribute('hidden')
+          summaryTab.focus() // 탭 변경 시 포커스 이동 (접근성)
+        } else {
+          fullTab.classList.add('active')
+          fullTab.setAttribute('aria-selected', 'true')
+          fullPanel.removeAttribute('hidden')
+          fullTab.focus() // 탭 변경 시 포커스 이동 (접근성)
+        }
+
+        renderContent() // 새로운 탭의 1페이지 렌더링
+      }
+
+      // 이벤트 리스너 설정
+      summaryTab.addEventListener('click', () => switchTab('summary'))
+      fullTab.addEventListener('click', () => switchTab('full'))
+
+      prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--
+          renderContent()
+          console.log(`이전 페이지: ${currentPage}`)
+        }
+      })
+
+      nextPageBtn.addEventListener('click', () => {
+        const currentTotalPages = pageContent[activeTab].length
+        if (currentPage < currentTotalPages) {
+          currentPage++
+          renderContent()
+          console.log(`다음 페이지: ${currentPage}`)
+        }
+      })
+
+      // 초기 상태 설정
+      window.onload = () => {
+        // 페이지 로드 시 'summary' 탭의 1페이지를 렌더링합니다.
+        switchTab('summary')
+      }
+    </script>
+  </body>
+</html>

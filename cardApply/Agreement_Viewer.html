@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>동의서 뷰어</title>
+    <!-- Tailwind CSS 로드 스크립트를 제거하고 순수 CSS를 사용합니다. -->
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+      /* 기본 스타일 */
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f7f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px 0; /* 상하 여백 추가하여 뷰어 중앙 배치 */
+        box-sizing: border-box;
+      }
+
+      /* 뷰어 컨테이너 (content-container 대체) */
+      .viewer-container {
+        height: 70vh;
+        max-width: 400px;
+        width: 95%;
+        background-color: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* 1. 상단 탭 영역 스타일 */
+      .tab-area {
+        padding: 1rem; /* p-4 */
+        display: flex;
+        justify-content: center;
+        background-color: #f9fafb; /* bg-gray-50 */
+        border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
+      }
+
+      .tab-switcher {
+        display: flex;
+        padding: 4px; /* p-1 */
+        background-color: #e5e7eb; /* bg-gray-200 */
+        border-radius: 9999px; /* rounded-full */
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+        max-width: 320px;
+        width: 100%;
+      }
+
+      /* 탭 버튼 스타일 */
+      .tab-button {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: #6b7280; /* Gray 500/600 */
+        border-radius: 9999px;
+        transition: all 0.3s ease;
+        flex: 1; /* flex-1 */
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        background-color: transparent;
+      }
+
+      .tab-button.active {
+        background-color: white;
+        color: #1f2937; /* Gray 800 */
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+          0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      }
+
+      /* 2. 내용 표시 영역 스타일 */
+      .agreement-content {
+        flex-grow: 1; /* flex-grow */
+        padding: 1.25rem; /* p-5 */
+        overflow-y: auto;
+        color: #4b5563; /* text-gray-700 */
+        position: relative;
+      }
+
+      .agreement-content h2 {
+        font-size: 1.25rem; /* text-xl */
+        font-weight: 700; /* font-bold */
+        margin-bottom: 0.75rem; /* mb-3 */
+      }
+
+      .agreement-content p {
+        margin-bottom: 1rem; /* mb-4 */
+        line-height: 1.5;
+      }
+
+      .agreement-content ul {
+        list-style: disc;
+        padding-left: 20px;
+        margin-bottom: 1rem;
+        font-size: 0.875rem; /* text-sm */
+      }
+
+      .agreement-content ul li {
+        margin-bottom: 0.25rem;
+      }
+
+      .agreement-content .note {
+        margin-top: 1rem; /* mt-4 */
+        font-size: 0.75rem; /* text-xs */
+        color: #6b7280; /* text-gray-500 */
+      }
+
+      .agreement-content .dummy-content {
+        margin-top: 2rem; /* mt-8 */
+        font-size: 0.875rem; /* text-sm */
+        line-height: 1.5;
+      }
+
+      .agreement-content .dummy-content p {
+        margin-bottom: 0.75rem; /* space-y-3 */
+      }
+
+      .full-text .indent {
+        margin-left: 1rem; /* ml-4 */
+      }
+
+      /* 3. 페이지네이션 컨트롤 스타일 */
+      .pagination-control {
+        position: absolute;
+        bottom: 20px; /* bottom-5 */
+        left: 50%;
+        transform: translateX(-50%); /* transform -translate-x-1/2 */
+        display: flex;
+        align-items: center;
+        background-color: rgba(31, 41, 55, 0.7); /* bg-gray-800 bg-opacity-70 */
+        color: white;
+        padding: 8px 16px; /* px-4 py-2 */
+        border-radius: 9999px; /* rounded-full */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-lg */
+        transition: background-color 0.3s ease;
+      }
+
+      .pagination-control:hover {
+        background-color: rgba(31, 41, 55, 0.8); /* hover:bg-opacity-80 */
+      }
+
+      .pagination-control button {
+        background-color: transparent;
+        border: none;
+        color: white;
+        padding: 4px; /* p-1 */
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, opacity 0.3s ease;
+        display: flex;
+        align-items: center;
+      }
+
+      .pagination-control button:hover:not(:disabled) {
+        background-color: rgba(
+          255,
+          255,
+          255,
+          0.2
+        ); /* hover:bg-white hover:bg-opacity-20 */
+      }
+
+      .pagination-control button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .pagination-control .page-indicator {
+        font-size: 0.875rem; /* text-sm */
+        font-weight: 600; /* font-semibold */
+        white-space: nowrap;
+        margin: 0 8px;
+      }
+
+      .pagination-control .prev-btn {
+        margin-right: 8px; /* mr-2 */
+      }
+
+      .pagination-control .next-btn {
+        margin-left: 8px; /* ml-2 */
+      }
+
+      /* 내용 숨김/보임 클래스 */
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="viewer-container">
+      <!-- 1. 상단 탭 영역 -->
+      <div class="tab-area">
+        <div class="tab-switcher">
+          <button id="summary-tab" class="tab-button active">
+            요약 동의서
+          </button>
+          <button id="full-tab" class="tab-button">전체 동의서</button>
+        </div>
+      </div>
+
+      <!-- 2. 내용 표시 영역 -->
+      <div id="agreement-content" class="agreement-content">
+        <!-- 탭 내용이 여기에 표시됩니다. -->
+        <div id="summary-text">
+          <h2>요약 동의서 제목</h2>
+          <p>
+            개인 정보 수집 및 이용에 대한 핵심 내용입니다. 본 동의서의 목적은
+            [서비스명] 서비스 제공을 위해 필요한 최소한의 정보를 수집하고
+            이용하는 것입니다. 동의하지 않으셔도 서비스 이용에 제한이 있을 수
+            있습니다.
+          </p>
+          <ul>
+            <li>수집 항목: 이름, 연락처, 이메일</li>
+            <li>수집 목적: 서비스 제공, 고객 상담, 이벤트 안내</li>
+            <li>보유 기간: 회원 탈퇴 시 또는 동의 철회 시까지</li>
+            <li>
+              동의 거부 권리 및 불이익: 고객님은 동의를 거부할 권리가 있으며,
+              거부 시 일부 서비스 이용이 제한될 수 있습니다.
+            </li>
+          </ul>
+          <p class="note">
+            더 자세한 내용은 '전체 동의서' 탭에서 확인하실 수 있습니다.
+          </p>
+          <!-- 내용 더미를 추가하여 스크롤 가능하게 만듭니다. -->
+          <div class="dummy-content">
+            <p>
+              <strong>제1조 (목적)</strong> 본 약관은 [서비스명]이 제공하는 모든
+              서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.
+            </p>
+            <p>
+              <strong>제2조 (개인정보의 수집 및 이용)</strong> 회사는 서비스
+              제공을 위하여 필요한 최소한의 개인정보를 수집하며, 동의 없이는
+              개인정보를 제3자에게 제공하지 않습니다.
+            </p>
+            <p>
+              <strong>제3조 (서비스 이용 시간)</strong> 서비스 이용은 연중무휴
+              1일 24시간을 원칙으로 합니다.
+            </p>
+            <p>
+              <strong>제4조 (회원의 의무)</strong> 회원은 관계 법령, 본 약관의
+              규정, 이용 안내 및 서비스와 관련하여 공지한 주의사항 등을
+              준수하여야 하며, 기타 회사의 업무에 방해되는 행위를 하여서는 안
+              됩니다.
+            </p>
+            <p>
+              <strong>제5조 (면책 조항)</strong> 회사는 천재지변 또는 이에
+              준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스
+              제공에 관한 책임이 면제됩니다.
+            </p>
+            <p>
+              <strong>제6조 (분쟁 해결)</strong> 서비스 이용과 관련하여 분쟁이
+              발생한 경우, 소송은 [서비스명]의 소재지를 관할하는 법원을 전속
+              관할로 합니다.
+            </p>
+            <p>
+              이어서 내용 더미... 이어서 내용 더미... 이어서 내용 더미... 이어서
+              내용 더미... 이어서 내용 더미... 이어서 내용 더미... 이어서 내용
+              더미... 이어서 내용 더미... 이어서 내용 더미... 이어서 내용
+              더미... 이어서 내용 더미... 이어서 내용 더미... 이어서 내용
+              더미... 이어서 내용 더미... 이어서 내용 더미... 이어서 내용
+              더미... 이어서 내용 더미... 이어서 내용 더미... 이어서 내용
+              더미... 이어서 내용 더미... 이어서 내용 더미... 이어서 내용
+              더미... 이어서 내용 더미... 이어서 내용 더미... 이어서 내용
+              더미... 이어서 내용 더미...
+            </p>
+          </div>
+        </div>
+
+        <div id="full-text" class="hidden">
+          <h2>전체 동의서 세부 내용</h2>
+          <div class="dummy-content">
+            <p><strong>제1장 총칙</strong></p>
+            <p>
+              <strong>제1조 (목적)</strong> 본 약관은 [서비스명]이 제공하는
+              서비스 이용에 대한 포괄적인 사항을 정함을 목적으로 합니다. (이하
+              세부 약관 5000자 생략...)
+            </p>
+            <p>
+              <strong>제2조 (정의)</strong> 이 약관에서 사용하는 용어의 정의는
+              다음과 같습니다.
+            </p>
+            <p class="indent">
+              - "서비스"라 함은 [서비스명]이 제공하는 모든 인터넷 기반 서비스를
+              의미합니다.
+            </p>
+            <p class="indent">
+              - "회원"이라 함은 본 약관에 동의하고 서비스 이용 자격을 부여받은
+              자를 의미합니다.
+            </p>
+            <p><strong>제3장 개인정보 보호</strong></p>
+            <p>
+              <strong>제10조 (개인정보의 수집 및 이용)</strong> 개인정보는
+              '정보통신망 이용촉진 및 정보보호 등에 관한 법률'에 따라 수집되며,
+              수집된 정보는 [수집목적] 외의 용도로 사용되지 않습니다. 보유
+              기간은 탈퇴 시까지입니다.
+            </p>
+            <!-- 내용 더미를 추가하여 스크롤 가능하게 만듭니다. -->
+            <p>
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+              내용 더미... 내용 더미... 내용 더미... 내용 더미... 내용 더미...
+            </p>
+          </div>
+        </div>
+
+        <!-- 3. 페이지네이션 컨트롤 (이미지 하단의 오버레이) -->
+        <div class="pagination-control">
+          <button id="prev-page" class="prev-btn">
+            <!-- Lucide Icon: Chevron Left -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-chevron-left"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+          </button>
+          <span id="page-indicator" class="page-indicator">1 / 3</span>
+          <button id="next-page" class="next-btn">
+            <!-- Lucide Icon: Chevron Right -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-chevron-right"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 상태 변수
+      let currentPage = 1
+      const totalPages = 3
+      let activeTab = 'summary' // 'summary' or 'full'
+
+      // DOM 요소 가져오기
+      const summaryTab = document.getElementById('summary-tab')
+      const fullTab = document.getElementById('full-tab')
+      const summaryText = document.getElementById('summary-text')
+      const fullText = document.getElementById('full-text')
+      const pageIndicator = document.getElementById('page-indicator')
+      const prevPageBtn = document.getElementById('prev-page')
+      const nextPageBtn = document.getElementById('next-page')
+      const contentArea = document.getElementById('agreement-content')
+
+      // 페이지 인디케이터 업데이트 함수
+      const updatePageIndicator = () => {
+        pageIndicator.textContent = `${currentPage} / ${totalPages}`
+
+        // 페이지네이션 버튼의 비활성화 상태 및 CSS 제어
+        prevPageBtn.disabled = currentPage === 1
+        nextPageBtn.disabled = currentPage === totalPages
+      }
+
+      // 탭 변경 함수
+      const switchTab = (tabName) => {
+        if (activeTab === tabName) return
+
+        activeTab = tabName
+
+        // 탭 버튼 스타일 업데이트
+        summaryTab.classList.remove('active')
+        fullTab.classList.remove('active')
+
+        // 내용 표시 업데이트
+        summaryText.classList.add('hidden')
+        fullText.classList.add('hidden')
+
+        if (tabName === 'summary') {
+          summaryTab.classList.add('active')
+          summaryText.classList.remove('hidden')
+        } else {
+          fullTab.classList.add('active')
+          fullText.classList.remove('hidden')
+        }
+
+        // 탭 변경 시 스크롤을 맨 위로 이동
+        contentArea.scrollTop = 0
+
+        // 탭 변경 시 페이지네이션을 1페이지로 리셋
+        currentPage = 1
+        updatePageIndicator()
+      }
+
+      // 이벤트 리스너 설정
+      summaryTab.addEventListener('click', () => switchTab('summary'))
+      fullTab.addEventListener('click', () => switchTab('full'))
+
+      prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--
+          updatePageIndicator()
+          // TODO: 실제로는 해당 페이지의 내용으로 업데이트하는 로직 필요
+          contentArea.scrollTop = 0 // 페이지 이동 시 스크롤 초기화
+          console.log(`이전 페이지: ${currentPage}`)
+        }
+      })
+
+      nextPageBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++
+          updatePageIndicator()
+          // TODO: 실제로는 해당 페이지의 내용으로 업데이트하는 로직 필요
+          contentArea.scrollTop = 0 // 페이지 이동 시 스크롤 초기화
+          console.log(`다음 페이지: ${currentPage}`)
+        }
+      })
+
+      // 초기 상태 설정
+      window.onload = () => {
+        updatePageIndicator()
+      }
+    </script>
+  </body>
+</html>
