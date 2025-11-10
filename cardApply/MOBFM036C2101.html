@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <template>
+    id: MOBFM036C2101
+    workid: TCM032, TCM504, TCM505
+    title: 1/5 Making 17
+    menu: 카드 > 카드 찾기 > 신용카드 > Deep Marking
+    publish: 박민숙
+    publishVersion: 0.8_20250924
+    rework: 2025.11.05
+    status: 완료
+    etc:
+    2025.11.05 data-tab → id, data-panel → aria-labelledby 로 변경,'다음' 버튼 이벤트 리스너 추가위해 onclick 대신 id사용
+    10/27 CSS 허브 적용,
+    2025.10.14 : 1% 적용 클릭시 lazy loading 보완,
+  </template>
+  <inject file="/components/head-meta.html" label="카드" />
+  <inject file="/components/head-css.html" />
+  <!-- 메뉴별 CSS 연결 -->
+  <!-- [REWORK 2025.10.27] CSS 허브 적용 -->
+  <inject file="/components/head-js.html" hub_css=",'/assets/css/pages/card.scss'" />
+
+  <script>
+    window.pageBreadcrumb = [
+      { text: "카드", url: "/card" },
+      { text: "카드찾기", url:  "/card/#" },
+      { text: "신용카드", url: "/card/#/#" },
+      { text: "Deep Marking", url: "/card/#/#/#" }
+    ];
+  </script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 공통 HEADER inject -->
+    <inject file="/components/header.html" label="카드 / 카드 찾기" />
+
+    <!-- Main Content -->
+    <main id="shcMainContent" class="shc-main">
+      <section class="shc-section accrual-rate17">
+        <h1 class="headline--s accrual-rate17__title">Making 17</h1>
+        <p class="accrual-rate17__desc">포인트 적립률은 영역별 1~5%이며<br> 적립률의 환산이 17%가 되도록 설정해주세요.</p>
+
+
+        <div class="accrual-rate17-header">
+          <div class="ai-recommendation__status">
+            <h2 class="title--m">AI 추천항목</h2>
+            <div class="shc-switch-toggle">
+              <input type="checkbox" class="shc-switch-toggle__input" role="switch" aria-labelledby="switch-label05"
+                id="ai-toggle" />
+              <label for="ai-toggle" id="switch-label05" class="shc-switch-toggle__track" data-on-txt="켜짐"
+                data-off-txt="꺼짐">
+                <span class="shc-switch-toggle__label sr-only">켜짐</span>
+              </label>
+            </div>
+          </div>
+          <div class="ai-recommendation__status--contents">
+            <p class="ai-description">
+              AI가 추천하는 영역과 적립률입니다.<br> 반드시 최대의 적립을 보장하지는 않으며, 직접 수정할 수 있습니다.
+            </p>
+            <div class="slide_area">
+              <div class="swiper shc-slide ai-recommend-slide">
+                <div class="swiper-wrapper">
+                  <!-- 동적 컨텐츠 구조 S-->
+                  <!-- <div class="swiper-slide" data-chart-value="5">
+                    <div class="swiper-inner">
+                      <div class="shc-chart--circle" data-chart-value="3">
+                        <svg viewBox="0 0 40 40">
+                          <circle class="shc-chart--circle__bg" cx="20" cy="20" r="18"></circle>
+                          <circle class="shc-chart--circle__progress" cx="20" cy="20" r="18"></circle>
+                        </svg>
+                        <div class="shc-chart--circle__lines">
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                          <span class="shc-chart--circle__line"></span>
+                        </div>
+                        <div class="shc-chart--circle__text">4%</div>
+                      </div>
+                      <strong class="name">소셜 커머스</strong>
+                    </div> 
+
+                  </div>
+                  -->
+                  <!-- 동적 컨텐츠 구조 E-->
+                </div>
+
+                <div class="shc-slide__utils">
+                  <div class="shc-slide__control">
+                    <span class="swiper-pagination"></span>
+                  </div>
+                </div>
+              </div>
+              <!--End of ai-recommend-slide -->
+            </div> <!-- End of slide_area -->
+          </div>
+          <!--End of ai-recommendation__status--active  -->
+
+        </div>
+
+
+
+      </section>
+      <section class="shc-section accrual-rate17">
+        <div class="shc-tab type-segment">
+          <!-- S: 2025.11.05 data-tab → id 로 변경(접근성개선) -->
+          <div class="shc-tab__menu" role="tablist">
+            <a href="javascript:void(0);" class="shc-tab__btn is-active" role="tab" id="shopping" aria-selected="true"
+              aria-controls="tab-shopping-panel" id="tab-shopping">
+              <span class="shc-tab__btn-text">쇼핑</span>
+            </a>
+            <a href="javascript:void(0);" class="shc-tab__btn" role="tab" id="lifestyle" aria-selected="false"
+              aria-controls="tab-lifestyle-panel" id="tab-lifestyle">
+              <span class="shc-tab__btn-text">생활</span>
+            </a>
+            <a href="javascript:void(0);" class="shc-tab__btn" role="tab" id="food" aria-selected="false"
+              aria-controls="tab-food-panel" id="tab-food">
+              <span class="shc-tab__btn-text">푸드</span>
+            </a>
+            <a href="javascript:void(0);" class="shc-tab__btn" role="tab" id="travel" aria-selected="false"
+              aria-controls="tab-travel-panel" id="tab-travel">
+              <span class="shc-tab__btn-text">여행</span>
+            </a>
+          </div>
+          <!-- E: 2025.11.05 data-tab → id 로 변경(접근성개선) -->
+          <div class="shc-tab__container">
+            <!-- 2025.11.05 data-panel → aria-labelledby 로 변경(접근성개선) -->
+            <div id="tab-shopping-panel" class="shc-tab__panel is-active" role="tabpanel" data-panel="shopping"
+              aria-labelledby="shopping">
+              <div class="flex-container">
+                <!-- JavaScript가 여기에 카드를 동적으로 추가합니다. -->
+                <!-- 동적 컨텐츠 구조 S-->
+                <!--
+                  <div class="item-card">
+                    <a href="#" class="item-link" aria-label="백화점 상세 정보 보기">
+                      <span class="shc-icon shc-icon--ai-store size-40"></span>
+                      <span class="label"></span>
+                      <button type="button" class="shc-txt-btn theme-secondary size-md">
+                        <span class="shc-txt-btn__text">백화점</span>
+                        <span class="shc-icon shc-icon--chevron"></span>
+                      </button>              
+                    </a>
+                    <div class="rate-control">
+                      <button type="button" class="shc-capsule-btn theme-outline size-sm minus" aria-label="백화점 적립률 감소">
+                        <span class="shc-capsule-btn__text">-</span>
+                      </button>
+                      <span class="rate-value" role="status" aria-live="polite">0%</span>
+                      <button type="button" class="shc-capsule-btn theme-outline size-sm plus" aria-label="백화점 적립률 증가">
+                        <span class="shc-capsule-btn__text">+</span>
+                      </button>
+                    </div>
+                  </div>
+                  -->
+                <!-- 동적 컨텐츠 구조 E-->
+              </div>
+            </div>
+            <!-- 2025.11.05 data-panel → aria-labelledby 로 변경(접근성개선) -->
+            <div id="tab-lifestyle-panel" class="shc-tab__panel" role="tabpanel" data-panel="lifestyle"
+              aria-labelledby="shopping">
+              <div class="flex-container"></div>
+            </div>
+            <!-- 2025.11.05 data-panel → aria-labelledby 로 변경(접근성개선) -->
+            <div id="tab-food-panel" class="shc-tab__panel" role="tabpanel" data-panel="food"
+              aria-labelledby="shopping">
+              <div class="flex-container"></div>
+            </div>
+            <!-- 2025.11.05 data-panel → aria-labelledby 로 변경(접근성개선) -->
+            <div id="tab-travel-panel" class="shc-tab__panel" role="tabpanel" data-panel="travel"
+              aria-labelledby="shopping">
+              <div class="flex-container"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="shc-fab-btn theme-primary size-lg fixed-percentage-btn"
+          onclick="gfn_layered.open('TCM032', event)">
+          <span id="total-rate" class="total-rate" aria-label="항목별 비율 한눈에 보기">17%</span>
+        </button>
+
+      </section>
+
+      <section class="shc-cta-area">
+        <div class="shc-btn-group" id="disabbtn">
+          <button type="button" class="shc-btn theme-secondary size-xl" id="all-1-button">
+            <span class="shc-btn__text">모든 영역 1% 설정</span>
+          </button>
+          <!-- 2025.11.05 '다음' 버튼 이벤트 리스너 추가위해 onclick 대신 id사용 ) -->
+          <button type="button" class="shc-btn theme-primary size-xl" id="next-button">
+            <span class="shc-btn__text">다음</span>
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- 공통 FOOTER inject -->
+    <inject file="/components/footer.html" label="카드 / 카드 찾기" />
+
+    <inject file="./layered/TCM032.html" label="항목별 비율 한눈에 보기" />
+    <inject file="./layered/TCM033.html" label="항목별 상세 팝업 " />
+
+  </div>
+  <script>
+  function Making_17() {
+    const aiSwiper = new Swiper('.ai-recommend-slide', {
+      // Swiper 초기화 (Initialization)
+      slidesPerView: 3,
+      slidesPerGroup: 3,
+      spaceBetween: 20,
+      //loop: true,
+      pagination: {
+        el: '.shc-slide__control .swiper-pagination', // Ensure this selector is correct
+        clickable: true,
+      },
+      // Dynamically loading slides means observer: true and observeParents: true are useful
+      observer: true,
+      observeParents: true,
+      breakpoints: {
+        320: {
+          slidesPerView: 3,
+          slidesPerGroup: 3,
+          spaceBetween: 8
+        },
+        375: {
+          slidesPerView: 3,
+          slidesPerGroup: 3,
+          spaceBetween: 8
+        },
+        440: {
+          slidesPerView: 3,
+          slidesPerGroup: 3,
+          spaceBetween: 8
+        }
+      },
+    });
+
+  // AI 추천 카드 데이터
+  const aiRecommendedRates = [
+    { label: '소셜 커머스', rate: 3, iconClass: 'shc-icon--ai-user' },
+    { label: '패션&amp;뷰티', rate: 1, iconClass: 'shc-icon--ai-magic' },
+    { label: '병원', rate: 2, iconClass: 'shc-icon--ai-hospital' },
+    { label: '마트', rate: 1, iconClass: 'shc-icon--ai-basket' },
+    { label: '온라인 쇼핑', rate: 1, iconClass: 'shc-icon--ai-online-shop' },
+    // { label: '주유', rate: 2, iconClass: 'shc-icon--ai-gas-pump' },
+    // { label: '커피 전문점', rate: 2, iconClass: 'shc-icon--ai-food-return' },
+    // { label: '배달 앱', rate: 3, iconClass: 'shc-icon--ai-delivery-app' },
+    // { label: '해외', rate: 2, iconClass: 'shc-icon--ai-overseas' },
+  ];
+
+  // AI 추천 항목을 Swiper 슬라이드로 동적 렌더링하는 함수
+  const renderAISlides = (data) => {
+    const swiperWrapper = document.querySelector('.ai-recommend-slide .swiper-wrapper');
+    if (!swiperWrapper) return;
+
+    // 기존 슬라이드 제거
+    swiperWrapper.innerHTML = '';
+  
+    // 새 슬라이드 만들기
+    const newSlides = data.map(item => {
+      const chartValue = item.rate;           
+      return `
+        <div class="swiper-slide">
+          <div class="swiper-inner">
+            <div class="shc-chart--circle" data-chart-value="0" data-value-preview="${chartValue}">
+              <svg viewBox="0 0 40 40">
+                <circle class="shc-chart--circle__bg" cx="20" cy="20" r="18"></circle>
+                <circle class="shc-chart--circle__progress" cx="20" cy="20" r="18"></circle>
+              </svg>
+              <div class="shc-chart--circle__lines">
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+                <span class="shc-chart--circle__line"></span>
+              </div>
+              <div class="shc-chart--circle__text">${item.rate}%</div>
+            </div>
+              <strong class="name">${item.label}</strong>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    swiperWrapper.innerHTML = newSlides;
+
+    function setChart(selector){
+      let chart = selector.querySelector('.shc-chart--circle');
+      let value = chart.getAttribute('data-value-preview')
+      chart.setAttribute('data-chart-value', value);
+      chart.querySelector('.shc-chart--circle__text').textContent = value + '%';
+    }  
+
+    // 새 슬라이드 추가한 후 Swiper 인스턴스를 업데이트
+    // 크기, 슬라이드 수, 페이지 매김을 다시 계산
+    if (aiSwiper) {
+      aiSwiper.update();
+      // 로드후 첫 번째 슬라이드로 이동
+      aiSwiper.slideTo(0, 0);
+      aiSwiper.on('transitionStart', function(swiper){                 
+        swiper.el.querySelectorAll('.swiper-slide').forEach(slide =>{
+        slide.querySelector('.shc-chart--circle').setAttribute('data-chart-value','0');
+        slide.querySelector('.shc-chart--circle__text').textContent = "0%" ;         
+        })
+      })
+      aiSwiper.on('transitionEnd', function(swiper){                    
+        let slide = swiper.el.querySelector('.swiper-slide-active');
+        const activeIndex = swiper.activeIndex;
+        const allSlides = swiper.slides;
+        const threeSlides = allSlides.slice(activeIndex, activeIndex + 3);
+        threeSlides.forEach(slide => {
+          setChart(slide);
+        });
+      })
+    }
+  };
+  renderAISlides(aiRecommendedRates);
+
+  // --- 탭 기능 ---
+  const tabs = document.querySelectorAll('.shc-tab__btn');
+  const panels = document.querySelectorAll('.shc-tab__panel');
+  const totalRateElement = document.getElementById('total-rate');
+  const aiToggle = document.getElementById('ai-toggle');
+  const aiContent = document.querySelector('.ai-recommendation__status--contents');
+
+  // 동적으로 생성할 카드 데이터 배열  
+  const cardData = [
+    // 쇼핑 카테고리
+    { category: 'shopping', label: '백화점', iconImg: 'bag_shopping', link: 'TCM033-bag_shopping'},
+    { category: 'shopping', label: '마트', iconImg: 'bag_shoppingbasket', link: 'TCM033-bag_shoppingbasket' },
+    { category: 'shopping', label: '홈 쇼핑', iconImg: 'monitor', link: 'TCM033-monitor' },
+    { category: 'shopping', label: '온라인 쇼핑', iconImg: 'bag_shoppingbasket', link: 'TCM033-onlineshopping' },
+    { category: 'shopping', label: '소셜 커머스', iconImg: 'persona_group', link: 'TCM033-persona_group' },
+    { category: 'shopping', label: '패션&amp;뷰티', iconImg: 'sun', link: 'TCM033-sun' },
+    // 생활 카테고리
+    { category: 'lifestyle', label: '주유', iconImg: 'water', link: 'TCM033-water' },
+    { category: 'lifestyle', label: '교육', iconImg: 'book_stack', link: 'TCM033-book_stack' },
+    { category: 'lifestyle', label: '병원', iconImg: 'facility_hospital2', link: 'TCM033-facility_hospital' },
+    { category: 'lifestyle', label: '이동통신', iconImg: 'phone', link: 'TCM033-phone' },
+    { category: 'lifestyle', label: '대중교통', iconImg: 'vehicle_car', link: 'TCM033-vehicle_car' },
+    // 푸드 카테고리
+    { category: 'food', label: '커피 전문점', iconImg: 'food_return', link: 'TCM033-food_return' },
+    { category: 'food', label: '편의점', iconImg: 'facility_24store', link: 'TCM033-facility_24store' },
+    { category: 'food', label: '베이커리', iconImg: 'food_donut', link: 'TCM033-food_donut' },
+    { category: 'food', label: '배달 앱', iconImg: 'vehicle_car', link: 'TCM033-delivery-app' },
+    // 여행 카테고리
+    { category: 'travel', label: '항공&amp;면세점', iconImg: 'vehicle_airplane', link: 'TCM033-vehicle_airplane' },
+    { category: 'travel', label: '해외', iconImg: 'vehicle_airplane', link: 'TCM033-vehicle_airplane2' },
+  ];
+
+  // AI 추천 적립률을 객체로 변환하여 사용
+  const aiRatesMap = aiRecommendedRates.reduce((acc, curr) => {
+    acc[curr.label] = curr.rate;
+    return acc;
+  }, {});
+
+  // 카드별 현재 적립률을 저장할 객체. 초기값 설정.
+  let cardRates = {};
+  const initialAIToggleState = aiToggle.checked;
+  if (initialAIToggleState) {
+    cardRates = { ...aiRatesMap };
+  }
+
+  // 총 적립률을 계산하고 표시하는 함수
+  const updateTotalRateDisplay = () => {
+    const total = Object.values(cardRates).reduce((sum, rate) => sum + rate, 0);
+    totalRateElement.textContent = `${total}%`;
+    if (total > 17) {
+      alertOpen()
+    }
+  };
+
+  // 카드를 동적으로 렌더링하는 함수
+  const renderCards = (category) => {
+    const flexContainer = document.querySelector(`#tab-${category}-panel .flex-container`);
+    if (!flexContainer) return;
+
+    flexContainer.innerHTML = ''; // 기존 카드 제거
+    const filteredCards = cardData.filter(card => card.category === category);
+    const isAIToggleChecked = aiToggle.checked;
+
+    filteredCards.forEach(item => {
+      const cardElement = document.createElement('div');
+      cardElement.className = 'item-card';
+
+      const currentRate = cardRates[item.label] || 0;
+      if (currentRate > 0) {
+        cardElement.classList.add('is-active');
+      }
+
+      cardElement.innerHTML = `
+        <a href="#${item.link}" class="item-link" aria-label="${item.label} 상세 정보 보기" onclick="gfn_layered.open('${item.link}', event)">
+          <picture><img data-src="/static/svg/graphic/${item.iconImg}.svg" alt=""></picture>
+          <button type="button" class="shc-txt-btn theme-secondary size-md">
+            <span class="shc-txt-btn__text">${item.label}</span>
+            <span class="shc-icon shc-icon--chevron"></span>
+          </button>              
+        </a>
+        <div class="rate-control">
+          <button type="button" class="shc-capsule-btn theme-outline size-sm minus" aria-label="${item.label} 적립률 감소" ${isAIToggleChecked ? 'disabled' : ''}>
+            <span class="shc-icon shc-icon--dash"></span>
+          </button>
+          <span class="rate-value" role="status" aria-live="polite">${currentRate}%</span>
+          <button type="button" class="shc-capsule-btn theme-outline size-sm plus" aria-label="${item.label} 적립률 증가" ${isAIToggleChecked ? 'disabled' : ''}>
+            <span class="shc-icon shc-icon--plus"></span>
+          </button>
+        </div>
+      `;
+
+      // 이벤트 리스너를 동적으로 추가
+      const minusBtn = cardElement.querySelector('.minus');
+      const plusBtn = cardElement.querySelector('.plus');
+      const rateValueSpan = cardElement.querySelector('.rate-value');
+      const linkBtns = document.querySelectorAll('.item-link');
+
+      // 각 버튼에 클릭 이벤트 리스너를 추가합니다.
+      linkBtns.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+        });
+      });
+
+      minusBtn.addEventListener('click', () => {
+        // let currentValue = parseInt(rateValueSpan.textContent);
+        let currentValue = cardRates[item.label] || 0;
+        if (currentValue > 0) {
+          currentValue--;
+          cardRates[item.label] = currentValue; // 상태 업데이트
+          rateValueSpan.textContent = `${currentValue}%`;
+          if (currentValue === 0) {
+            cardElement.classList.remove('is-active');
+          }
+          updateTotalRateDisplay();
+        }
+      });
+
+      plusBtn.addEventListener('click', () => {
+        let currentValue = parseInt(rateValueSpan.textContent);
+        if (currentValue < 5) {
+          currentValue++;
+          cardRates[item.label] = currentValue; // 상태 업데이트
+          rateValueSpan.textContent = `${currentValue}%`;
+          if (currentValue > 0) {
+            cardElement.classList.add('is-active');
+          }
+          updateTotalRateDisplay();
+        }
+      });
+      flexContainer.appendChild(cardElement);
+    });
+  };
+
+  // 탭 클릭 이벤트 리스너
+  tabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      const targetTab = e.target;
+      const category = tab.id;        
+      const targetPanel = document.querySelector(`#tab-${category}-panel`);
+      targetTab.setAttribute('tabindex', '0');
+      renderCards(category);
+      
+    });
+  });
+  renderCards('shopping');
+
+
+  // AI 추천 토글 스위치 이벤트 리스너
+  aiToggle.addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+  
+    if (isChecked) {
+      // AI 추천 콘텐츠 표시
+      aiContent.classList.add('is-active');
+      // AI 추천 적용: 모든 적립률 초기화 후 AI 추천값으로 설정
+      cardRates = { ...aiRatesMap };
+    } else {
+      // AI 추천 콘텐츠 숨기기
+      aiContent.classList.remove('is-active');
+      // 수동 설정: 모든 적립률을 0으로 초기화
+      cardRates = {};
+    }
+
+    // 현재 활성화된 탭의 카드를 다시 렌더링하여 UI 업데이트
+    const activeTab = document.querySelector('.shc-tab__btn.is-active');
+    const activeCategory = activeTab.id;
+    renderCards(activeCategory);
+    setTimeout(() => {
+      if (window.loadPopupImages) {
+        window.loadPopupImages(`#tab-${activeCategory}-panel`);
+      }
+    }, 100);
+    updateTotalRateDisplay();
+  });
+
+
+  // '모든 영역 1% 설정' 버튼 이벤트 리스너
+  document.getElementById('all-1-button').addEventListener('click', () => {
+    // AI 추천 토글 해제 및 UI 업데이트
+    aiToggle.checked = false;
+    //aiContent.classList.add('hidden');
+    aiContent.classList.remove('is-active');
+
+    // 모든 카드의 적립률을 1%로 설정
+    cardData.forEach(item => {
+      cardRates[item.label] = 1;
+    });
+
+    // 현재 활성화된 탭의 카드를 다시 렌더링하여 UI 업데이트
+    const activeTab = document.querySelector('.shc-tab__btn.is-active');
+    
+    
+    const activeCategory = activeTab.id;
+    renderCards(activeCategory);
+    // lazy loading 보완
+    setTimeout(() => {
+          if (window.loadPopupImages) {
+            window.loadPopupImages(`#tab-${activeCategory}-panel`);
+          }
+        }, 100);
+    updateTotalRateDisplay();
+  });
+
+    // S: 2025.11.05 '다음' 버튼 이벤트 리스너 추가 (HTML의 onclick 대신 사용)
+    document.getElementById('next-button').addEventListener('click', alert02Open);
+    // E: 2025.11.05
+
+
+  // 초기 렌더링: '쇼핑' 탭의 카드들을 표시
+  renderCards('shopping');
+  updateTotalRateDisplay();
+            
+  function alertOpen(){
+    gfn_modal.alert({
+      content: 'Making 17의 적립률이 17%를 초과했습니다.',
+      alignCenter: true
+    });
+  }
+
+  function alert02Open(){
+    const total = Object.values(cardRates).reduce((sum, rate) => sum + rate, 0);
+      totalRateElement.textContent = `${total}%`;
+      if (total < 17) {
+        gfn_modal.alert({
+          content: 'Making 17의 적립률은 17%로 맞춰주세요.',
+          alignCenter: true
+        });
+      }else {
+        window.location.href = './MOBFM036C2102.html';  
+      }        
+  }
+}
+ScriptHub.onReady('core', function() {  
+  Making_17();
+}); 
+</script>
+</body>
+
+</html>
