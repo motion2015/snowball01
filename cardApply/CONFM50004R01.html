@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <template>
+    id: CONFM50004R01
+    workid: TCM127
+    title:
+    menu: 카드 > 카드서비스 > 기프트카드
+    publish: 박민숙
+    publishVersion: 0.8_
+    rework:
+    status: 작업중
+  </template>
+  <inject file="/components/head-meta.html" label="카드" />
+  <inject file="/components/head-css.html" />
+  <inject file="/components/head-js.html" hub_css=",'/assets/css/pages/card.scss'" />
+
+  <script>
+    window.pageBreadcrumb = [
+      { text: "카드", url: "/card" },
+      { text: "카드서비스", url: "/card/#" },
+      { text: "기프트카드", url: "/card/#/#" }
+    ];
+  </script>
+</head>
+
+<body>
+  <div class="app">
+    <!-- 공통 HEADER inject -->
+    <inject file="/components/header.html" label="카드 Header Label" type="process" />
+    <!-- Main Content -->
+    <main id="shcMainContent" class="shc-main bottom-spacing valign--top">
+      <section class="shc-section">
+        <h1 class="sr-only">기프트카드</h1>
+        <ul class="shc-ul gap--lg mt--md">
+          <li>
+            <a class="shc-bridge-menu" href="/pconts/html/card/giftCard/MOBFM067/MOBFM067R01.html">
+              <strong class="shc-bridge-menu__title">기프트카드 안내</strong>
+            </a>
+          </li>
+          <li>
+            <a class="shc-bridge-menu" href="/pconts/html/card/giftCard/MOBFM066/MOBFM066R01.html">
+              <strong class="shc-bridge-menu__title">소지자 정보 등록∙해제</strong>
+            </a>
+          </li>
+          <li>
+            <a class="shc-bridge-menu" href="/pconts/html/card/giftCard/MOBFM066N/MOBFM066R02.html">
+              <strong class="shc-bridge-menu__title">소지자 정보∙비밀번호 변경</strong>
+            </a>
+          </li>
+          <li>
+            <a class="shc-bridge-menu" href="/mob/MOBFM065N/MOBFM065R01.shc">
+              <strong class="shc-bridge-menu__title">환불∙내역</strong>
+            </a>
+          </li>
+          <li>
+            <a class="shc-bridge-menu" href="/mob/MOBFM064N/MOBFM064R01.shc">
+              <strong class="shc-bridge-menu__title">잔액 조회∙내역</strong>
+            </a>
+          </li>
+          <li>
+            <a class="shc-bridge-menu" href="/mob/MOBFM185N/MOBFM185C01.shc">
+              <strong class="shc-bridge-menu__title">수령 등록</strong>
+            </a>
+          </li>
+          <li>
+            <a class="shc-bridge-menu" href="/mob/MOBFM03049N/MOBFM03049C01.shc ">
+              <strong class="shc-bridge-menu__title">리플러스 충전 ∙ 내역</strong>
+            </a>
+          </li>
+        </ul>
+
+        <div class="swiper shc-slide gift-card-bridge mt--4xl">
+          <div class="swiper-wrapper">
+            <!--  TO DO : 블랙(black), 신한트래블카드(Shinhan Travel Card, STC), SG다인힐 기프트카드 순차적으로 노출 [S] -->
+            <div class="swiper-slide">
+              <div class="swiper-inner">
+                <div class="content-box">
+                  <picture class="shc-card-info__img">
+                    <img data-src="/static/images/card/sample.gif" alt="아이행복 체크카드 카드">
+                  </picture>
+                  <div class="text_area">
+                    <h2 class="body--l truncate2">신한기프트카드 블랙(black)</h2>
+                    <p class="truncate2">세련되고 고급스러운 디자인으로 가장 많은 고객분들이 선택해주시는 신한 기프트카드</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="swiper-slide">
+              <div class="swiper-inner">
+                <div class="content-box">
+                  <picture class="shc-card-info__img">
+                    <img data-src="/static/images/card/sample.gif" alt="아이행복 체크카드 카드">
+                  </picture>
+                  <div class="text_area">
+                    <h2 class="body--l truncate2">신한트래블카드(Shinhan Travel Card, STC) / 최대 2줄 노출
+                      블랙(black)</h2>
+                    <p class="truncate2">세련되고 고급스러운 디자인으로 가장 많은 고객분들이 선택해주시는 신한 기프트카드 / 최대 2줄 노출</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- TO DO :  블랙(black), 신한트래블카드(Shinhan Travel Card, STC), SG다인힐 기프트카드 순차적으로 노출 [E]-->
+          </div>
+          <div class="shc-slide__utils">
+            <div class="shc-slide__control">
+              <span class="swiper-pagination"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    </main>
+
+    <!-- 공통 FOOTER inject -->
+    <inject file="/components/footer.html" label="카드" />
+  </div>
+  <script>
+  function banner() {
+    console.log(11);
+    
+    // Swiper 초기화 (Initialization)
+    const travelJSwiper1 = new Swiper('.gift-card-bridge', {
+      slidesPerView: 1,
+      slidesPerGroup: 1,
+      spaceBetween: 20,
+      //loop: true,
+      pagination: {
+        el: '.shc-slide__control .swiper-pagination', // Ensure this selector is correct
+        clickable: true,
+      },
+      // Dynamically loading slides means observer: true and observeParents: true are useful
+      observer: true,
+      observeParents: true,
+    });
+
+  }
+  ScriptHub.onReady('core', function() {  
+    banner();
+  }); 
+  </script>
+</body>
+
+</html>
