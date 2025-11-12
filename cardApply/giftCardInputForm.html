@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카드 정보 입력</title>
+    
+    <style>
+        /* CSS 변수 설정 */
+        :root {
+            --primary-blue: #4c7cff;
+            --error-red: #ef4444;
+            --gray-dark: #1f2937;
+            --gray-medium: #6b7280;
+            --gray-light: #f7f9fb;
+            --border-color-default: #d1d5db; /* gray-300 */
+        }
+
+        body {
+            background-color: var(--gray-light);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+
+        /* 페이지 전체 래퍼 및 중앙 정렬 */
+        .page-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem; /* p-4 */
+        }
+
+        /* 카드 컨테이너 스타일 */
+        .card-container {
+            width: 100%;
+            max-width: 512px; /* max-w-lg */
+            background-color: white;
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            border: 1px solid #f3f4f6; /* border-gray-100 */
+        }
+
+        /* 제목 스타일 */
+        .title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: bold;
+            margin-bottom: 2rem; /* mb-8 */
+            color: var(--gray-dark);
+            text-align: center;
+        }
+
+        /* 폼 행(row) 및 Fieldset 레이아웃 - 기본: 데스크톱 스타일 */
+        .form-row, .form-fieldset {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            /* fieldset 기본 border와 padding 제거 */
+            border: none;
+            padding: 0;
+            margin: 0 0 24px 0;
+        }
+        
+        /* 폼 라벨 및 Fieldset legend 스타일 */
+        .form-label {
+            width: 120px;
+            color: var(--gray-dark);
+            font-size: 1rem;
+            font-weight: 500;
+            padding-top: 0.75rem; /* pt-3 */
+            display: flex;
+            align-items: center;
+        }
+
+        /* legend가 fieldset 내부에서 라벨처럼 작동하도록 flex item으로 만듭니다. */
+        .form-fieldset legend.form-label {
+            float: none; /* float 해제 */
+            order: 1; /* flex item 순서 지정 */
+            margin-right: 0;
+        }
+
+        /* 입력 필드 그룹 스타일 */
+        .input-group {
+            flex-grow: 1;
+            order: 2; /* flex item 순서 지정 */
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem; /* p-3 */
+            border: 1px solid var(--border-color-default);
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            box-sizing: border-box; /* 패딩이 width에 포함되도록 설정 */
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(76, 124, 255, 0.5); /* focus:ring-2 */
+        }
+        
+        /* 단일 입력 필드 시뮬레이션 (Display Div) */
+        .card-display-simulated {
+            /* Input Field 기본 스타일 상속 */
+            display: flex;
+            align-items: center;
+            font-family: monospace; /* 균일한 숫자 간격 확보 */
+            cursor: text;
+            user-select: none;
+            min-height: 48px; 
+            line-height: 1.5;
+            letter-spacing: 0.1em; /* 숫자 간격 조절 */
+            color: var(--gray-dark);
+        }
+
+        .card-display-simulated.focused-input {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(76, 124, 255, 0.5);
+        }
+
+        .styled-hyphen {
+            color: var(--primary-blue); /* 파란색 구분자 */
+            font-weight: 500;
+            margin: 0 6px; 
+            letter-spacing: normal;
+        }
+
+        .placeholder {
+            color: var(--gray-medium);
+            font-style: italic;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            letter-spacing: normal;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 1px;
+            height: 1.2em;
+            background-color: var(--gray-dark);
+            margin-left: 1px;
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
+
+        /* 숨겨진 Raw Input (실제 입력 처리) */
+        .hidden-raw-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 1px;
+            height: 1px;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+
+        /* 오류 상태 스타일 */
+        .text-error {
+            color: var(--error-red);
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.25rem; /* mt-1 */
+            margin-left: 0.25rem; /* ml-1 */
+        }
+
+        /* Select 그룹 스타일 (유효기간) */
+        .select-group {
+            display: flex;
+            gap: 0.75rem; /* space-x-3 */
+            flex-grow: 1;
+        }
+
+        .select-field {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color-default);
+            border-radius: 0.5rem;
+            background-color: white;
+            appearance: none;
+            font-size: 1rem;
+        }
+
+        /* 비밀번호 입력 필드 그룹 스타일 */
+        .password-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-grow: 1;
+        }
+
+        /* CVC 및 메모 텍스트 */
+        .text-note {
+            font-size: 0.875rem; /* text-sm */
+            color: var(--gray-medium);
+            margin-top: 0.75rem; /* mt-3 */
+            margin-left: 0.25rem; /* ml-1 */
+        }
+
+        /* 비밀번호 입력 필드 마침표 간격 */
+        input[type="password"] {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.25em; 
+            font-size: 1.125rem; /* text-lg */
+        }
+        
+        /* 확인 표시가 있는 입력 필드 */
+        .input-with-icon {
+            position: relative;
+            flex: 1;
+        }
+
+        .input-with-icon .input-field {
+            padding-right: 2.5rem; /* 아이콘 공간 확보 */
+        }
+
+        .checkmark-icon {
+            position: absolute;
+            top: 50%;
+            right: 0.75rem; 
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+            color: var(--primary-blue);
+        }
+
+        /* 다음 버튼 스타일 */
+        .submit-button {
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 0.75rem; /* py-3 */
+            border-radius: 0.5rem; 
+            margin-top: 1.5rem; /* mt-6 */
+            font-weight: 600; 
+            transition: background-color 0.15s ease-in-out;
+            border: none;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #3b66d4; /* hover:bg-blue-600 */
+        }
+
+        /* 헬프 아이콘 */
+        .help-icon {
+            margin-left: 0.5rem;
+            color: var(--gray-medium);
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* 모바일 반응형 설정 (640px 이하) */
+        @media (max-width: 639px) {
+            .form-row, .form-fieldset {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .form-label {
+                width: 100%;
+                margin-bottom: 8px;
+                padding-top: 0;
+            }
+            .select-group, .password-group {
+                gap: 0.5rem;
+            }
+            .page-wrapper {
+                padding: 1rem 0.5rem;
+            }
+            /* Fieldset의 legend를 모바일에서 block으로 만듭니다. */
+            .form-fieldset legend.form-label {
+                order: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Card Container -->
+        <div class="card-container">
+            <h1 class="title">결제 정보 입력</h1>
+
+            <form id="payment-form">
+
+                <!-- 1. 기프트카드번호 (Gift Card Number) -->
+                <div class="form-row">
+                    <label for="raw-card-number" class="form-label">기프트카드번호</label>
+                    <div class="input-group">
+                        
+                        <!-- Visible Display (사용자에게 보이는 영역) -->
+                        <div id="card-display" class="input-field card-display-simulated" tabindex="0" aria-hidden="true" aria-live="polite">
+                            <span class="placeholder">카드번호를 입력하세요.</span>
+                        </div>
+                        
+                        <!-- Raw Input (숨겨진 실제 입력 필드) -->
+                        <input type="text" id="raw-card-number" class="hidden-raw-input" maxlength="16" inputmode="numeric" aria-label="16자리 기프트카드 번호 입력">
+
+                        <p class="text-error" id="card-number-error">카드번호 16자리를 입력하세요.</p>
+                    </div>
+                </div>
+
+                <!-- 2. 유효기간 (Expiration Date) - Fieldset으로 변경 -->
+                <fieldset class="form-fieldset">
+                    <legend class="form-label">유효기간</legend>
+                    <div class="select-group input-group">
+                        <!-- Month Select -->
+                        <select id="exp-month" class="select-field" aria-label="만료 월">
+                            <option value="" disabled selected>월</option>
+                        </select>
+                        <!-- Year Select -->
+                        <select id="exp-year" class="select-field" aria-label="만료 연도">
+                            <option value="" disabled selected>년</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <!-- 3. CVC번호 (CVC Number) -->
+                <div class="form-row">
+                    <label for="cvc-number" class="form-label">
+                        CVC번호 
+                        <!-- Help Icon (Question Mark) -->
+                        <span class="help-icon" role="img" aria-label="CVC 번호는 카드 뒷면 3자리 숫자입니다.">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </span>
+                    </label>
+                    <div class="input-group">
+                        <input type="password" id="cvc-number" 
+                            placeholder="..."
+                            class="input-field"
+                            maxlength="3" inputmode="numeric" aria-describedby="cvc-note">
+                        <p class="text-note" id="cvc-note">5회 이상 오류 시 서비스 제한됩니다.</p>
+                    </div>
+                </div>
+                
+                <!-- 4. 카드비밀번호 (Card Password) - Fieldset으로 변경 -->
+                <fieldset class="form-fieldset">
+                    <legend class="form-label">
+                        카드비밀번호
+                         <!-- Help Icon (Question Mark) -->
+                         <span class="help-icon" role="img" aria-label="카드 비밀번호 앞 2자리를 입력합니다.">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </span>
+                    </legend>
+                    <div class="password-group input-group">
+                        <!-- First 2 digits -->
+                        <input type="password" id="card-pass-1" 
+                            placeholder="...."
+                            class="input-field"
+                            maxlength="2" inputmode="numeric" style="flex: 1;" aria-label="카드 비밀번호 앞 2자리">
+                        <!-- Last 2 digits -->
+                        <div class="input-with-icon">
+                            <input type="password" id="card-pass-2" 
+                                placeholder="...."
+                                class="input-field"
+                                maxlength="2" inputmode="numeric" aria-label="카드 비밀번호 뒤 2자리">
+                            <!-- Checkmark Icon (Simulated success) -->
+                            <div class="checkmark-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-button">
+                    다음
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 카드 번호의 포맷팅, 마스킹, 커서 관리를 담당하는 클래스입니다.
+         * 단일 숨김 입력 필드와 보이는 display div를 사용합니다.
+         */
+        class CardInputFormatter {
+            constructor(rawInputId, displayId) {
+                this.rawInput = document.getElementById(rawInputId);
+                this.displayDiv = document.getElementById(displayId);
+                this.maxLength = this.rawInput.maxLength || 16;
+                
+                this._initializeEventListeners();
+                this._formatAndDisplay(); // 초기 렌더링 (플레이스홀더 및 포커스 설정)
+            }
+
+            /**
+             * 이벤트 리스너를 설정하고 포커스/블러 시 시각적 효과를 제어합니다.
+             */
+            _initializeEventListeners() {
+                // 1. Display Div 클릭 시 숨겨진 Input에 포커스를 맞춥니다.
+                this.displayDiv.addEventListener('click', () => {
+                    this.rawInput.focus();
+                    // 커서를 항상 끝으로 이동 (모바일 사용성 개선)
+                    this.rawInput.selectionStart = this.rawInput.selectionEnd = this.rawInput.value.length;
+                });
+                
+                // 2. Hidden Input에 포커스 시, 시각적 효과를 Display Div에 적용
+                this.rawInput.addEventListener('focus', () => {
+                    this.displayDiv.classList.add('focused-input');
+                    this._formatAndDisplay();
+                });
+
+                this.rawInput.addEventListener('blur', () => {
+                    this.displayDiv.classList.remove('focused-input');
+                    this._formatAndDisplay(); // 포커스가 나갈 때 커서 제거를 위해 갱신
+                });
+
+                // 3. Raw Input 입력 시 포맷팅 및 커서 이동
+                this.rawInput.addEventListener('input', () => {
+                    this._formatAndDisplay();
+                    // 입력 후에도 커서를 항상 끝으로 이동 (안정성 확보)
+                    this.rawInput.selectionStart = this.rawInput.selectionEnd = this.rawInput.value.length;
+                });
+            }
+
+            /**
+             * Raw 값을 받아 포맷팅, 마스킹하여 Display Div에 HTML로 렌더링합니다.
+             */
+            _formatAndDisplay() {
+                // 1. Raw Value 처리: 숫자만 허용 및 길이 제한
+                let rawValue = this.rawInput.value.replace(/[^0-9]/g, '');
+                if (rawValue.length > this.maxLength) {
+                    rawValue = rawValue.substring(0, this.maxLength);
+                }
+                this.rawInput.value = rawValue; // Raw input field 갱신
+
+                const isFocused = document.activeElement === this.rawInput;
+                const currentLength = rawValue.length;
+                
+                if (currentLength === 0) {
+                    // 입력이 없으면 플레이스홀더 표시
+                    const cursorHtml = isFocused ? '<span class="cursor"></span>' : '';
+                    this.displayDiv.innerHTML = `<span class="placeholder">카드번호를 입력하세요.</span>${cursorHtml}`;
+                    return;
+                }
+
+                let formattedHtml = '';
+                const HYPHEN = '<span class="styled-hyphen">-</span>';
+                const CURSOR = '<span class="cursor"></span>';
+
+                // 2. 단일 반복문으로 전체 16자리 처리
+                for (let i = 0; i < this.maxLength; i++) {
+                    const digit = rawValue[i];
+
+                    // 하이픈 추가 (0, 4, 8, 12번째 숫자 이전에 추가)
+                    if (i > 0 && i % 4 === 0) {
+                        formattedHtml += HYPHEN;
+                    }
+
+                    // 현재 입력 길이보다 길면 (남은 빈 칸)
+                    if (i >= currentLength) {
+                        // 커서 표시 (포커스가 있고, 현재가 입력 위치이며, 마지막 글자가 *가 아닐 때)
+                        if (i === currentLength && isFocused) {
+                            formattedHtml += CURSOR;
+                        }
+                        // 더 이상 숫자가 없으므로 중단
+                        break; 
+                    }
+
+                    // 3. 마스킹 규칙 적용
+                    if (i < 8) {
+                        // Part 1 & 2 (1-8): 숫자로 표시
+                        formattedHtml += digit;
+                    } else if (i < 12) {
+                        // Part 3 (9-12): 입력된 숫자 개수만큼 '*' 마스킹
+                        formattedHtml += '*';
+                    } else {
+                        // Part 4 (13-16): XXX* 마스킹
+                        if (i < 15) {
+                            // 13, 14, 15번째 자리는 숫자로 표시
+                            formattedHtml += digit;
+                        } else {
+                            // 16번째 자리는 '*'로 마스킹
+                            formattedHtml += '*';
+                        }
+                    }
+                }
+                
+                // 4. 최종 렌더링
+                this.displayDiv.innerHTML = formattedHtml;
+            }
+        }
+
+        /**
+         * 유효 기간 드롭다운 초기화 함수
+         */
+        function initializeDateDropdowns() {
+            const monthSelect = document.getElementById('exp-month');
+            const yearSelect = document.getElementById('exp-year');
+            const currentYear = new Date().getFullYear();
+
+            // Months (01 to 12)
+            for (let i = 1; i <= 12; i++) {
+                const month = i.toString().padStart(2, '0');
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            }
+
+            // Years (Current year + next 10 years)
+            for (let i = 0; i < 11; i++) {
+                const year = currentYear + i;
+                const option = document.createElement('option');
+                option.value = year; 
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+
+            // 이미지에 있는 기본값 설정 (03 and 2026)
+            monthSelect.value = '03';
+            yearSelect.value = '2026';
+        }
+
+        /**
+         * 폼 제출 처리 (데모 목적)
+         */
+        function handleFormSubmission(e) {
+            e.preventDefault();
+            console.log('Form submitted (demo mode).');
+            
+            // 시각적 메시지 표시
+            const statusMessage = document.createElement('div');
+            statusMessage.textContent = 'Demo: 폼이 제출되었습니다! (실제 데이터 전송 없음)';
+            statusMessage.style.cssText = `
+                position: fixed;
+                bottom: 1rem;
+                right: 1rem;
+                background-color: var(--primary-blue);
+                color: white;
+                padding: 0.75rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+                transition: opacity 0.3s ease-in-out;
+            `;
+            document.body.appendChild(statusMessage);
+
+            setTimeout(() => {
+                statusMessage.style.opacity = '0';
+                setTimeout(() => statusMessage.remove(), 300);
+            }, 2000);
+        }
+
+        // --- 메인 초기화 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 유효 기간 드롭다운 초기화
+            initializeDateDropdowns();
+
+            // 2. 카드 입력 포맷터 초기화 (핵심 로직)
+            new CardInputFormatter('raw-card-number', 'card-display');
+            
+            // 3. 폼 제출 리스너 등록
+            document.getElementById('payment-form').addEventListener('submit', handleFormSubmission);
+        });
+    </script>
+</body>
+</html>
