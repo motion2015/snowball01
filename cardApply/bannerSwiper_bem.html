@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swiper.js 커스텀 슬라이더 (BEM 적용)</title>
+
+    <!-- 1. Swiper.js CSS CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!-- 2. 커스텀 CSS (BEM 방식 적용) -->
+    <style>
+      /* 기본 페이지 스타일 */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Helvetica Neue', Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4f7f6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      /* --- BEM Block --- */
+      /* Swiper를 감싸는 메인 카드 블록 */
+      .card-slider {
+        width: 800px;
+        max-width: 95%;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        padding: 40px;
+        overflow: hidden;
+      }
+
+      /* Swiper 기본 설정 (라이브러리 클래스) */
+      .swiper {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* 개별 슬라이드 레이아웃 (라이브러리 클래스) */
+      .swiper-slide {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+        background: #fff;
+      }
+
+      /* --- BEM Elements --- */
+
+      /* 슬라이드 내부 - 텍스트 콘텐츠 */
+      .card-slider__slide-content {
+        flex: 1;
+      }
+
+      .card-slider__subtitle {
+        font-size: 16px;
+        color: #555;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .card-slider__title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+
+      .card-slider__description {
+        font-size: 18px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      /* 슬라이드 내부 - 이미지 */
+      .card-slider__slide-image {
+        flex-shrink: 0; /* 이미지가 찌그러지지 않도록 */
+      }
+
+      .card-slider__image {
+        width: 200px; /* 이미지 너비 고정 */
+        height: 320px; /* 이미지 높이 고정 */
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* --- 커스텀 컨트롤 디자인 --- */
+
+      /* 컨트롤 영역 (버튼 + 페이지네이션) */
+      .card-slider__controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        width: 84px;
+        height: 16px;
+        margin: 30px auto 0 auto;
+      }
+
+      /* 페이지네이션 (Swiper가 생성한 요소들을 스타일링) */
+      .card-slider__pagination {
+        position: static;
+        width: auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* BEM 네이밍에 맞게 Swiper 기본 클래스를 좀 더 한정(scope) */
+      .card-slider__pagination .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background-color: #d0d0d0;
+        opacity: 1;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        margin: 0 3px;
+      }
+
+      .card-slider__pagination .swiper-pagination-bullet-active {
+        width: 16px;
+        height: 6px;
+        background-color: #444;
+        border-radius: 5px;
+      }
+
+      /* 좌/우 네비게이션 버튼 (기본) */
+      .card-slider__button {
+        position: static;
+        width: auto;
+        height: 100%;
+        margin-top: 0;
+        background-color: transparent;
+        border-radius: 0;
+        color: #888;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        /* Swiper의 기본 ::after를 사용하기 위해 필요 */
+        font-family: swiper-icons;
+      }
+
+      .card-slider__button:hover {
+        background-color: transparent;
+        transform: none;
+        color: #333;
+      }
+
+      .card-slider__button::after {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      /* --- BEM Modifiers --- */
+
+      /* 이전 버튼 (Swiper v11 호환) */
+      .card-slider__button--prev::after,
+      .swiper-rtl .card-slider__button--next::after {
+        content: 'prev';
+      }
+
+      /* 다음 버튼 (Swiper v11 호환) */
+      .card-slider__button--next::after,
+      .swiper-rtl .card-slider__button--prev::after {
+        content: 'next';
+      }
+
+      /* 모바일 반응형 */
+      @media (max-width: 768px) {
+        .card-slider {
+          padding: 20px;
+        }
+
+        .swiper-slide {
+          flex-direction: column-reverse; /* 모바일에선 이미지를 위로 */
+          text-align: center;
+        }
+
+        .card-slider__title {
+          font-size: 24px;
+        }
+
+        .card-slider__description {
+          font-size: 16px;
+        }
+
+        .card-slider__slide-image {
+          width: 100%;
+        }
+
+        .card-slider__image {
+          width: 100%;
+          height: 250px;
+        }
+
+        .card-slider__controls {
+          margin-top: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 3. HTML 구조 (BEM 적용) -->
+    <div class="card-slider">
+      <!-- Swiper.js v11 권장 구조 (.swiper) -->
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <!-- Slide 1 -->
+          <div class="swiper-slide">
+            <div class="card-slider__slide-content">
+              <div class="card-slider__subtitle">
+                신한기프트카드 블랙(black)
+              </div>
+              <div class="card-slider__title">
+                고급스러운 디자인으로<br />신한 기프트카드 카드
+              </div>
+              <div class="card-slider__description">
+                설명 두줄입니다. 마음을 전하세요.
+              </div>
+            </div>
+            <div class="card-slider__slide-image">
+              <!-- <img> 태그에 Element 클래스 적용 -->
+              <img
+                class="card-slider__image"
+                src="https://placehold.co/200x320/000000/FFFFFF?text=Card+1"
+                alt="Black Gift Card"
+              />
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="swiper-slide">
+            <div class="card-slider__slide-content">
+              <div class="card-slider__subtitle">신한기프트카드 레드(red)</div>
+              <div class="card-slider__title">
+                매력적인 레드 컬러<br />특별한 날을 위한 선물
+              </div>
+              <div class="card-slider__description">
+                강렬하고 세련된 디자인입니다.
+              </div>
+            </div>
+            <div class="card-slider__slide-image">
+              <img
+                class="card-slider__image"
+                src="https://placehold.co/200x320/D32F2F/FFFFFF?text=Card+2"
+                alt="Red Gift Card"
+              />
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="swiper-slide">
+            <div class="card-slider__slide-content">
+              <div class="card-slider__subtitle">신한기프트카드 골드(gold)</div>
+              <div class="card-slider__title">
+                우아하고 럭셔리한<br />골드 에디션 기프트카드
+              </div>
+              <div class="card-slider__description">
+                감사의 마음을 품격있게 전합니다.
+              </div>
+            </div>
+            <div class="card-slider__slide-image">
+              <img
+                class="card-slider__image"
+                src="https://placehold.co/200x320/FFD700/000000?text=Card+3"
+                alt="Gold Gift Card"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 커스텀 컨트롤 영역 (BEM 적용) -->
+      <div class="card-slider__controls">
+        <!-- BEM 클래스 (Base + Modifier) 적용 -->
+        <div class="card-slider__button card-slider__button--prev"></div>
+        <div class="card-slider__pagination"></div>
+        <div class="card-slider__button card-slider__button--next"></div>
+      </div>
+    </div>
+
+    <!-- 4. Swiper.js JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- 5. Swiper 초기화 스크립트 (BEM 클래스로 연결) -->
+    <script>
+      const swiper = new Swiper('.swiper', {
+        // 옵션
+        loop: true,
+        speed: 500,
+
+        // 페이지네이션 연결 (BEM 클래스)
+        pagination: {
+          el: '.card-slider__pagination', // '.swiper-pagination' -> '.card-slider__pagination'
+          clickable: true,
+        },
+
+        // 네비게이션(화살표) 연결 (BEM 클래스)
+        navigation: {
+          nextEl: '.card-slider__button--next', // '.swiper-button-next' -> '.card-slider__button--next'
+          prevEl: '.card-slider__button--prev', // '.swiper-button-prev' -> '.card-slider__button--prev'
+        },
+      })
+    </script>
+  </body>
+</html>

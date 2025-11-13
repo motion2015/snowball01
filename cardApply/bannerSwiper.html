@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swiper.js 커스텀 슬라이더</title>
+
+    <!-- 1. Swiper.js CSS CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <!-- 2. 커스텀 CSS (Tailwind 미사용) -->
+    <style>
+      /* 기본 페이지 스타일 */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          'Helvetica Neue', Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4f7f6; /* 부드러운 배경색 */
+      }
+
+      /* --- 수정된 부분 --- */
+      /* 모바일에서 padding 값 때문에 .swiper-card가 
+          화면보다 커지는 것을 방지하기 위해 box-sizing을 적용합니다.
+        */
+      * {
+        box-sizing: border-box;
+      }
+
+      /* Swiper를 감싸는 메인 카드 */
+      .swiper-card {
+        width: 550px;
+        max-width: 95%;
+        background: #ffffff;
+        border-radius: 16px; /* 둥근 모서리 */
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08); /* 부드러운 그림자 */
+        padding: 40px;
+        overflow: hidden; /* 내부 요소가 튀어나가지 않게 */
+      }
+
+      /* Swiper 기본 설정 */
+      .swiper {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* 개별 슬라이드 레이아웃 */
+      .swiper-slide {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px; /* 텍스트와 이미지 사이 간격 */
+        background: #fff; /* 슬라이드 배경 */
+      }
+
+      /* 슬라이드 내부 - 텍스트 콘텐츠 */
+      .slide-content {
+        flex: 1;
+      }
+
+      .slide-content .subtitle {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .slide-content .title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #222;
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+
+      .slide-content .description {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+      }
+
+      /* 슬라이드 내부 - 이미지 */
+      .slide-image {
+        flex-shrink: 0; /* 이미지가 찌그러지지 않도록 */
+      }
+
+      .slide-image img {
+        width: 150px; /* 이미지 너비 고정 */
+        height: 100px; /* 이미지 높이 고정 */
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* --- 커스텀 컨트롤 디자인 (핵심) ---
+        */
+
+      /* 컨트롤 영역 (버튼 + 페이지네이션) */
+      .swiper-controls {
+        display: flex;
+        justify-content: space-between; /* 양쪽 끝으로 버튼, 가운데 페이지네이션 */
+        align-items: center;
+        position: relative;
+
+        /* --- 요청사항 적용 --- */
+        width: 84px;
+        height: 16px;
+        margin: 30px auto 0 auto; /* 상단 마진 30px, 좌우 auto로 중앙 정렬 */
+      }
+
+      /* 페이지네이션 (가운데 정렬) */
+      .swiper-pagination {
+        position: static; /* Swiper 기본값(absolute) 덮어쓰기 */
+        width: auto; /* Swiper 기본값(100%) 덮어쓰기 */
+        height: 100%; /* 부모(16px)와 높이 맞춤 */
+        display: flex;
+        align-items: center;
+        justify-content: center; /* 불릿들을 중앙 정렬 */
+      }
+
+      /* 페이지네이션 불릿 (기본 - 비활성) */
+      .swiper-pagination-bullet {
+        width: 6px; /* 크기 축소 */
+        height: 6px; /* 크기 축소 */
+        background-color: #d0d0d0;
+        opacity: 1; /* Swiper 기본값 덮어쓰기 */
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        margin: 0 3px; /* 간격 축소 */
+      }
+
+      /* 페이지네이션 불릿 (활성) - 이미지 참고 */
+      .swiper-pagination-bullet-active {
+        width: 16px; /* 활성 불릿은 길게 (축소) */
+        height: 6px; /* 높이 맞춤 */
+        background-color: #444; /* 진한 색상 */
+        border-radius: 5px; /* 둥근 사각형 (pill) */
+      }
+
+      /* 좌/우 네비게이션 버튼 */
+      .swiper-button-prev,
+      .swiper-button-next {
+        position: static; /* Swiper 기본값(absolute) 덮어쓰기 */
+        width: auto; /* 크기 자동 (내용물 기반) */
+        height: 100%; /* 부모(16px)와 높이 맞춤 */
+        margin-top: 0; /* Swiper 기본값 덮어쓰기 */
+
+        background-color: transparent; /* 배경 제거 */
+        border-radius: 0; /* 원형 제거 */
+        color: #888; /* 화살표 색상 */
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        transition: all 0.3s ease;
+      }
+
+      /* 버튼 호버 효과 */
+      .swiper-button-prev:hover,
+      .swiper-button-next:hover {
+        background-color: transparent; /* 배경 없음 */
+        transform: none; /* 스케일 제거 */
+        color: #333; /* 호버 시 색상 진하게 */
+      }
+
+      /* 버튼 화살표 아이콘 크기/굵기 조절 */
+      .swiper-button-prev::after,
+      .swiper-button-next::after {
+        font-size: 14px; /* 화살표 크기 축소 */
+        font-weight: 600;
+      }
+
+      /* Swiper v11부터는 기본 화살표가 SVG이므로, 이전 버전 화살표(::after)를 사용하도록 강제 */
+      .swiper-button-prev:after,
+      .swiper-rtl .swiper-button-next:after {
+        content: 'prev';
+      }
+      .swiper-button-next:after,
+      .swiper-rtl .swiper-button-prev:after {
+        content: 'next';
+      }
+
+      /* 모바일 반응형 */
+      @media (max-width: 768px) {
+        .swiper-card {
+          padding: 20px;
+        }
+
+        .swiper-slide {
+          flex-direction: column-reverse; /* 모바일에선 이미지를 위로 */
+          text-align: center;
+        }
+
+        .slide-content .title {
+          font-size: 24px;
+        }
+
+        .slide-content .description {
+          font-size: 16px;
+        }
+
+        /* --- 수정된 부분 --- */
+        /* .slide-image (div)가 100% 너비를 갖도록 설정합니다. 
+               (flex-direction: column 일 때 align-items: center가 
+               적용되어 너비가 200px로 축소되는 것을 방지)
+            */
+        .slide-image {
+          width: 100%;
+        }
+
+        .slide-image img {
+          width: 100%; /* 부모(.slide-image)의 100%를 채우도록 다시 설정 */
+          /* height: 250px; <- 이 속성을 제거합니다. */
+          /* 부모의 text-align: center에 의해 중앙 정렬됩니다. */
+          /* 데스크탑 스타일의 width: 200px; 가 적용됩니다. */
+          height: 250px; /* 모바일 높이 조절 */
+        }
+        /* --- 여기까지 --- */
+
+        .swiper-controls {
+          margin-top: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 3. HTML 구조 -->
+    <div class="swiper-card">
+      <!-- Swiper.js v11 권장 구조 (.swiper) -->
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <!-- Slide 1 -->
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <div class="subtitle">신한기프트카드 블랙(black)</div>
+              <div class="title">
+                고급스러운 디자인으로<br />신한 기프트카드 카드
+              </div>
+              <div class="description">설명 두줄입니다. 마음을 전하세요.</div>
+            </div>
+            <div class="slide-image">
+              <img
+                src="https://placehold.co/200x320/000000/FFFFFF?text=Card+1"
+                alt="Black Gift Card"
+              />
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <div class="subtitle">신한기프트카드 레드(red)</div>
+              <div class="title">
+                매력적인 레드 컬러<br />특별한 날을 위한 선물
+              </div>
+              <div class="description">강렬하고 세련된 디자인입니다.</div>
+            </div>
+            <div class="slide-image">
+              <img
+                src="https://placehold.co/200x320/D32F2F/FFFFFF?text=Card+2"
+                alt="Red Gift Card"
+              />
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="swiper-slide">
+            <div class="slide-content">
+              <div class="subtitle">신한기프트카드 골드(gold)</div>
+              <div class="title">
+                우아하고 럭셔리한<br />골드 에디션 기프트카드
+              </div>
+              <div class="description">감사의 마음을 품격있게 전합니다.</div>
+            </div>
+            <div class="slide-image">
+              <img
+                src="https://placehold.co/200x320/FFD700/000000?text=Card+3"
+                alt="Gold Gift Card"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 커스텀 컨트롤 영역 -->
+      <div class="swiper-controls">
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+      </div>
+    </div>
+
+    <!-- 4. Swiper.js JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- 5. Swiper 초기화 스크립트 -->
+    <script>
+      const swiper = new Swiper('.swiper', {
+        // 옵션
+        loop: true, // 무한 루프
+        speed: 500, // 전환 속도
+
+        // 페이지네이션 연결
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true, // 클릭으로 슬라이드 이동
+        },
+
+        // 네비게이션(화살표) 연결
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      })
+    </script>
+  </body>
+</html>
