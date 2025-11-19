@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>신한카드 처음 - ANNIVERSE</title>
+    <!-- Swiper CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <style>
+      /* 기본 Reset */
+      * { box-sizing: border-box; }
+      
+      /* 접근성 개선: 포커스 링 스타일 정의 */
+      :focus-visible {
+        outline: 2px solid #000;
+        outline-offset: 2px;
+      }
+      
+      body { margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; color: #333; }
+      ul, li { list-style: none; padding: 0; margin: 0; }
+      button { cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; }
+      input { font-family: inherit; }
+      
+      /* 스크린 리더 전용 클래스 */
+      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; white-space: nowrap; }
+
+      /* --- BEM 스타일 정의 --- */
+
+      /* 메인 컨테이너 */
+      .anniverse-container {
+        width: 100%;
+        background-color: #fff;
+      }
+
+      .anniverse-container__inner {
+        max-width: 980px; 
+        margin: 0 auto; 
+        padding: 48px 20px 100px; 
+      }
+
+      /* 헤더 영역 */
+      .anniverse-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .anniverse-header__subtitle {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #000;
+      }
+
+      .anniverse-header__title {
+        font-size: 32px;
+        line-height: 1.3;
+        color: #000;
+      }
+
+      .anniverse-header__highlight {
+        background: linear-gradient(90deg, #2596ff, #c72cff);
+        background-size: 100% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 900;
+      }
+
+      /* 탭 네비게이션 */
+      .anniverse-tab {
+        width: 100%;
+        margin-bottom: 0;
+      }
+
+      .anniverse-tab__list {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .anniverse-tab__item {
+        width: 50%;
+        text-align: center;
+      }
+
+      .anniverse-tab__btn {
+        width: 100%;
+        padding: 15px 0;
+        font-size: 16px;
+        font-weight: 500;
+        color: #888;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+      }
+
+      .anniverse-tab__item--active .anniverse-tab__btn {
+        color: #000;
+        font-weight: bold;
+        border-bottom: 2px solid #000;
+      }
+
+      /* 탭 패널 공통 */
+      .anniverse-panel {
+        display: none;
+        margin-top: 20px;
+      }
+
+      .anniverse-panel--active {
+        display: block;
+      }
+
+      /* 1. 날짜 선택 섹션 */
+      .date-selector {
+        text-align: center;
+        padding: 30px 20px;
+        background-image: url('https://cdnu.www.shinhancard.com/pconts/html/card/anniverse/img/bg_pc.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center 70%;
+        border-radius: 20px;
+        min-height: 390px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* JS 상태 토글 클래스: 숨김 처리 */
+      .date-selector--hidden {
+        display: none;
+      }
+
+      .date-selector__image {
+        width: 275px;
+        margin-bottom: 30px;
+      }
+
+      .date-selector__form {
+        max-width: 100%;
+      }
+      
+      /* fieldset 스타일 분리 */
+      .date-selector__fieldset {
+        border: 0;
+        padding: 0;
+        margin: 0;
+      }
+
+      .date-selector__input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+      }
+
+      .date-selector__input {
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        font-size: 28px;
+        padding: 10px;
+        text-align: center;
+        border: 3px solid #b9b0ff;
+        background: #0b103d;
+        color: #fff;
+      }
+
+      .date-selector__input:focus {
+        border: 3px solid #fff;
+      }
+
+      .date-selector__input--filled {
+        border: 3px solid #fff;
+      }
+
+      /* 공통 버튼 스타일 */
+      .btn {
+        width: auto;
+        height: auto;
+        line-height: 1;
+        font-size: 14px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+      }
+
+      .btn--primary {
+        width: 248px;
+        background: linear-gradient(90deg, #1fa7e2 0%, #a23dff 100%);
+      }
+
+      .btn--primary:disabled {
+        background: linear-gradient(90deg, #325897 0%, #523098 100%);
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      .btn--reset {
+        width: 136px;
+        height: 40px;
+        border-radius: 100px;
+        background-image: linear-gradient(to left, #3a80e1, #7026c6),
+          linear-gradient(135deg, #c697ff, #41ffff);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        border: 1px solid transparent;
+        padding: 0;
+      }
+      
+      .btn--reset span {
+        display: flex;
+        align-items: center;
+      }
+
+      .btn--reset::before {
+        content: '';
+        display: block;
+        width: 24px;
+        height: 24px;
+        background: url('https://www.shinhancard.com/pconts/html/card/anniverse/img/ico_reset.png') no-repeat center / 100%;
+        margin-right: 4px;
+      }
+
+      /* 결과 카드 (Result Card) */
+      .result-card {
+        display: none; /* 초기 상태 숨김 */
+        padding: 30px 20px;
+        background: url('https://cdnu.www.shinhancard.com/pconts/html/card/anniverse/img/ani_bg_pc.png') no-repeat top center / 100% auto;
+        border-radius: 20px;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      /* JS 상태 토글 클래스: 보임 처리 */
+      .result-card--visible {
+        display: block;
+      }
+
+      .result-card__date {
+        color: #bbccff;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .result-card__title {
+        color: #ffffff;
+        font-size: 22px;
+        font-weight: 900;
+        margin-bottom: 20px;
+      }
+
+      .result-card__image-box {
+        width: 178px;
+        height: 280px;
+        margin: 0 auto 20px;
+        position: relative;
+        box-shadow: 5px 10px 20px 0 rgb(0 0 0 / 10%);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .result-card__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .result-card__desc {
+        color: #ffffff;
+        font-size: 14px;
+        line-height: 1.5;
+        max-width: 600px;
+        margin: 0 auto 30px;
+      }
+
+      /* 2. 사진 선택 섹션 (Photo Gallery) */
+      .photo-gallery {
+        /* layout */
+      }
+
+      .month-nav {
+        position: relative;
+        width: 100%;
+        padding: 20px 40px;
+        overflow: hidden;
+      }
+
+      .month-nav__swiper .swiper-slide {
+        width: auto;
+        padding: 0 10px;
+      }
+
+      .month-nav__btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .month-nav__thumb {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        opacity: 0.4;
+        transition: opacity 0.3s;
+        padding: 3px; /* border space */
+      }
+
+      .month-nav__thumb img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: white;
+        padding: 3px;
+        object-fit: cover;
+      }
+
+      .month-nav__text {
+        font-size: 14px;
+        color: #aaa;
+        margin-top: 8px;
+      }
+
+      /* Active State for Month Nav */
+      .month-nav__btn--active .month-nav__thumb {
+        background: linear-gradient(45deg, #4a90e2, #b250e0);
+        opacity: 1;
+      }
+
+      .month-nav__btn--active .month-nav__text {
+        font-weight: 900;
+        color: #000;
+      }
+
+      .month-nav__arrow {
+        color: #333;
+        width: 30px;
+        height: 30px;
+        margin-top: -15px;
+      }
+      .month-nav__arrow:after {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      /* 사진 리스트 (Photo List) */
+      .photo-list {
+        margin-top: 20px;
+        padding: 0 10px;
+      }
+
+      .photo-list__empty {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+      }
+
+      .photo-list__item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 14px 48px 14px 18px;
+        background: #f4f7fc;
+        border-radius: 12px;
+        transition: all 0.2s;
+      }
+
+      /* 선택되었을 때 시각적 스타일 */
+      .photo-list__item--selected {
+        border: 2px solid #4a90e2;
+        background: #eef6ff;
+      }
+      
+      .photo-list__item[aria-pressed="true"] {
+        border: 2px solid #4a90e2;
+        background: #eef6ff;
+      }
+
+      .photo-list__item::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: url('https://cdnu.www.shinhancard.com/pconts/html/card/anniverse/img/ico_arrow_bk.svg') no-repeat center / 100%;
+        top: 50%;
+        right: 18px;
+        transform: translateY(-50%);
+      }
+
+      .photo-list__thumb {
+        flex: 0 0 90px;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .photo-list__thumb img {
+        width: 90px;
+        height: auto;
+        display: block;
+      }
+
+      .photo-list__info {
+        flex-grow: 1;
+        text-align: left;
+        margin-left: 16px;
+      }
+
+      .photo-list__date {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .photo-list__title {
+        font-size: 16px;
+        color: #000;
+        font-weight: 900;
+        margin-top: 4px;
+        display: block;
+      }
+
+      /* 하단 고정 푸터 (Sticky Footer) */
+      .sticky-footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #eee;
+        z-index: 100;
+        padding: 20px 0;
+        box-shadow: 0 -5px 10px rgba(0,0,0,0.05);
+      }
+
+      .sticky-footer__inner {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .sticky-footer__btn {
+        background: #111;
+        color: #fff;
+        width: 90%;
+        max-width: 400px;
+        height: 50px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .sticky-footer__btn:disabled {
+        background: #ddd;
+        color: #999;
+        cursor: not-allowed;
+      }
+
+      /* 정보 박스 (Info Box) */
+      .info-box {
+        margin-top: 40px;
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .info-box__title {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 15px;
+      }
+
+      .info-box__list li {
+        margin-bottom: 8px;
+        font-size: 13px;
+        color: #666;
+        line-height: 1.5;
+        position: relative;
+        padding-left: 10px;
+      }
+
+      .info-box__list li::before {
+        content: '-';
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      /* Mobile Responsive */
+      @media only screen and (max-width: 1100px) {
+        .anniverse-container__inner {
+          margin-top: 24px;
+        }
+
+        .result-card {
+          background: url(https://cdnu.www.shinhancard.com/pconts/html/card/anniverse/img/ani_bg_mo.png) no-repeat top center / 100% auto;
+        }
+
+        .date-selector {
+          background-image: url('https://cdnu.www.shinhancard.com/pconts/html/card/anniverse/img/bg_mo.png');
+        }
+        
+        .btn--primary {
+          width: 100%; 
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="anniverse-container" aria-label="나만의 우주 카드 선택">
+      <div class="anniverse-container__inner">
+        
+        <!-- Header -->
+        <div class="anniverse-header">
+          <h3 class="anniverse-header__subtitle">카드신청</h3>
+          <h4 class="anniverse-header__title">
+            카드에 새겨질<br />
+            <span class="anniverse-header__highlight">나만의 우주</span>를 골라주세요
+          </h4>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="anniverse-tab">
+          <ul class="anniverse-tab__list" role="tablist">
+            <li class="anniverse-tab__item anniverse-tab__item--active">
+              <button type="button" class="anniverse-tab__btn" role="tab" aria-controls="panel-date" aria-selected="true" id="tab-date">
+                날짜로 고르기
+              </button>
+            </li>
+            <li class="anniverse-tab__item">
+              <button type="button" class="anniverse-tab__btn" role="tab" aria-controls="panel-photo" aria-selected="false" id="tab-photo">
+                사진으로 고르기
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 1. Date Selector Panel -->
+        <div id="panel-date" class="anniverse-panel anniverse-panel--active" role="tabpanel" tabindex="0" aria-labelledby="tab-date">
+          <!-- Input Area -->
+          <div class="date-selector" id="dateInputArea">
+            <img
+              src="https://www.shinhancard.com/pconts/html/card/anniverse/img/page_title.png"
+              alt="기념하고 싶은 날짜를 선택해보세요."
+              class="date-selector__image"
+            />
+            <div class="date-selector__form">
+              <!-- inline style removed, using class -->
+              <fieldset class="date-selector__fieldset">
+                <legend class="sr-only">생년월일 입력</legend>
+                <div class="date-selector__input-group">
+                  <label for="birth_month1" class="sr-only">월 첫번째 자리</label>
+                  <input type="text" id="birth_month1" class="date-selector__input" maxlength="1" placeholder="M" inputmode="numeric" title="월 10의 자리" />
+                  
+                  <label for="birth_month2" class="sr-only">월 두번째 자리</label>
+                  <input type="text" id="birth_month2" class="date-selector__input" maxlength="1" placeholder="M" inputmode="numeric" title="월 1의 자리" />
+                  
+                  <label for="birth_day1" class="sr-only">일 첫번째 자리</label>
+                  <input type="text" id="birth_day1" class="date-selector__input" maxlength="1" placeholder="D" inputmode="numeric" title="일 10의 자리" />
+                  
+                  <label for="birth_day2" class="sr-only">일 두번째 자리</label>
+                  <input type="text" id="birth_day2" class="date-selector__input" maxlength="1" placeholder="D" inputmode="numeric" title="일 1의 자리" />
+                </div>
+              </fieldset>
+              <button type="button" id="checkDateBtn" disabled class="btn btn--primary">
+                <span>내 기념일 우주 확인하기</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Result Card Area -->
+          <div class="result-card" id="dateResultArea" aria-live="polite">
+            <h5 class="result-card__title sr-only" id="resultTitle" tabindex="-1">검색된 우주 카드 결과</h5>
+            
+            <div class="result-card__date">
+              On <span class="result-card__month-text">January</span> <span class="result-card__day-text">01</span>
+            </div>
+            <div class="result-card__title" aria-hidden="true">Galaxy Leo TV</div>
+            
+            <div class="result-card__image-box">
+              <img
+                src="https://www.shinhancard.com/pconts/html/card/anniverse/img/W_NASA_1111.png"
+                alt="선택한 날짜의 우주 사진: Galaxy Leo TV"
+                class="result-card__image"
+                id="resultCardImg"
+              />
+            </div>
+            <div class="result-card__desc" id="resultCardDesc">
+              레오 IV는 은하수 근처에 있는 10개 이상의 희미한 왜소은하 중 하나입니다.
+            </div>
+            <button type="button" id="resetBtn" class="btn btn--reset">
+              <span>다른 우주 찾기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Photo Selector Panel -->
+        <div id="panel-photo" class="anniverse-panel" role="tabpanel" tabindex="0" aria-labelledby="tab-photo">
+          <div class="photo-gallery">
+            <!-- Swiper Month Nav -->
+            <div class="month-nav">
+              <div class="swiper-container month-nav__swiper">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                    <button type="button" class="month-nav__btn month-nav__btn--active" data-month="all" aria-label="전체 보기, 선택됨">
+                      <div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_all.png" alt="" aria-hidden="true" /></div>
+                      <span class="month-nav__text">전체</span>
+                    </button>
+                  </div>
+                  <!-- 1~12월 -->
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="1" aria-label="1월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_1.png" alt="" aria-hidden="true"></div><span class="month-nav__text">1월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="2" aria-label="2월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_2.png" alt="" aria-hidden="true"></div><span class="month-nav__text">2월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="3" aria-label="3월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_3.png" alt="" aria-hidden="true"></div><span class="month-nav__text">3월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="4" aria-label="4월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_4.png" alt="" aria-hidden="true"></div><span class="month-nav__text">4월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="5" aria-label="5월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_5.png" alt="" aria-hidden="true"></div><span class="month-nav__text">5월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="6" aria-label="6월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_6.png" alt="" aria-hidden="true"></div><span class="month-nav__text">6월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="7" aria-label="7월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_7.png" alt="" aria-hidden="true"></div><span class="month-nav__text">7월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="8" aria-label="8월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_8.png" alt="" aria-hidden="true"></div><span class="month-nav__text">8월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="9" aria-label="9월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_9.png" alt="" aria-hidden="true"></div><span class="month-nav__text">9월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="10" aria-label="10월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_10.png" alt="" aria-hidden="true"></div><span class="month-nav__text">10월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="11" aria-label="11월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_11.png" alt="" aria-hidden="true"></div><span class="month-nav__text">11월</span></button></div>
+                  <div class="swiper-slide"><button type="button" class="month-nav__btn" data-month="12" aria-label="12월 보기"><div class="month-nav__thumb"><img src="https://www.shinhancard.com/pconts/html/card/anniverse/img/anni_12.png" alt="" aria-hidden="true"></div><span class="month-nav__text">12월</span></button></div>
+                </div>
+                <div class="swiper-button-prev month-nav__arrow" role="button" aria-label="이전 월 보기"></div>
+                <div class="swiper-button-next month-nav__arrow" role="button" aria-label="다음 월 보기"></div>
+              </div>
+            </div>
+            <!-- List Container -->
+            <div class="photo-list" id="photoListContainer" aria-live="polite">
+              <!-- List items will be injected here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Sticky Footer -->
+        <div class="sticky-footer">
+          <div class="sticky-footer__inner">
+            <button type="button" class="sticky-footer__btn" disabled id="submitBtn">
+              <span>이 카드로 신청하기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+          <strong class="info-box__title">신한카드 처음 ‘ANNIVERSE’ 프로젝트는?</strong>
+          <ul class="info-box__list">
+            <li>ANNIVERSE는 기념일을 뜻하는 Anniversary와 우주를 뜻하는 Universe를 합친 프로젝트입니다.</li>
+            <li>허블 우주 망원경이 내 생일에 촬영한 우주 이미지를 카드로 만나보세요.</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Swiper JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        
+        /* --- 1. Tab Logic --- */
+        const tabBtns = document.querySelectorAll('.anniverse-tab__btn');
+        const panels = document.querySelectorAll('.anniverse-panel');
+        const submitBtn = document.getElementById('submitBtn');
+
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            tabBtns.forEach(b => {
+              b.setAttribute('aria-selected', 'false');
+              b.parentElement.classList.remove('anniverse-tab__item--active');
+            });
+            panels.forEach(p => p.classList.remove('anniverse-panel--active'));
+
+            btn.setAttribute('aria-selected', 'true');
+            btn.parentElement.classList.add('anniverse-tab__item--active');
+            
+            const targetId = btn.getAttribute('aria-controls');
+            const targetPanel = document.getElementById(targetId);
+            targetPanel.classList.add('anniverse-panel--active');
+            
+            submitBtn.disabled = true;
+          });
+        });
+
+        /* --- 2. Date Input Logic --- */
+        const inputs = [
+          document.getElementById('birth_month1'),
+          document.getElementById('birth_month2'),
+          document.getElementById('birth_day1'),
+          document.getElementById('birth_day2')
+        ];
+        const checkDateBtn = document.getElementById('checkDateBtn');
+        const dateInputArea = document.getElementById('dateInputArea');
+        const dateResultArea = document.getElementById('dateResultArea');
+        const resultTitle = document.getElementById('resultTitle'); 
+        const resetBtn = document.getElementById('resetBtn');
+
+        inputs.forEach((input, idx) => {
+          input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^0-9]/g, ''); 
+            
+            if(input.value.length >= 1) {
+              input.classList.add('date-selector__input--filled');
+              if(idx < inputs.length - 1) inputs[idx + 1].focus();
+            } else {
+              input.classList.remove('date-selector__input--filled');
+            }
+
+            const allFilled = inputs.every(i => i.value.length === 1);
+            checkDateBtn.disabled = !allFilled;
+          });
+
+          input.addEventListener('keydown', (e) => {
+            if(e.key === 'Backspace' && input.value.length === 0 && idx > 0) {
+              inputs[idx - 1].focus();
+            }
+          });
+        });
+
+        // 확인 버튼
+        checkDateBtn.addEventListener('click', () => {
+          const m = parseInt(inputs[0].value + inputs[1].value);
+          const d = parseInt(inputs[2].value + inputs[3].value);
+
+          if (m < 1 || m > 12 || d < 1 || d > 31) {
+            alert('유효한 날짜를 입력해주세요.');
+            return;
+          }
+
+          // CSS 클래스로 상태 제어 (인라인 스타일 제어 제거)
+          dateInputArea.classList.add('date-selector--hidden');
+          dateResultArea.classList.add('result-card--visible');
+
+          const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+          
+          document.querySelector('.result-card__month-text').textContent = monthNames[m-1] || "";
+          document.querySelector('.result-card__day-text').textContent = inputs[2].value + inputs[3].value;
+
+          submitBtn.disabled = false;
+
+          setTimeout(() => {
+             if(resultTitle) resultTitle.focus();
+          }, 100);
+        });
+
+        // 리셋 버튼
+        resetBtn.addEventListener('click', () => {
+          inputs.forEach(i => {
+            i.value = '';
+            i.classList.remove('date-selector__input--filled');
+          });
+          
+          checkDateBtn.disabled = true;
+          submitBtn.disabled = true;
+
+          // CSS 클래스 제거로 초기화
+          dateInputArea.classList.remove('date-selector--hidden');
+          dateResultArea.classList.remove('result-card--visible');
+          
+          inputs[0].focus();
+        });
+
+
+        /* --- 3. Swiper & Photo List Logic --- */
+        const swiper = new Swiper('.swiper-container', {
+          slidesPerView: 'auto',
+          spaceBetween: 0,
+          a11y: {
+            prevSlideMessage: '이전 달 보기',
+            nextSlideMessage: '다음 달 보기',
+            firstSlideMessage: '첫 번째 달',
+            lastSlideMessage: '마지막 달',
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+
+        // Mock Data
+        const mockData = [];
+        for(let m=1; m<=12; m++) {
+          for(let d=1; d<=5; d++) {
+             mockData.push({
+               month: m,
+               day: d,
+               title: `Cosmic Wonder ${m}-${d}`,
+               img: `https://www.shinhancard.com/pconts/html/card/anniverse/img/W_NASA_1111.png`
+             });
+          }
+        }
+
+        function renderList(month) {
+          const container = document.getElementById('photoListContainer');
+          container.innerHTML = '';
+          
+          let list = mockData;
+          if(month !== 'all') {
+            list = mockData.filter(item => item.month === parseInt(month));
+          }
+
+          if(list.length === 0) {
+            // 인라인 스타일 제거하고 클래스로 대체
+            container.innerHTML = '<div class="photo-list__empty">해당하는 카드가 없습니다.</div>';
+            return;
+          }
+
+          list.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'photo-list__item';
+            btn.setAttribute('aria-pressed', 'false');
+            btn.innerHTML = `
+              <div class="photo-list__thumb"><img src="${item.img}" alt=""></div>
+              <div class="photo-list__info">
+                <div class="photo-list__date">${item.month}월 ${item.day}일</div>
+                <strong class="photo-list__title">${item.title}</strong>
+              </div>
+            `;
+            btn.addEventListener('click', () => {
+              const siblings = container.querySelectorAll('.photo-list__item');
+              siblings.forEach(s => {
+                  s.classList.remove('photo-list__item--selected');
+                  s.setAttribute('aria-pressed', 'false');
+              });
+              
+              btn.classList.add('photo-list__item--selected');
+              btn.setAttribute('aria-pressed', 'true');
+              
+              submitBtn.disabled = false;
+            });
+            container.appendChild(btn);
+          });
+        }
+
+        renderList('all');
+
+        const navBtns = document.querySelectorAll('.month-nav__btn');
+        navBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            navBtns.forEach(b => {
+                b.classList.remove('month-nav__btn--active');
+                let label = b.getAttribute('aria-label') || "";
+                label = label.replace(', 선택됨', '');
+                b.setAttribute('aria-label', label);
+            });
+            
+            btn.classList.add('month-nav__btn--active');
+            let currentLabel = btn.getAttribute('aria-label');
+            btn.setAttribute('aria-label', currentLabel + ', 선택됨');
+            
+            renderList(btn.getAttribute('data-month'));
+            submitBtn.disabled = true;
+          });
+        });
+
+        submitBtn.addEventListener('click', () => {
+          alert('신청 페이지로 이동합니다.');
+        });
+
+      });
+    </script>
+  </body>
+</html>
