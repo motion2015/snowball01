@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카드 검색 - 신한카드 스타일</title>
+    <!-- 폰트 및 아이콘 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           Reset & Base Styles
+           ========================================= */
+        :root {
+            --color-primary: #0055fe;
+            --color-primary-light: #ebf2ff;
+            --color-text-main: #111111;
+            --color-text-sub: #666666;
+            --color-text-desc: #888888;
+            --color-border: #e0e0e0;
+            --color-bg: #ffffff;
+            --color-bg-page: #f8f9fa;
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--color-bg-page);
+            color: var(--color-text-main);
+            line-height: 1.5;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* =========================================
+           Layout (.layout)
+           ========================================= */
+        .layout {
+            display: flex;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            gap: 40px;
+        }
+
+        /* Responsive: Mobile */
+        @media (max-width: 900px) {
+            .layout {
+                flex-direction: column;
+                padding: 20px;
+            }
+        }
+
+        /* =========================================
+           Sidebar (.sidebar)
+           ========================================= */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 100%;
+            }
+        }
+
+        /* Card Type Switcher */
+        .sidebar__type-switch {
+            display: flex;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 24px;
+        }
+
+        .sidebar__switch-btn {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text-sub);
+            border-radius: 6px;
+        }
+
+        .sidebar__switch-btn--active {
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .search-box__input {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-box__input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .search-box__icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-main);
+        }
+
+        /* Filter Groups */
+        .filter-group {
+            margin-bottom: 32px;
+        }
+
+        .filter-group__title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group__subtitle {
+            font-size: 12px;
+            color: var(--color-text-desc);
+            font-weight: 400;
+        }
+
+        /* Filter Tags (Chips) */
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tags__item {
+            padding: 8px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--color-text-sub);
+            background-color: var(--color-bg);
+            transition: all 0.2s;
+        }
+
+        .filter-tags__item:hover {
+            border-color: #bbbbbb;
+        }
+
+        .filter-tags__item--active {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            background-color: var(--color-primary-light);
+            font-weight: 600;
+        }
+
+        .filter-tags__icon {
+            margin-right: 4px;
+        }
+
+        /* Range Slider (Visual Only) */
+        .range-slider {
+            margin-top: 20px;
+            padding: 0 10px;
+        }
+
+        .range-slider__bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .range-slider__fill {
+            position: absolute;
+            left: 0;
+            width: 70%;
+            height: 100%;
+            background-color: var(--color-primary);
+            border-radius: 3px;
+        }
+
+        .range-slider__handle {
+            width: 18px;
+            height: 18px;
+            background-color: var(--color-bg);
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        .range-slider__handle--start { left: 0; }
+        .range-slider__handle--end { left: 70%; }
+
+        .range-slider__tooltip {
+            position: absolute;
+            top: -35px;
+            right: -10px;
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .range-slider__labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--color-text-desc);
+        }
+
+        /* Sidebar Actions */
+        .sidebar__actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            flex: 1;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn--secondary {
+            background-color: #eef1f6;
+            color: var(--color-primary);
+        }
+
+        .btn--primary {
+            background-color: var(--color-primary);
+            color: #ffffff;
+        }
+
+        /* =========================================
+           Main Content (.main-content)
+           ========================================= */
+        .main-content {
+            flex: 1;
+        }
+
+        /* Results Header */
+        .results-header {
+            margin-bottom: 24px;
+        }
+
+        .results-header__count {
+            font-size: 15px;
+            color: var(--color-text-sub);
+        }
+
+        .results-header__number {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        /* =========================================
+           Card Item (.card-item)
+           ========================================= */
+        .card-item {
+            background-color: var(--color-bg);
+            border-radius: 12px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            /* In a real scenario, this might be a link tag */
+            cursor: pointer;
+        }
+
+        .card-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card);
+        }
+
+        /* Card Visual (Image area) */
+        .card-item__visual {
+            position: relative;
+            padding: 30px 20px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-item__img {
+            max-width: 140px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Plus Button */
+        .card-item__add-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 40px; /* Adjusted to sit near the card corner */
+            width: 32px;
+            height: 32px;
+            background-color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            color: var(--color-text-main);
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .card-item__add-btn:hover {
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+        }
+
+        /* Card Content */
+        .card-item__content {
+            padding: 20px;
+        }
+
+        /* Badge */
+        .card-item__badge {
+            display: inline-block;
+            font-size: 11px;
+            color: #ff4d4d;
+            background-color: #fff0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Title */
+        .card-item__title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--color-text-main);
+        }
+
+        /* Benefit Tags */
+        .benefit-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .benefit-tags__item {
+            font-size: 11px;
+            color: var(--color-primary);
+            background-color: var(--color-primary-light);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Benefit List (Description) */
+        .benefit-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .benefit-list__item {
+            font-size: 13px;
+            color: var(--color-text-sub);
+            letter-spacing: -0.5px;
+        }
+
+        /* Card Colors (Simulating the image variations) */
+        .card-item--blue .card-item__img { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        .card-item--green .card-item__img { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+        .card-item--red .card-item__img { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); }
+        .card-item--dark .card-item__img { background: linear-gradient(135deg, #434343 0%, #000000 100%); }
+        
+        /* Placeholder styling for images since we don't have real files */
+        .card-item__img-placeholder {
+            width: 100px;
+            height: 160px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.8);
+            font-weight: 700;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar__type-switch">
+                <button class="sidebar__switch-btn">신용카드</button>
+                <button class="sidebar__switch-btn sidebar__switch-btn--active">체크카드</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" class="search-box__input" placeholder="카드명, 혜택명으로 검색">
+                <i class="fas fa-search search-box__icon"></i>
+            </div>
+
+            <div class="filter-group">
+                <h3 class="filter-group__title">혜택 유형</h3>
+                <div class="filter-tags">
+                    <button class="filter-tags__item filter-tags__item--active">할인</button>
+                    <button class="filter-tags__item">적립</button>
+                    <button class="filter-tags__item">마일리지</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3 class="filter-group__title">
+                    자주 이용하는 혜택
+                    <span class="filter-group__subtitle">(최대 5개)</span>
+                </h3>
+                
+                <!-- Category: Daily -->
+                <div style="margin-bottom: 12px; margin-top: 12px;">
+                    <span style="font-size: 13px; font-weight:700; color:#333;"><i class="fas fa-store" style="color:#ff6b6b; margin-right:6px;"></i> 일상소비</span>
+                </div>
+                <div class="filter-tags">
+                    <button class="filter-tags__item">어디서나</button>
+                    <button class="filter-tags__item filter-tags__item--active">편의점</button>
+                    <button class="filter-tags__item">카페/베이커리</button>
+                    <button class="filter-tags__item">외식/배달</button>
+                    <button class="filter-tags__item">뷰티</button>
+                    <button class="filter-tags__item">구독</button>
+                    <button class="filter-tags__item">간편결제</button>
+                    <button class="filter-tags__item">대형마트</button>
+                    <button class="filter-tags__item">쇼핑</button>
+                </div>
+
+                <!-- Category: Transport -->
+                <div style="margin-bottom: 12px; margin-top: 24px;">
+                    <span style="font-size: 13px; font-weight:700; color:#333;"><i class="fas fa-car" style="color:#4d96ff; margin-right:6px;"></i> 교통</span>
+                </div>
+                <div class="filter-tags">
+                    <button class="filter-tags__item">주유</button>
+                    <button class="filter-tags__item">대중교통</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h3 class="filter-group__title">연회비</h3>
+                <div class="range-slider">
+                    <div class="range-slider__bar">
+                        <div class="range-slider__fill"></div>
+                        <!-- Handle 1 (Start is 0 so invisible or at start) -->
+                        <div class="range-slider__handle range-slider__handle--start"></div>
+                        <!-- Handle 2 -->
+                        <div class="range-slider__handle range-slider__handle--end">
+                            <div class="range-slider__tooltip">4만원</div>
+                        </div>
+                    </div>
+                    <div class="range-slider__labels">
+                        <span>0원</span>
+                        <span>1만원</span>
+                        <span>3만원</span>
+                        <span>5만원</span>
+                        <span>5만원 초과</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar__actions">
+                <button class="btn btn--secondary">초기화</button>
+                <button class="btn btn--primary">검색</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="results-header">
+                <p class="results-header__count">총 <span class="results-header__number">20건</span>의 카드가 검색되었습니다</p>
+            </header>
+
+            <div class="card-grid">
+                <!-- Card 1 -->
+                <article class="card-item card-item--blue">
+                    <div class="card-item__visual">
+                        <div class="card-item__img-placeholder" style="background: linear-gradient(180deg, #6FA8FF 0%, #0046FF 100%);">SOL PLAN</div>
+                        <button class="card-item__add-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-item__content">
+                        <span class="card-item__badge">딱 맞는 카드 #1</span>
+                        <h3 class="card-item__title">SOL메이트 신한카드 SOL Plan</h3>
+                        <div class="benefit-tags">
+                            <span class="benefit-tags__item">어디서나</span>
+                            <span class="benefit-tags__item">카페/베이커리</span>
+                            <span class="benefit-tags__item">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li class="benefit-list__item">일상생활비 0.5~3% 적립</li>
+                            <li class="benefit-list__item">주말 외식비 포인트 적립</li>
+                            <li class="benefit-list__item">정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="card-item card-item--green">
+                    <div class="card-item__visual">
+                        <div class="card-item__img-placeholder" style="background: linear-gradient(180deg, #A8E6CF 0%, #34D399 100%); color:#333;">Point Plan</div>
+                        <button class="card-item__add-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-item__content">
+                        <span class="card-item__badge" style="color:#34D399; background:#eafff5;">딱 맞는 카드 #2</span>
+                        <h3 class="card-item__title">신한카드 Point Plan</h3>
+                        <div class="benefit-tags">
+                            <span class="benefit-tags__item">어디서나</span>
+                            <span class="benefit-tags__item">카페/베이커리</span>
+                            <span class="benefit-tags__item">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li class="benefit-list__item">일상생활비 0.5~3% 적립</li>
+                            <li class="benefit-list__item">주말 외식비 포인트 적립</li>
+                            <li class="benefit-list__item">정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="card-item card-item--red">
+                    <div class="card-item__visual">
+                        <div class="card-item__img-placeholder" style="background: linear-gradient(180deg, #FF6B6B 0%, #D80000 100%);">Mr. Life</div>
+                        <button class="card-item__add-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-item__content">
+                        <span class="card-item__badge" style="color:#FF6B6B; background:#fff0f0;">딱 맞는 카드 #3</span>
+                        <h3 class="card-item__title">신한카드 Mr.Life</h3>
+                        <div class="benefit-tags">
+                            <span class="benefit-tags__item">어디서나</span>
+                            <span class="benefit-tags__item">카페/베이커리</span>
+                            <span class="benefit-tags__item">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li class="benefit-list__item">일상생활비 0.5~3% 적립</li>
+                            <li class="benefit-list__item">주말 외식비 포인트 적립</li>
+                            <li class="benefit-list__item">정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Card 4 (SOL Travel) -->
+                <article class="card-item">
+                    <div class="card-item__visual">
+                        <div class="card-item__img-placeholder" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">SOL Travel</div>
+                        <button class="card-item__add-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-item__content">
+                        <h3 class="card-item__title">신한카드 SOL트래블</h3>
+                        <div class="benefit-tags">
+                            <span class="benefit-tags__item">어디서나</span>
+                            <span class="benefit-tags__item">카페/베이커리</span>
+                            <span class="benefit-tags__item">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li class="benefit-list__item">일상생활비 0.5~3% 적립</li>
+                            <li class="benefit-list__item">주말 외식비 포인트 적립</li>
+                            <li class="benefit-list__item">정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Card 5 (Wood pattern) -->
+                <article class="card-item">
+                    <div class="card-item__visual">
+                        <div class="card-item__img-placeholder" style="background: #e6cea3; color:#5d4037;">SOL 트래블</div>
+                        <button class="card-item__add-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-item__content">
+                        <h3 class="card-item__title">신한카드 SOL트래블(목재)</h3>
+                        <div class="benefit-tags">
+                            <span class="benefit-tags__item">어디서나</span>
+                            <span class="benefit-tags__item">카페/베이커리</span>
+                            <span class="benefit-tags__item">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li class="benefit-list__item">일상생활비 0.5~3% 적립</li>
+                            <li class="benefit-list__item">주말 외식비 포인트 적립</li>
+                            <li class="benefit-list__item">정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Card 6 (Simple Platinum) -->
+                <article class="card-item card-item--dark">
+                    <div class="card-item__visual">
+                        <div class="card-item__img-placeholder" style="background: linear-gradient(135deg, #232526 0%, #414345 100%);">Platinum#</div>
+                        <button class="card-item__add-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="card-item__content">
+                        <h3 class="card-item__title">신한카드 Simple Platinum#</h3>
+                        <div class="benefit-tags">
+                            <span class="benefit-tags__item">어디서나</span>
+                            <span class="benefit-tags__item">카페/베이커리</span>
+                            <span class="benefit-tags__item">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li class="benefit-list__item">일상생활비 0.5~3% 적립</li>
+                            <li class="benefit-list__item">주말 외식비 포인트 적립</li>
+                            <li class="benefit-list__item">정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+            </div>
+        </main>
+    </div>
+</body>
+</html>

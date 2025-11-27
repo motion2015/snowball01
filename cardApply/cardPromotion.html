@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신한카드 포인트 플랜</title>
+    <style>
+        /* * Reset & Base Styles 
+         */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+            color: #333;
+            background-color: #fff;
+            line-height: 1.5;
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* * Component: Product Section (BEM Block)
+         */
+        .product-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* * Element: Tabs 
+         */
+        .product-section__tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-section__tab-item {
+            padding: 12px 4px;
+            font-size: 16px;
+            color: #888;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Modifier: Active Tab */
+        .product-section__tab-item--active {
+            color: #111;
+            font-weight: 700;
+        }
+
+        .product-section__tab-item--active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #111;
+        }
+
+        /* * Element: List Container 
+         */
+        .product-section__list {
+            display: grid;
+            gap: 40px 24px; /* Row gap, Col gap */
+        }
+
+        /* * Component: Card (BEM Block nested inside)
+         */
+        .card {
+            display: flex;
+            text-decoration: none;
+            color: inherit;
+            /* 모바일 기본: 가로 배치 */
+            flex-direction: row; 
+            align-items: center;
+        }
+
+        /* Card Visual (Image + Add Button) */
+        .card__visual {
+            position: relative;
+            flex-shrink: 0;
+            /* 모바일 이미지 크기 */
+            width: 80px; 
+            height: 120px; 
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f4f4f4; /* 이미지 로딩 전 배경 */
+        }
+
+        .card__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card__image {
+            transform: scale(1.05);
+        }
+
+        .card__add-btn {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            line-height: 1;
+            padding-bottom: 2px; /* 시각적 정렬 보정 */
+        }
+
+        /* Card Content (Text) */
+        .card__content {
+            padding-left: 20px;
+            flex: 1;
+        }
+
+        .card__benefits {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .card__benefit-item {
+            display: block;
+            color: #333;
+        }
+
+        /* Modifier: Highlight Text (Blue) */
+        .card__text--highlight {
+            color: #0066ff;
+            font-weight: 600;
+        }
+
+        .card__footer {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* * Element: Actions (Bottom Button)
+         */
+        .product-section__actions {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        /* 그라데이션 보더 버튼 스타일 */
+        .product-section__cta-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #ff3366;
+            background: #fff;
+            border-radius: 50px;
+            z-index: 1;
+            /* 그라데이션 보더 효과를 위한 트릭 */
+        }
+
+        .product-section__cta-btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50px; 
+            padding: 2px; /* 보더 두께 */
+            background: linear-gradient(to right, #6a9cff, #ff6b6b); 
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
+        
+        .product-section__cta-btn--icon {
+            margin-left: 6px;
+            font-size: 1.2em;
+        }
+        
+        .product-section__float-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .product-section__badge {
+            background-color: #ff4d4d;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+
+        /* * =========================================
+         * MEDIA QUERIES (PC Version)
+         * Breakpoint: 768px 이상부터 PC/태블릿 레이아웃 적용
+         * =========================================
+         */
+        @media (min-width: 769px) {
+            
+            /* 리스트 -> 그리드로 변경 */
+            .product-section__list {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 40px 20px;
+            }
+
+            /* 카드 레이아웃: 가로 -> 세로 변경 */
+            .card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            /* 비주얼 영역 크기 조정 */
+            .card__visual {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1 / 1.5; /* 카드 비율 유지 */
+                margin-bottom: 20px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            }
+
+            /* 콘텐츠 패딩 제거 (상단 이미지 아래로 오므로) */
+            .card__content {
+                padding-left: 0;
+                width: 100%;
+            }
+
+            .card__benefits {
+                font-size: 15px; /* PC에서 글자 약간 키움 */
+            }
+            
+            .card__footer {
+                margin-top: 8px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="product-section">
+        <!-- 탭 메뉴 -->
+        <ul class="product-section__tabs">
+            <li class="product-section__tab-item product-section__tab-item--active">선불전자지급수단</li>
+            <li class="product-section__tab-item">선불카드</li>
+        </ul>
+
+        <!-- 카드 리스트 -->
+        <div class="product-section__list">
+            
+            <!-- Item 1 -->
+            <article>
+                <a href="#" class="card">
+                    <div class="card__visual">
+                        <!-- 이미지 플레이스홀더: 실제 이미지 경로로 교체 필요 -->
+                        <img src="https://placehold.co/300x450/111/FFF?text=Black+Card" alt="신한카드 Point Plan 블랙" class="card__image">
+                        <span class="card__add-btn">+</span>
+                    </div>
+                    <div class="card__content">
+                        <div class="card__benefits">
+                            <span class="card__benefit-item">일상생활비 <span class="card__text--highlight">0.5~3% 적립</span></span>
+                            <span class="card__benefit-item">주말 외식비 <span class="card__text--highlight">포인트 적립</span></span>
+                            <span class="card__benefit-item">정기결제 자동납부 <span class="card__text--highlight">포인트 적립</span></span>
+                        </div>
+                        <div class="card__footer">신한카드 Point Plan</div>
+                    </div>
+                </a>
+            </article>
+
+            <!-- Item 2 -->
+            <article>
+                <a href="#" class="card">
+                    <div class="card__visual">
+                        <img src="https://placehold.co/300x450/444/FFF?text=Galaxy+Card" alt="신한카드 Point Plan 갤럭시" class="card__image">
+                        <span class="card__add-btn">+</span>
+                    </div>
+                    <div class="card__content">
+                        <div class="card__benefits">
+                            <span class="card__benefit-item">일상생활비 <span class="card__text--highlight">0.5~3% 적립</span></span>
+                            <span class="card__benefit-item">주말 외식비 <span class="card__text--highlight">포인트 적립</span></span>
+                            <span class="card__benefit-item">정기결제 자동납부 <span class="card__text--highlight">포인트 적립</span></span>
+                        </div>
+                        <div class="card__footer">신한카드 Point Plan</div>
+                    </div>
+                </a>
+            </article>
+
+            <!-- Item 3 -->
+            <article>
+                <a href="#" class="card">
+                    <div class="card__visual">
+                        <img src="https://placehold.co/300x450/FFD700/333?text=ShinChan+1" alt="신한카드 Point Plan 짱구1" class="card__image">
+                        <span class="card__add-btn">+</span>
+                    </div>
+                    <div class="card__content">
+                        <div class="card__benefits">
+                            <span class="card__benefit-item">일상생활비 <span class="card__text--highlight">0.5~3% 적립</span></span>
+                            <span class="card__benefit-item">주말 외식비 <span class="card__text--highlight">포인트 적립</span></span>
+                            <span class="card__benefit-item">정기결제 자동납부 <span class="card__text--highlight">포인트 적립</span></span>
+                        </div>
+                        <div class="card__footer">신한카드 Point Plan</div>
+                    </div>
+                </a>
+            </article>
+
+            <!-- Item 4 -->
+            <article>
+                <a href="#" class="card">
+                    <div class="card__visual">
+                        <img src="https://placehold.co/300x450/87CEEB/333?text=ShinChan+2" alt="신한카드 Point Plan 짱구2" class="card__image">
+                        <span class="card__add-btn">+</span>
+                    </div>
+                    <div class="card__content">
+                        <div class="card__benefits">
+                            <span class="card__benefit-item">일상생활비 <span class="card__text--highlight">0.5~3% 적립</span></span>
+                            <span class="card__benefit-item">주말 외식비 <span class="card__text--highlight">포인트 적립</span></span>
+                            <span class="card__benefit-item">정기결제 자동납부 <span class="card__text--highlight">포인트 적립</span></span>
+                        </div>
+                        <div class="card__footer">신한카드 Point Plan</div>
+                    </div>
+                </a>
+            </article>
+
+             <!-- Item 5 (PC Grid Test - 리스트에 더미로 추가) -->
+             <article>
+                <a href="#" class="card">
+                    <div class="card__visual">
+                        <img src="https://placehold.co/300x450/222/FFF?text=Basic+Black" alt="신한카드 Point Plan 기본" class="card__image">
+                        <span class="card__add-btn">+</span>
+                    </div>
+                    <div class="card__content">
+                        <div class="card__benefits">
+                            <span class="card__benefit-item">일상생활비 <span class="card__text--highlight">0.5~3% 적립</span></span>
+                            <span class="card__benefit-item">주말 외식비 <span class="card__text--highlight">포인트 적립</span></span>
+                            <span class="card__benefit-item">정기결제 자동납부 <span class="card__text--highlight">포인트 적립</span></span>
+                        </div>
+                        <div class="card__footer">신한카드 Point Plan</div>
+                    </div>
+                </a>
+            </article>
+
+        </div>
+
+        <!-- 하단 버튼 영역 -->
+        <div class="product-section__actions">
+            <button class="product-section__cta-btn">
+                내게 맞는 카드 찾기
+            </button>
+            
+            <!-- 우측 하단 플로팅 버튼 스타일 (PC버전 이미지 참조) -->
+            <div style="position: relative;">
+                <button class="product-section__float-btn">
+                    +
+                </button>
+                <span class="product-section__badge">2</span>
+            </div>
+        </div>
+
+    </section>
+
+</body>
+</html>

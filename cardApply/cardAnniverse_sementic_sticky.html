@@ -18,7 +18,7 @@
       /* 접근성 개선: 포커스 링 스타일 정의 */
       :focus-visible {
         outline: 2px solid #000;
-        outline-offset: 2px;
+        outline-offset: 2px;ㅁ
       }
 
       body {
@@ -63,7 +63,7 @@
       .anniverse-container {
         width: 100%;
         background-color: #fff;
-        display: block; /* semantic tag support for older browsers */
+        display: block;
       }
 
       .anniverse-container__inner {
@@ -162,7 +162,6 @@
         align-items: center;
       }
 
-      /* JS 상태 토글 클래스 */
       .date-selector--hidden {
         display: none;
       }
@@ -265,7 +264,7 @@
         margin-right: 4px;
       }
 
-      /* 결과 카드 (Result Card - Article) */
+      /* 결과 카드 */
       .result-card {
         display: none;
         padding: 30px 20px;
@@ -294,7 +293,6 @@
         margin-top: 0;
       }
 
-      /* Figure styling */
       .result-card__figure {
         width: 178px;
         height: 280px;
@@ -322,21 +320,32 @@
         margin: 0 auto 30px;
       }
 
-      /* 2. 사진 선택 섹션 (Photo Gallery - Section) */
+      /* 2. 사진 선택 섹션 (Photo Gallery) */
       .photo-gallery {
         /* layout */
       }
 
-      /* Month Nav (Nav) */
+      /* Month Nav (Nav) - Sticky & Style */
       .month-nav {
         position: sticky;
         top: 0;
-        z-index: 100;
-        background-color: #fff; /* Add background to prevent content showing through */
+        z-index: 50;
+        background: #fff;
         width: 100%;
         padding: 20px 40px;
         overflow: hidden;
         display: block;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 1);
+      }
+
+      .month-nav::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background: #eee;
       }
 
       .month-nav__swiper .swiper-slide {
@@ -385,15 +394,36 @@
         color: #000;
       }
 
+      /* --- 화살표 스타일 수정 (Visibility Fix) --- */
       .month-nav__arrow {
         color: #333;
         width: 30px;
         height: 30px;
         margin-top: -15px;
+        z-index: 100;
+        position: absolute;
+        outline: none; /* 기본 아웃라인 제거 후 focus-visible로 관리 */
+        cursor: pointer;
       }
+
       .month-nav__arrow:after {
         font-size: 20px;
         font-weight: bold;
+      }
+
+      /* 포커스 시 시각적 혼동 방지 (배경 흰색 + 또렷한 테두리) */
+      .month-nav__arrow:focus-visible {
+        background-color: #fff; /* 뒤에 있는 요소가 비치지 않도록 흰색 배경 */
+        border-radius: 4px;
+        box-shadow: 0 0 0 2px #000; /* outline 대신 box-shadow로 깔끔하게 */
+        z-index: 110; /* 포커스 됐을 때 제일 위로 */
+      }
+
+      /* 비활성화 상태(끝 도달) 스타일 - 투명도만 낮추고 포커스는 유지 */
+      .swiper-button-disabled {
+        opacity: 0.35;
+        cursor: default;
+        /* pointer-events: none; 제거: 마우스로 눌렀을 때 반응 없어도 툴팁 등은 뜰 수 있게 */
       }
 
       /* 사진 리스트 (UL) */
@@ -409,7 +439,7 @@
         color: #666;
       }
 
-      /* 리스트 아이템 (LI) 스타일 - 여백은 여기서 처리하거나 내부 버튼에서 처리 */
+      /* 리스트 아이템 (LI) 스타일 */
       .photo-list__item-wrap {
         display: block;
         width: 100%;
@@ -425,7 +455,6 @@
         background: #f4f7fc;
         border-radius: 12px;
         transition: all 0.2s;
-        /* margin-bottom은 li로 이동 */
       }
 
       .photo-list__item--selected {
@@ -620,13 +649,14 @@
           id="panel-date"
           class="anniverse-panel anniverse-panel--active"
           role="tabpanel"
+          tabindex="0"
           aria-labelledby="tab-date"
         >
           <!-- Input Area -->
           <div class="date-selector" id="dateInputArea">
             <img
               src="https://www.shinhancard.com/pconts/html/card/anniverse/img/page_title.png"
-              alt=""
+              alt="기념하고 싶은 날짜를 선택해보세요."
               class="date-selector__image"
             />
             <div class="date-selector__form">
@@ -733,17 +763,23 @@
           id="panel-photo"
           class="anniverse-panel"
           role="tabpanel"
+          tabindex="0"
           aria-labelledby="tab-photo"
         >
           <div class="photo-gallery">
             <!-- Swiper Month Navigation -->
             <nav class="month-nav" aria-label="월별 사진 보기">
+              <!-- DOM 구조: Prev -> Wrapper -> Next (탭 순서 유지) -->
               <div class="swiper-container month-nav__swiper">
-                <button
+                <!-- 1. 이전 버튼: DIV로 변경하여 강제 비활성 방지 + tabindex 유지 -->
+                <div
                   class="swiper-button-prev month-nav__arrow"
                   role="button"
+                  tabindex="0"
                   aria-label="이전 월 보기"
-                ></button>
+                ></div>
+
+                <!-- 2. 월별 리스트 (Wrapper) -->
                 <div class="swiper-wrapper">
                   <div class="swiper-slide">
                     <button
@@ -968,11 +1004,13 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- 3. 다음 버튼: DIV로 변경하여 강제 비활성 방지 + tabindex 유지 -->
                 <div
                   class="swiper-button-next month-nav__arrow"
                   role="button"
-                  aria-label="다음 월 보기"
                   tabindex="0"
+                  aria-label="다음 월 보기"
                 ></div>
               </div>
             </nav>
@@ -1033,10 +1071,7 @@
               b.setAttribute('aria-selected', 'false')
               b.parentElement.classList.remove('anniverse-tab__item--active')
             })
-            panels.forEach((p) => {
-              p.classList.remove('anniverse-panel--active')
-              p.setAttribute('aria-hidden', 'true')
-            })
+            panels.forEach((p) => p.classList.remove('anniverse-panel--active'))
 
             btn.setAttribute('aria-selected', 'true')
             btn.parentElement.classList.add('anniverse-tab__item--active')
@@ -1044,7 +1079,6 @@
             const targetId = btn.getAttribute('aria-controls')
             const targetPanel = document.getElementById(targetId)
             targetPanel.classList.add('anniverse-panel--active')
-            targetPanel.setAttribute('aria-hidden', 'false')
 
             submitBtn.disabled = true
           })
@@ -1144,18 +1178,9 @@
         /* --- 3. Swiper & Photo List Logic --- */
         const swiper = new Swiper('.swiper-container', {
           slidesPerView: 'auto',
-          allowTouchMove: true,
-          slidesPerGroup: 5,
-          spaceBetween: 9,
-          breakpoints: {
-            1100: {
-              spaceBetween: 0,
-              slidesPerView: 5.5,
-              slidesPerGroup: 1,
-              slidesOffsetBefore: 24,
-              slidesOffsetAfter: 24,
-            }, // 태블릿
-          },
+          spaceBetween: 6,
+          // 중요: A11y 옵션을 통해 슬라이드 내 접근성은 유지하되
+          // 버튼 클릭은 아래 커스텀 이벤트 리스너에서 보완
           a11y: {
             prevSlideMessage: '이전 달 보기',
             nextSlideMessage: '다음 달 보기',
@@ -1168,13 +1193,14 @@
           },
         })
 
-        // Accessibility enhancement for Swiper arrows
-        const swiperArrows = document.querySelectorAll('.month-nav__arrow')
-        swiperArrows.forEach((arrow) => {
+        // [접근성] Swiper 네비게이션 버튼 키보드(Enter/Space) 지원 추가
+        // DIV로 변경했으므로 기본 버튼 동작을 스크립트로 구현
+        const navArrows = document.querySelectorAll('.month-nav__arrow')
+        navArrows.forEach((arrow) => {
           arrow.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()
-              arrow.click()
+              arrow.click() // Swiper가 click 이벤트를 감지하여 이동함
             }
           })
         })
@@ -1202,7 +1228,6 @@
           }
 
           if (list.length === 0) {
-            // Semantic Refactoring: LI 안에 메시지
             container.innerHTML =
               '<li class="photo-list__empty">해당하는 카드가 없습니다.</li>'
             return
