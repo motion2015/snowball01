@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카드 추천 서비스 (No Grid, No Gap)</title>
+    <style>
+        /* =========================================
+           Reset & Base Styles
+           ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        button {
+            border: none;
+            background: none;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* =========================================
+           Layout Container
+           ========================================= */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* =========================================
+           Component: Promo Section
+           ========================================= */
+        .promo-section {
+            display: flex;
+            flex-direction: column;
+            /* gap 대신 margin 사용 */
+            margin-bottom: 40px;
+        }
+
+        /* Main Banner */
+        .promo-banner {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            flex: 2; /* flex-grow: 2 */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #eef0f5;
+            min-height: 200px;
+            /* 모바일에서 아래쪽 여백 추가 (gap 대체) */
+            margin-bottom: 20px;
+        }
+
+        .promo-banner__content {
+            z-index: 2;
+            position: relative;
+            text-align: center;
+        }
+
+        .promo-banner__title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            color: #222;
+        }
+
+        .promo-banner__highlight {
+            color: #ff6b6b;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .promo-banner__button {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+
+        .promo-banner__button:hover {
+            background-color: #d2e3fc;
+        }
+
+        /* Icons Background */
+        .promo-banner__deco-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            padding-top: 10px;
+            opacity: 0.5;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .promo-banner__icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            /* gap 대체: 아이콘 사이 여백 */
+            margin: 0 7px; 
+        }
+
+        .promo-banner__icon-circle--highlight {
+            background-color: #ffeb3b;
+        }
+
+        /* Side Banner */
+        .side-banner {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 20px;
+            padding: 30px;
+            flex: 1; /* flex-grow: 1 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .side-banner__title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1565c0;
+            z-index: 2;
+        }
+
+        .side-banner__link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .side-banner__link::after {
+            content: '>';
+            margin-left: 5px;
+        }
+
+        /* =========================================
+           Component: Filter Bar
+           ========================================= */
+        .filter-bar {
+            display: flex;
+            /* gap 대신 margin 사용 */
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-button {
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: 1px solid #eee;
+            background-color: #fff;
+            white-space: nowrap;
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            /* gap 대체: 우측 여백 */
+            margin-right: 8px;
+        }
+
+        /* 마지막 버튼의 여백 제거 */
+        .filter-button:last-child {
+            margin-right: 0;
+        }
+
+        /* 내부 아이콘과 텍스트 사이 간격 (gap 대체) */
+        .filter-button span, 
+        .filter-button i { 
+            margin-right: 6px; 
+        } 
+        /* 텍스트만 있는 경우 등 실제로는 HTML 구조에 따라 마진 방향 조정 필요하나 
+           여기선 단순화를 위해 텍스트 내 이모지 뒤에 공백이 있다고 가정하거나 생략 */
+
+
+        .filter-button:hover {
+            border-color: #ddd;
+            background-color: #fcfcfc;
+        }
+
+        .filter-button--active {
+            background-color: #34495e;
+            color: #fff;
+            border-color: #34495e;
+            font-weight: 600;
+        }
+
+        .filter-button--active:hover {
+            background-color: #2c3e50;
+        }
+
+        /* =========================================
+           Component: Card Section
+           ========================================= */
+        .card-section {
+            margin-bottom: 50px;
+        }
+
+        .card-section__header {
+            margin-bottom: 15px;
+        }
+
+        .card-section__title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #222;
+            margin-bottom: 15px;
+        }
+
+        /* Grid System Replacement (Flexbox) 
+           grid + gap 대신 flex wrap + negative margin + padding 사용
+        */
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            /* 좌우 음수 마진으로 컨테이너 확장 (내부 padding 상쇄) */
+            margin-left: -8px;
+            margin-right: -8px;
+            margin-bottom: 24px;
+        }
+
+        /* 각 카드 아이템 래퍼 (li) */
+        .card-grid > li {
+            /* gap 대신 padding으로 간격 확보 */
+            padding-left: 8px;
+            padding-right: 8px;
+            /* 세로 간격 */
+            margin-bottom: 16px;
+            /* 기본 모바일: 1열 (100%) */
+            width: 100%;
+            /* 박스 사이징 필수 */
+            box-sizing: border-box;
+        }
+
+        .card-section__more-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #555;
+            transition: background-color 0.2s;
+        }
+
+        .card-section__more-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* =========================================
+           Component: Card Item
+           ========================================= */
+        /* 내부 컨텐츠 박스 */
+        .card-item {
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            /* gap 대신 margin 사용을 위해 자식 요소 제어 필요 */
+            align-items: flex-start;
+            border: 1px solid #f0f0f0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%; /* 높이 맞춤 */
+        }
+
+        .card-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border-color: #e0e0e0;
+        }
+
+        .card-item__visual {
+            flex-shrink: 0;
+            width: 60px;
+            padding-top: 5px;
+            /* gap 대체: 이미지와 텍스트 사이 간격 */
+            margin-right: 20px;
+        }
+
+        .card-item__img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            display: block;
+            aspect-ratio: 1/1.58; 
+            background-color: #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card-item__content {
+            flex-grow: 1;
+        }
+
+        .card-item__tags {
+            display: flex;
+            /* gap 대체: 태그 사이 간격 */
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            font-size: 0.65rem;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            line-height: 1;
+            /* gap 대체 */
+            margin-right: 5px;
+        }
+        
+        .tag:last-child {
+            margin-right: 0;
+        }
+
+        .tag--new {
+            background-color: #ffebee;
+            color: #ff5252;
+        }
+
+        .tag--popular {
+            background-color: #e3f2fd;
+            color: #2196f3;
+        }
+
+        .card-item__benefits {
+            font-size: 0.85rem;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        .card-item__benefit-row {
+            margin-bottom: 3px;
+            line-height: 1.4;
+            letter-spacing: -0.3px;
+        }
+
+        .text-highlight {
+            color: #007bff;
+            font-weight: 700;
+        }
+
+        .card-item__name {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* =========================================
+           Component: Premium Card
+           ========================================= */
+        .premium-card {
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            /* gap 대체 */
+            /* gap: 12px -> 자식 요소 margin으로 처리 */
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .premium-card__visual {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            /* gap 대체: 이미지와 텍스트 사이 간격 */
+            margin-bottom: 12px;
+        }
+        
+        .premium-card:hover .premium-card__visual {
+            transform: translateY(-8px);
+        }
+
+        .premium-card__img {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 1/1.58;
+        }
+
+        .premium-card__name {
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        /* =========================================
+           Visual Helpers (Card Designs) - 변경 없음
+           ========================================= */
+        .bg-point-plan { background: linear-gradient(135deg, #e3f2fd 0%, #ffffff 50%, #90caf9 100%); position: relative; }
+        .bg-point-plan::after { content: 'POINT'; position: absolute; top: 5px; left: 5px; font-size: 8px; font-weight: bold; color: #1976d2; opacity: 0.5; }
+        .bg-sol-mate { background: conic-gradient(from 45deg, #4facfe, #00f2fe, #43e97b, #4facfe); }
+        .bg-wood { background: #d7ccc8; border: 1px solid #bcaaa4; }
+        .bg-mint-grad { background: linear-gradient(135deg, #e0f2f1, #4db6ac); }
+        .bg-peach-grad { background: linear-gradient(135deg, #fff3e0, #ffcc80); }
+        .bg-deep-blue { background: linear-gradient(135deg, #1565c0, #0d47a1); }
+        .bg-sol-travel { background: linear-gradient(135deg, #ffecb3 0%, #fff 40%, #81d4fa 100%); position: relative; }
+        .bg-spring { background: linear-gradient(135deg, #e1bee7 0%, #fff 50%, #fff9c4 100%); }
+        .bg-pepero { background-color: #d32f2f; position: relative; }
+        .bg-pepero::before { content: ''; position: absolute; left: 30%; top: 0; width: 10px; height: 100%; background: #5d4037; }
+        .bg-premium-red { background: linear-gradient(135deg, #ef9a9a, #c62828); }
+        .bg-premium-silver { background: linear-gradient(45deg, #cfd9df 0%, #e2ebf0 100%); }
+        .bg-premium-black { background: linear-gradient(45deg, #434343 0%, #000000 100%); }
+        .bg-premium-sky { background: linear-gradient(to top, #accbee 0%, #e7f0fd 100%); }
+
+        /* =========================================
+           Responsive Breakpoints
+           ========================================= */
+        
+        /* Tablet & Desktop */
+        @media (min-width: 768px) {
+            .promo-section {
+                flex-direction: row;
+            }
+            
+            .promo-banner {
+                /* 가로 배치시 아래 여백 제거하고 오른쪽 여백 추가 */
+                margin-bottom: 0;
+                margin-right: 20px;
+            }
+
+            /* 2열 배치 (50%) */
+            .card-grid > li {
+                width: 50%;
+            }
+
+            .card-section__more-btn {
+                width: 300px;
+                margin: 0 auto;
+                display: block;
+            }
+        }
+
+        /* Full Desktop (PC) */
+        @media (min-width: 1024px) {
+            /* Grid Gap을 크게 변경 (16px -> 24px)
+               Margin(Container)와 Padding(Item)을 함께 조정해야 함
+            */
+            .card-grid {
+                margin-left: -12px;  /* 24px의 절반 */
+                margin-right: -12px;
+            }
+
+            /* 3열 배치 (33.333%) */
+            .card-grid > li {
+                width: 33.3333%;
+                padding-left: 12px;  /* 24px의 절반 */
+                padding-right: 12px;
+                margin-bottom: 24px;
+            }
+            
+            /* 프리미엄 카드: 4열 배치 (25%) */
+            .premium-grid > li {
+                width: 25%;
+            }
+
+            .card-item {
+                padding: 24px;
+            }
+            .card-item__visual {
+                width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="app-container">
+        
+        <!-- 1. 프로모션 영역 -->
+        <section class="promo-section">
+            <div class="promo-banner">
+                <!-- 배경 아이콘 데코레이션 -->
+                <div class="promo-banner__deco-bg">
+                    <div class="promo-banner__icon-circle">✈️</div>
+                    <div class="promo-banner__icon-circle">👟</div>
+                    <div class="promo-banner__icon-circle promo-banner__icon-circle--highlight">🚗</div>
+                    <div class="promo-banner__icon-circle">🎁</div>
+                </div>
+                
+                <div class="promo-banner__content">
+                    <p class="promo-banner__title">
+                        <span class="promo-banner__highlight">교통비 할인에 포인트 적립까지</span>
+                        되는 카드를 찾고 있다면?
+                    </p>
+                    <button type="button" class="promo-banner__button">내게 맞는 카드 찾기</button>
+                </div>
+            </div>
+            
+            <!-- PC 모드용 사이드 배너 -->
+            <div class="side-banner">
+                <p class="side-banner__title">나만을 위한 <strong>맞춤 카드</strong>를<br>추천 받는 방법</p>
+                <a href="#" class="side-banner__link">확인하러 가기</a>
+                <div style="position: absolute; bottom: 25px; right: 25px; width: 50px; height: 32px; background: #3949ab; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transform: rotate(-10deg);"></div>
+                <div style="position: absolute; bottom: 35px; right: 40px; width: 50px; height: 32px; background: #42a5f5; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transform: rotate(5deg);"></div>
+            </div>
+        </section>
+
+        <!-- 2. 신용카드 섹션 -->
+        <section class="card-section">
+            <div class="card-section__header">
+                <h2 class="card-section__title">혜택이 돋보이는 신용카드</h2>
+                
+                <div class="filter-bar">
+                    <button type="button" class="filter-button filter-button--active">전체</button>
+                    <button type="button" class="filter-button">🚩 어디서나</button>
+                    <button type="button" class="filter-button">🚘 주유</button>
+                    <button type="button" class="filter-button">🍱 외식·배달</button>
+                    <button type="button" class="filter-button">📚 교육·육아</button>
+                </div>
+            </div>
+
+            <ul class="card-grid">
+                <!-- Card 1 -->
+                <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-point-plan"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__tags">
+                                <span class="tag tag--new">새로 나온</span>
+                                <span class="tag tag--popular">인기 있는</span>
+                            </div>
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">일상생활비 <span class="text-highlight">0.5~3% 적립</span></p>
+                                <p class="card-item__benefit-row">주말 외식비 <span class="text-highlight">포인트 적립</span></p>
+                                <p class="card-item__benefit-row">정기결제 자동납부 <span class="text-highlight">포인트 적립</span></p>
+                            </div>
+                            <p class="card-item__name">신한카드 Point Plan</p>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Card 2 -->
+                <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-sol-mate"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">일상생활비 <span class="text-highlight">0.5~3% 적립</span></p>
+                                <p class="card-item__benefit-row">주말 외식비 <span class="text-highlight">포인트 적립</span></p>
+                                <p class="card-item__benefit-row">정기결제 자동납부 <span class="text-highlight">포인트 적립</span></p>
+                            </div>
+                            <p class="card-item__name">신한카드 Sol Mate</p>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Card 3 -->
+                <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-wood"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">일상생활비 <span class="text-highlight">0.5~3% 적립</span></p>
+                                <p class="card-item__benefit-row">주말 외식비 <span class="text-highlight">포인트 적립</span></p>
+                                <p class="card-item__benefit-row">정기결제 자동납부 <span class="text-highlight">포인트 적립</span></p>
+                            </div>
+                            <p class="card-item__name">이케아 신한카드</p>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Card 4 -->
+                <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-mint-grad"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">대중교통 <span class="text-highlight">10% 할인</span></p>
+                                <p class="card-item__benefit-row">통신요금 <span class="text-highlight">5% 적립</span></p>
+                            </div>
+                            <p class="card-item__name">신한카드 Simple+</p>
+                        </div>
+                    </div>
+                </li>
+
+                 <!-- Card 5 -->
+                 <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-peach-grad"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">편의점 <span class="text-highlight">5% 적립</span></p>
+                                <p class="card-item__benefit-row">온라인 쇼핑 <span class="text-highlight">3% 적립</span></p>
+                            </div>
+                            <p class="card-item__name">신한카드 Shopping</p>
+                        </div>
+                    </div>
+                </li>
+
+                 <!-- Card 6 -->
+                 <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-deep-blue"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">해외이용 <span class="text-highlight">3% 캐시백</span></p>
+                                <p class="card-item__benefit-row">공항 라운지 <span class="text-highlight">무료 이용</span></p>
+                            </div>
+                            <p class="card-item__name">신한카드 Globus</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <button type="button" class="card-section__more-btn">신용카드 전체보기</button>
+        </section>
+
+        <!-- 3. 체크카드 섹션 -->
+        <section class="card-section">
+            <div class="card-section__header">
+                <h2 class="card-section__title">누구나 다 쓸 수 있는 체크카드</h2>
+                <div class="filter-bar">
+                    <button type="button" class="filter-button filter-button--active">전체</button>
+                    <button type="button" class="filter-button">🚩 어디서나</button>
+                    <button type="button" class="filter-button">🏪 편의점</button>
+                    <button type="button" class="filter-button">🚌 대중교통</button>
+                </div>
+            </div>
+
+            <ul class="card-grid">
+                 <!-- Card 1 -->
+                 <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-sol-travel"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__tags">
+                                <span class="tag tag--new">새로 나온</span>
+                                <span class="tag tag--popular">인기 있는</span>
+                            </div>
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">일상생활비 <span class="text-highlight">0.5~3% 적립</span></p>
+                                <p class="card-item__benefit-row">주말 외식비 <span class="text-highlight">포인트 적립</span></p>
+                                <p class="card-item__benefit-row">정기결제 자동납부 <span class="text-highlight">포인트 적립</span></p>
+                            </div>
+                            <p class="card-item__name">신한카드 Sol Travel 체크</p>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Card 2 -->
+                <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
+                            <div class="card-item__img bg-spring"></div>
+                        </div>
+                        <div class="card-item__content">
+                            <div class="card-item__benefits">
+                                <p class="card-item__benefit-row">일상생활비 <span class="text-highlight">0.5~3% 적립</span></p>
+                                <p class="card-item__benefit-row">주말 외식비 <span class="text-highlight">포인트 적립</span></p>
+                                <p class="card-item__benefit-row">정기결제 자동납부 <span class="text-highlight">포인트 적립</span></p>
+                            </div>
+                            <p class="card-item__name">신한카드 봄 체크</p>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Card 3 -->
+                <li>
+                    <div class="card-item">
+                        <div class="card-item__visual">
