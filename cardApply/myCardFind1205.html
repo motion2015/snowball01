@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카드 찾기 - 신한카드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 아이콘 사용을 위한 Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        /* --- Reset & Variables --- */
+        :root {
+            --primary-color: #0046ff;
+            --text-color: #111;
+            --text-sub: #666;
+            --text-light: #888;
+            --bg-color: #fff;
+            --bg-light: #f8f9fa;
+            --border-color: #e1e1e1;
+            --border-radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --gap: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.5;
+            letter-spacing: -0.02em; /* 현대적인 느낌을 위한 자간 조정 */
+        }
+
+        ul, li {
+            list-style: none;
+        }
+
+        button, input {
+            font-family: inherit;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            gap: 40px;
+        }
+
+        /* --- Sidebar (Aside) --- */
+        .filters {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        /* Tabs */
+        .card-type-tabs {
+            display: flex;
+            background-color: #f0f2f5;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .card-type-tabs button {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-sub);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .card-type-tabs button.active {
+            background-color: #fff;
+            color: var(--text-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-weight: 700;
+        }
+
+        /* Search Input */
+        .search-box {
+            position: relative;
+            margin-bottom: 32px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 16px;
+            padding-right: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: var(--text-color);
+        }
+
+        /* Filter Sections */
+        .filter-section {
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .filter-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .filter-section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .filter-section h3 i {
+            color: #ff4d4d;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background-color: #fff;
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .tag-btn.selected {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: #f0f6ff;
+            font-weight: 500;
+        }
+
+        /* Category Filter List */
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .category-item h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* --- Hyundai Card Style Slider (Refined) --- */
+        .range-slider-wrapper {
+            position: relative;
+            height: 80px; /* 라벨 공간 확보 */
+            margin-top: 10px;
+            padding: 0 12px; /* 핸들 크기만큼 여백 */
+        }
+
+        .range-value-display {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .slider-track-container {
+            position: relative;
+            width: 100%;
+            height: 4px; /* 얇은 트랙 */
+            background-color: #e5e5e5;
+            border-radius: 2px;
+            top: 10px; /* 수직 정렬 조정 */
+        }
+
+        .slider-track-fill {
+            position: absolute;
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            z-index: 1;
+        }
+        
+        /* 눈금 (Ticks) - 트랙 위에 표시 */
+        .slider-ticks {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            z-index: 0;
+            pointer-events: auto; /* 클릭 가능하도록 변경 */
+        }
+        
+        .slider-tick {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin-top: 0; /* 트랙 내부에 위치 */
+            cursor: pointer; /* 포인터 커서 추가 */
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        /* 눈금 클릭 영역 확장 및 호버 효과 */
+        .slider-tick::after {
+            content: '';
+            position: absolute;
+            top: -10px; bottom: -10px; left: -10px; right: -10px;
+        }
+
+        .slider-tick:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.5);
+        }
+
+        /* Transparent Range Inputs Overlay */
+        .range-input-container {
+            position: absolute;
+            top: -8px; /* 핸들 중앙 정렬을 위한 조정 */
+            left: 12px; /* wrapper padding 보정 */
+            right: 12px;
+            height: 40px; /* 터치 영역 확보 */
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .range-input-container input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            background: transparent;
+            pointer-events: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            margin: 0;
+        }
+
+        /* Slider Thumb Styling (Webkit) */
+        .range-input-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            pointer-events: auto;
+            width: 24px; /* 더 커진 핸들 */
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #d4d4d4; /* 얇은 테두리 */
+            cursor: grab;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* 부드러운 그림자 */
+            position: relative;
+            z-index: 10;
+            margin-top: 8px; /* 트랙 중앙 정렬 */
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .range-input-container input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            border-color: var(--primary-color);
+        }
+        
+        /* Slider Thumb Styling (Firefox) */
+        .range-input-container input[type="range"]::-moz-range-thumb {
+            pointer-events: auto;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid #d4d4d4;
+            cursor: grab;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            z-index: 10;
+            transform: translateY(2px); /* 미세 조정 */
+        }
+
+        /* Slider Labels */
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px; /* 트랙과의 간격 */
+            padding: 0;
+            position: relative;
+            left: -10px; /* 라벨 중앙 정렬 보정 */
+            width: calc(100% + 20px);
+        }
+
+        .slider-labels span {
+            font-size: 12px;
+            color: #888;
+            font-weight: 400;
+            width: 40px;
+            text-align: center;
+            cursor: pointer; /* 라벨 클릭 가능 표시 */
+            transition: color 0.2s;
+        }
+        
+        .slider-labels span:hover {
+            color: var(--text-color);
+        }
+        
+        .slider-labels span.active {
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        /* Reset Button */
+        .reset-btn-wrapper {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .reset-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 24px;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        /* --- Main Content --- */
+        .content {
+            flex: 1;
+        }
+
+        .content-header {
+            margin-bottom: 24px;
+        }
+
+        .result-count {
+            font-size: 15px;
+            color: var(--text-sub);
+        }
+
+        .result-count b {
+            color: var(--primary-color);
+        }
+
+        /* Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        /* Card Item */
+        .card-item {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Card Image Area */
+        .card-visual {
+            position: relative;
+            width: 100%;
+            /* Aspect ratio roughly for vertical credit card */
+            padding-top: 158%; 
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card-visual:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+
+        .card-visual img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Placeholder styles to simulate card designs without images */
+        .card-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+        
+        .design-blue { background: linear-gradient(135deg, #0046ff 0%, #001a6e 100%); color: white; }
+        .design-mint { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; }
+        .design-red { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); color: white; }
+        .design-travel { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); color: #333; }
+        .design-wood { background: #e6dace; color: #5d4037; }
+        .design-white { background: #fff; border: 1px solid #eee; color: #333; }
+        .design-black { background: #1a1a1a; color: #fff; }
+
+        .card-chip {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 40px;
+            height: 25px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+        }
+        .card-logo-text {
+            font-size: 18px;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            position: absolute;
+            top: 10%;
+            right: 10%;
+            letter-spacing: 2px;
+        }
+
+        .add-btn {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        /* Card Info */
+        .card-info {
+            padding: 0 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 11px;
+            color: #ff466e;
+            background-color: #fff0f3;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            font-size: 11px;
+            color: #0046ff;
+            background-color: #eef4ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .benefit-list {
+            font-size: 13px;
+            color: var(--text-sub);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .benefit-list li {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Load More */
+        .load-more {
+            display: flex;
+            justify-content: center;
+            margin-top: 60px;
+        }
+
+        .btn-more {
+            padding: 12px 40px;
+            border: 1px solid var(--border-color);
+            background-color: #fff;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-more:hover {
+            border-color: var(--text-color);
+            background-color: #f8f9fa;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 20px;
+            }
+            .filters {
+                width: 100%;
+                position: static;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+            }
+            .search-box {
+                margin-bottom: 20px;
+            }
+            .filter-section {
+                display: none; /* Mobile simplified view */
+            }
+            .filter-section.mobile-visible {
+                display: block;
+            }
+            
+            /* Fix slider width on mobile */
+            .range-slider-wrapper {
+                padding: 0 10px;
+            }
+            .range-input-container {
+                left: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- 왼쪽 사이드바: 필터 -->
+        <aside class="filters">
+            <!-- 탭 -->
+            <nav class="card-type-tabs">
+                <button type="button" class="active">신용카드</button>
+                <button type="button">체크카드</button>
+            </nav>
+
+            <!-- 검색 -->
+            <div class="search-box">
+                <label for="card-search" class="sr-only" style="display:none;">카드 검색</label>
+                <input type="text" id="card-search" placeholder="카드명, 혜택명으로 검색">
+                <i class="ph ph-magnifying-glass"></i>
+            </div>
+
+            <!-- 혜택 유형 -->
+            <section class="filter-section mobile-visible">
+                <h3>혜택 유형</h3>
+                <div class="tag-group">
+                    <button class="tag-btn">할인</button>
+                    <button class="tag-btn">적립</button>
+                    <button class="tag-btn">마일리지</button>
+                </div>
+            </section>
+
+            <!-- 자주 이용하는 혜택 -->
+            <section class="filter-section">
+                <h3><i class="ph-fill ph-storefront"></i> 자주 이용하는 혜택 <span style="font-size:12px; font-weight:400; color:#888; margin-left:4px;">(최대 5개)</span></h3>
+                
+                <div class="category-list">
+                    <div class="category-item">
+                        <h4><i class="ph-fill ph-coffee"></i> 일상소비</h4>
+                        <div class="tag-group">
+                            <button class="tag-btn">어디서나</button>
+                            <button class="tag-btn">편의점</button>
+                            <button class="tag-btn">카페/베이커리</button>
+                            <button class="tag-btn">외식/배달</button>
+                            <button class="tag-btn">뷰티</button>
+                            <button class="tag-btn">구독</button>
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <h4><i class="ph-fill ph-bus"></i> 교통</h4>
+                        <div class="tag-group">
+                            <button class="tag-btn">주유</button>
+                            <button class="tag-btn">대중교통</button>
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <h4><i class="ph-fill ph-popcorn"></i> 문화/취미</h4>
+                        <div class="tag-group">
+                            <button class="tag-btn">레저/스포츠</button>
+                            <button class="tag-btn">영화/공연</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 연회비 (Refined Style) -->
+            <section class="filter-section mobile-visible">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 style="margin-bottom:0;">연회비</h3>
+                    <div id="feeRangeDisplay" class="range-value-display">전체</div>
+                </div>
+                
+                <div class="range-slider-wrapper">
+                    <!-- 배경 트랙 및 눈금 -->
+                    <div class="slider-track-container">
+                        <div class="slider-ticks">
+                            <!-- 6 ticks for 6 positions (0 to 5) -->
+                            <div class="slider-tick"></div>
+                            <div class="slider-tick"></div>
+                            <div class="slider-tick"></div>
+                            <div class="slider-tick"></div>
+                            <div class="slider-tick"></div>
+                            <div class="slider-tick"></div>
+                        </div>
+                        <div class="slider-track-fill" id="sliderTrackFill"></div>
+                    </div>
+                    
+                    <!-- 실제 Input (보이지 않지만 기능 수행) -->
+                    <div class="range-input-container">
+                        <input type="range" id="inputMin" min="0" max="5" value="0" step="1">
+                        <input type="range" id="inputMax" min="0" max="5" value="5" step="1">
+                    </div>
+                    
+                    <!-- 라벨 -->
+                    <div class="slider-labels" id="sliderLabels">
+                        <span>0</span>
+                        <span>1만</span>
+                        <span>3만</span>
+                        <span>5만</span>
+                        <span>10만</span>
+                        <span>10만~</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="reset-btn-wrapper">
+                <button class="reset-btn">
+                    <i class="ph ph-arrow-counter-clockwise"></i> 초기화
+                </button>
+            </div>
+        </aside>
+
+        <!-- 메인 컨텐츠: 카드 리스트 -->
+        <main class="content">
+            <header class="content-header">
+                <p class="result-count">총 <b>200</b>건의 카드가 검색되었습니다</p>
+            </header>
+
+            <div class="card-grid" id="cardGrid">
+                
+                <!-- 카드 1 -->
+                <article class="card-item">
+                    <div class="card-visual design-blue">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text">SOL Plan</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <span class="badge">딱 맞는 카드 #1</span>
+                        <h2 class="card-title">SOL메이트 신한카드 SOL Plan</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">외식/배달</span>
+                            <span class="tag">레저/스포츠</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>일상생활비 0.5~3% 적립</li>
+                            <li>주말 외식비 포인트 적립</li>
+                            <li>정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 카드 2 -->
+                <article class="card-item">
+                    <div class="card-visual design-mint">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text" style="color:#0046ff">Point Plan</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <span class="badge" style="color:#0046ff; background-color:#eef4ff;">딱 맞는 카드 #2</span>
+                        <h2 class="card-title">신한카드 Point Plan</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>일상생활비 0.5~3% 적립</li>
+                            <li>주말 외식비 포인트 적립</li>
+                            <li>정기결제 자동납부 포인트 적립</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 카드 3 -->
+                <article class="card-item">
+                    <div class="card-visual design-red">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text">Mr.Life</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <span class="badge" style="color:#ff466e; background-color:#fff0f3;">딱 맞는 카드 #3</span>
+                        <h2 class="card-title">신한카드 Mr.Life</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>공과금 10% 할인</li>
+                            <li>세탁소 10% 할인</li>
+                            <li>온라인 쇼핑 10% 할인</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 카드 4 -->
+                <article class="card-item">
+                    <div class="card-visual design-travel">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text" style="writing-mode:horizontal-tb; bottom: 20%; right: auto; left: 10%; top: auto;">SOL Travel</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <h2 class="card-title">신한카드 SOL트래블</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>해외 이용 수수료 면제</li>
+                            <li>공항 라운지 무료 이용</li>
+                            <li>해외 대중교통 1% 할인</li>
+                        </ul>
+                    </div>
+                </article>
+
+                 <!-- 카드 5 -->
+                 <article class="card-item">
+                    <div class="card-visual design-wood">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text" style="color:#333">IKEA</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <h2 class="card-title">신한카드 SOL트래블(이케아)</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>IKEA 10% 결제일 할인</li>
+                            <li>주요 백화점 5% 할인</li>
+                            <li>커피 전문점 10% 할인</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 카드 6 -->
+                <article class="card-item">
+                    <div class="card-visual design-white">
+                        <div class="card-chip" style="background:#ddd;"></div>
+                        <div class="card-logo-text" style="color:#333">SEOUL</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <h2 class="card-title">신한카드 Mr.Life(서울)</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">외식/배달</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>서울 주요 명소 30% 할인</li>
+                            <li>대중교통 10% 할인</li>
+                            <li>편의점 5% 할인</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 카드 7 -->
+                <article class="card-item">
+                    <div class="card-visual" style="background: linear-gradient(to right, #ff9966, #ff5e62); color:white;">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text">Unboxing</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <h2 class="card-title">신한카드 Unboxing</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">쇼핑</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>쇼핑 10% 캐시백</li>
+                            <li>배송비 3,000원 할인</li>
+                            <li>멤버십 정기결제 할인</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 카드 8 -->
+                <article class="card-item">
+                    <div class="card-visual design-black">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text">Splendor</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <h2 class="card-title">신한카드 Simple Platinum#</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">호텔</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>전 가맹점 1% 적립</li>
+                            <li>호텔/공항 발렛파킹</li>
+                            <li>영화관 5,000원 할인</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 카드 9 -->
+                <article class="card-item">
+                    <div class="card-visual" style="background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);">
+                        <div class="card-chip"></div>
+                        <div class="card-logo-text" style="color:#555">Sanrio</div>
+                        <div class="add-btn"><i class="ph ph-plus"></i></div>
+                    </div>
+                    <div class="card-info">
+                        <h2 class="card-title">신한카드 플리(산리오)</h2>
+                        <div class="card-tags">
+                            <span class="tag">어디서나</span>
+                            <span class="tag">카페/베이커리</span>
+                            <span class="tag">캐릭터</span>
+                        </div>
+                        <ul class="benefit-list">
+                            <li>캐릭터 샵 10% 할인</li>
+                            <li>간편결제 2% 적립</li>
+                            <li>스트리밍 20% 할인</li>
+                        </ul>
+                    </div>
+                </article>
+
+            </div>
+
+            <div class="load-more">
+                <button class="btn-more" id="loadMoreBtn">
+                    <i class="ph ph-plus"></i> 더보기
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- 슬라이더 로직 시작 ---
+        const inputMin = document.getElementById("inputMin");
+        const inputMax = document.getElementById("inputMax");
+        const sliderTrackFill = document.getElementById("sliderTrackFill");
+        const feeRangeDisplay = document.getElementById("feeRangeDisplay");
+        const sliderLabels = document.getElementById("sliderLabels").children;
+        const sliderTicks = document.querySelectorAll('.slider-tick'); // 눈금 요소 선택
+
+        // 현대카드 연회비 구간 값 매핑
+        const rangeValues = [
+            { val: 0, text: "0" },
+            { val: 1, text: "1만" },
+            { val: 2, text: "3만" },
+            { val: 3, text: "5만" },
+            { val: 4, text: "10만" },
+            { val: 5, text: "10만+" }
+        ];
+
+        // 슬라이더 업데이트 함수
+        function updateSlider(e) {
+            let minVal = parseInt(inputMin.value);
+            let maxVal = parseInt(inputMax.value);
+
+            // Cross over prevention & Z-index management
+            // 현재 조작 중인 슬라이더가 겹칠 때 위로 올라오도록 설정
+            if(e && e.target === inputMin) {
+                inputMin.style.zIndex = "3";
+                inputMax.style.zIndex = "2";
+                if(minVal > maxVal) { inputMax.value = minVal; maxVal = minVal; }
+            } else if (e && e.target === inputMax) {
+                inputMax.style.zIndex = "3";
+                inputMin.style.zIndex = "2";
+                if(maxVal < minVal) { inputMin.value = maxVal; minVal = maxVal; }
+            } else {
+                // 초기 로드 시 등의 경우
+                if(minVal > maxVal) {
+                    const temp = minVal; minVal = maxVal; maxVal = temp;
+                }
+            }
+
+            // Calculate percentage
+            const minPercent = (minVal / 5) * 100;
+            const maxPercent = (maxVal / 5) * 100;
+
+            // Fill the track
+            sliderTrackFill.style.left = minPercent + "%";
+            sliderTrackFill.style.width = (maxPercent - minPercent) + "%";
+
+            // Update Labels Active State
+            for(let i=0; i<sliderLabels.length; i++) {
+                if(i >= minVal && i <= maxVal) {
+                    sliderLabels[i].classList.add("active");
+                } else {
+                    sliderLabels[i].classList.remove("active");
+                }
+            }
+
+            // Update Text Display
+            let displayText = "";
+            if (minVal === 0 && maxVal === 5) {
+                displayText = "전체";
+            } else if (minVal === maxVal) {
+                const txt = rangeValues[minVal].text;
+                if(minVal === 0) displayText = "연회비 없음";
+                else if(txt === "10만+") displayText = "10만원 이상";
+                else displayText = txt + "원";
+            } else {
+                let startStr = rangeValues[minVal].text;
+                let endStr = rangeValues[maxVal].text;
+                
+                if(startStr !== "0" && startStr !== "10만+") startStr += "원";
+                else if(startStr === "0") startStr = "0원";
+
+                if(endStr === "10만+") endStr = "10만원 이상";
+                else endStr += "원";
+                
+                displayText = `${startStr} ~ ${endStr}`;
+            }
+            feeRangeDisplay.innerText = displayText;
+        }
+
+        // --- 클릭 이동 로직 추가 ---
+        function moveHandleTo(val) {
+            val = parseInt(val);
+            let minVal = parseInt(inputMin.value);
+            let maxVal = parseInt(inputMax.value);
+
+            // 현재 범위 밖을 클릭한 경우: 더 가까운 쪽을 해당 위치로 이동
+            if (val < minVal) {
+                inputMin.value = val;
+            } else if (val > maxVal) {
+                inputMax.value = val;
+            } else {
+                // 현재 범위 안을 클릭한 경우: 거리가 더 가까운 핸들을 이동
+                const distMin = Math.abs(val - minVal);
+                const distMax = Math.abs(val - maxVal);
+                
+                if (distMin <= distMax) {
+                    inputMin.value = val;
+                    // z-index 업데이트 (Min을 위로)
+                    inputMin.style.zIndex = "3";
+                    inputMax.style.zIndex = "2";
+                } else {
+                    inputMax.value = val;
+                    // z-index 업데이트 (Max를 위로)
+                    inputMax.style.zIndex = "3";
+                    inputMin.style.zIndex = "2";
+                }
+            }
+            updateSlider(); // UI 갱신
+        }
+
+        // 눈금(Tick)에 클릭 이벤트 리스너 추가
+        sliderTicks.forEach((tick, index) => {
+            tick.addEventListener('click', () => moveHandleTo(index));
+        });
+
+        // 라벨(Label)에 클릭 이벤트 리스너 추가
+        Array.from(sliderLabels).forEach((label, index) => {
+            label.addEventListener('click', () => moveHandleTo(index));
+        });
+
+        inputMin.addEventListener("input", updateSlider);
+        inputMax.addEventListener("input", updateSlider);
+        
+        // Initial call
+        updateSlider();
+        // --- 슬라이더 로직 끝 ---
+
+
+        // 기존 태그 버튼 토글 기능
+        const tagBtns = document.querySelectorAll('.tag-btn');
+        tagBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('selected');
+            });
+        });
+
+        // 탭 전환 기능
+        const tabs = document.querySelectorAll('.card-type-tabs button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // 더보기 버튼 (더미 기능)
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        loadMoreBtn.addEventListener('click', () => {
+            const currentText = loadMoreBtn.innerHTML;
+            loadMoreBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> 로딩중...';
+            
+            setTimeout(() => {
+                alert('추가 카드를 불러왔습니다 (데모)');
+                loadMoreBtn.innerHTML = currentText;
+            }, 800);
+        });
+    </script>
+</body>
+</html>
